@@ -89,11 +89,13 @@ export const getJobsByCategory = async (req, res) => {
 
 export const getJobsByState = async (req, res) => {
   const state = req.validated?.state || req.params.state;
+  const category = req.query.category;
   const limit = cleanLimit(req.validated?.limit, 20, 100);
   const page = Math.max(1, Number(req.validated?.page) || 1);
   const skip = (page - 1) * limit;
 
   const filter = { state: new RegExp(`^${escapeRegex(state)}$`, 'i'), status: 'active' };
+  if (category) filter.category = category;
 
   const [jobs, total] = await Promise.all([
     Job.find(filter)

@@ -29,8 +29,10 @@ export async function getJobsByCategory(category: string, page = 1, limit = 20):
   return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/category/${category}?page=${page}&limit=${limit}`);
 }
 
-export async function getJobsByState(state: string, page = 1, limit = 20): Promise<PaginatedResponse<JobListItem>> {
-  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/state/${encodeURIComponent(state)}?page=${page}&limit=${limit}`);
+export async function getJobsByState(state: string, page = 1, limit = 20, category?: string): Promise<PaginatedResponse<JobListItem>> {
+  let url = `/api/jobs/state/${encodeURIComponent(state)}?page=${page}&limit=${limit}`;
+  if (category) url += `&category=${category}`;
+  return safeFetch<PaginatedResponse<JobListItem>>(url);
 }
 
 export async function getJobBySlug(slug: string): Promise<JobDetail | null> {

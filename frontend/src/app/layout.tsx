@@ -28,6 +28,12 @@ export const metadata: Metadata = {
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || '',
   },
+  alternates: {
+    canonical: '/',
+    languages: {
+      'hi-IN': '/',
+    },
+  },
   openGraph: {
     type: 'website',
     locale: 'hi_IN',
@@ -44,9 +50,6 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true },
-  },
-  alternates: {
-    canonical: '/',
   },
 };
 

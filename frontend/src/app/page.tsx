@@ -4,6 +4,7 @@ import { JobCard } from '@/components/JobCard';
 import { StatsBanner } from '@/components/StatsBanner';
 import { SectionHeader } from '@/components/SectionHeader';
 import { SearchForm } from '@/components/SearchForm';
+import { SubscribeCTA } from '@/components/SubscribeCTA';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
 export const revalidate = 60;
@@ -108,6 +109,9 @@ export default async function HomePage() {
             </div>
           </section>
         )}
+
+        {/* Subscribe CTA */}
+        <SubscribeCTA />
 
         {/* Latest Jobs */}
         <section id="latest">

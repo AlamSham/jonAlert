@@ -1,6 +1,17 @@
 import Link from 'next/link';
-import { JobListItem, CATEGORY_EMOJI, CATEGORY_COLORS } from '@/lib/types';
+import { JobListItem, CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 import { timeAgo, formatDate } from '@/lib/seo';
+
+function getLastDateStatus(lastDate?: string) {
+  if (!lastDate) return null;
+  const now = new Date();
+  const ld = new Date(lastDate);
+  const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  if (daysLeft < 0) return { label: '❌ Expired', class: 'bg-stone-100 text-stone-500' };
+  if (daysLeft <= 3) return { label: `⏰ ${daysLeft}d left!`, class: 'bg-red-100 text-red-700 animate-pulse' };
+  if (daysLeft <= 7) return { label: `⏰ ${daysLeft}d left`, class: 'bg-orange-100 text-orange-700' };
+  return null;
+}
 
 export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }) {
   const emoji = CATEGORY_EMOJI[job.category] || '📢';
@@ -16,7 +27,7 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
       <div className="flex items-center justify-between mb-3">
         <span className={`badge ${colorClass}`}>
           <span>{emoji}</span>
-          {job.category === 'admit-card' ? 'Admit Card' : job.category}
+          {CATEGORY_LABELS[job.category] || job.category}
         </span>
         <time className="text-[11px] text-stone-400 font-medium">{timeAgo(job.createdAt)}</time>
       </div>
@@ -61,13 +72,19 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
             📅 {formatDate(job.lastDate)}
           </span>
         )}
+        {(() => {
+          const status = getLastDateStatus(job.lastDate);
+          return status ? <span className={`badge ${status.class}`}>{status.label}</span> : null;
+        })()}
       </div>
 
-      {/* Tags */}
+      {/* Tags — Clickable */}
       {job.tags && job.tags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {job.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="tag-chip">#{tag}</span>
+            <Link key={tag} href={`/search?q=${encodeURIComponent(tag)}`} className="tag-chip hover:bg-accent/15 hover:text-accent transition">
+              #{tag}
+            </Link>
           ))}
         </div>
       )}

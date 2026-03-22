@@ -62,6 +62,38 @@ export default async function JobDetailPage({ params }: Props) {
           ),
         }}
       />
+      {/* FAQ JSON-LD for Google Rich Snippets */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              job.eligibility && {
+                '@type': 'Question',
+                name: `${job.title} ke liye eligibility kya hai?`,
+                acceptedAnswer: { '@type': 'Answer', text: job.eligibility },
+              },
+              job.lastDate && {
+                '@type': 'Question',
+                name: `${job.title} ki last date kab hai?`,
+                acceptedAnswer: { '@type': 'Answer', text: `Last date: ${formatDate(job.lastDate)}` },
+              },
+              job.applyLink && {
+                '@type': 'Question',
+                name: `${job.title} ke liye kaise apply karein?`,
+                acceptedAnswer: { '@type': 'Answer', text: `Official website par jaake online form bhare: ${job.applyLink}` },
+              },
+              job.qualificationLevel && {
+                '@type': 'Question',
+                name: `${job.title} ke liye qualification kya chahiye?`,
+                acceptedAnswer: { '@type': 'Answer', text: `Minimum qualification: ${job.qualificationLevel}` },
+              },
+            ].filter(Boolean),
+          }),
+        }}
+      />
 
       <Breadcrumb items={breadcrumbs} />
 
@@ -193,6 +225,20 @@ export default async function JobDetailPage({ params }: Props) {
 
       {/* Related Jobs */}
       <RelatedJobsSection slug={slug} />
+
+      {/* Sticky Mobile WhatsApp Share */}
+      <div className="fixed bottom-4 right-4 md:hidden z-40">
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(`📢 ${job.title}\n👉 https://sarkaripulse.com/job/${slug}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-2xl text-white shadow-xl transition hover:bg-green-600 active:scale-90"
+          aria-label="Share on WhatsApp"
+          id="sticky-whatsapp"
+        >
+          💬
+        </a>
+      </div>
     </div>
   );
 }
