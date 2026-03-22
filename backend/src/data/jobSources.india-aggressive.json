@@ -62,5 +62,29 @@
   {"name":"Puducherry Govt Jobs","type":"rss","url":"https://news.google.com/rss/search?q=Puducherry+government+job+vacancy&hl=en-IN&gl=IN&ceid=IN:en","category":"job","bucket":"ut","state":"Puducherry","priority":68},
 
   {"name":"State Result Updates","type":"rss","url":"https://news.google.com/rss/search?q=state+government+exam+result+declared+scorecard&hl=en-IN&gl=IN&ceid=IN:en","category":"result","bucket":"state","priority":82},
-  {"name":"State Admit Card Updates","type":"rss","url":"https://news.google.com/rss/search?q=state+government+exam+admit+card+released&hl=en-IN&gl=IN&ceid=IN:en","category":"admit-card","bucket":"state","priority":82}
+  {"name":"State Admit Card Updates","type":"rss","url":"https://news.google.com/rss/search?q=state+government+exam+admit+card+released&hl=en-IN&gl=IN&ceid=IN:en","category":"admit-card","bucket":"state","priority":82},
+
+  {"name":"DU JNU BHU AMU Admission","type":"rss","url":"https://news.google.com/rss/search?q=DU+JNU+BHU+AMU+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"central","priority":90},
+  {"name":"IIT NIT IIIT Admission","type":"rss","url":"https://news.google.com/rss/search?q=IIT+NIT+IIIT+admission+counselling+JoSAA+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"central","priority":89},
+  {"name":"IGNOU SOL Distance Admission","type":"rss","url":"https://news.google.com/rss/search?q=IGNOU+SOL+distance+education+admission+registration+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"central","priority":88},
+  {"name":"NEET UG PG Admission","type":"rss","url":"https://news.google.com/rss/search?q=NEET+UG+PG+medical+admission+counselling+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"central","priority":89},
+  {"name":"UP Bihar College Admission","type":"rss","url":"https://news.google.com/rss/search?q=UP+Bihar+university+college+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"state","priority":85},
+  {"name":"Rajasthan MP College Admission","type":"rss","url":"https://news.google.com/rss/search?q=Rajasthan+MP+university+college+admission+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"state","priority":84},
+  {"name":"Maharashtra Gujarat College Admission","type":"rss","url":"https://news.google.com/rss/search?q=Maharashtra+Gujarat+university+college+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"state","priority":84},
+  {"name":"West Bengal Tamil Nadu Admission","type":"rss","url":"https://news.google.com/rss/search?q=West+Bengal+Tamil+Nadu+college+university+admission+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"state","priority":83},
+  {"name":"Delhi Karnataka Telangana Admission","type":"rss","url":"https://news.google.com/rss/search?q=Delhi+Karnataka+Telangana+college+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"state","priority":83},
+  {"name":"Polytechnic ITI Diploma Admission","type":"rss","url":"https://news.google.com/rss/search?q=polytechnic+ITI+diploma+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"admission","bucket":"central","priority":82},
+
+  {"name":"National Scholarship Portal NSP","type":"rss","url":"https://news.google.com/rss/search?q=national+scholarship+portal+NSP+registration+apply+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"scholarship","bucket":"central","priority":90},
+  {"name":"SC ST OBC Minority Scholarship","type":"rss","url":"https://news.google.com/rss/search?q=SC+ST+OBC+minority+scholarship+2026+apply&hl=en-IN&gl=IN&ceid=IN:en","category":"scholarship","bucket":"central","priority":89},
+  {"name":"Post Matric Pre Matric Scholarship","type":"rss","url":"https://news.google.com/rss/search?q=post+matric+pre+matric+scholarship+notification+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"scholarship","bucket":"central","priority":88},
+  {"name":"UP Bihar Scholarship Scheme","type":"rss","url":"https://news.google.com/rss/search?q=UP+Bihar+scholarship+scheme+students+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"scholarship","bucket":"state","priority":85},
+  {"name":"Rajasthan MP Maharashtra Scholarship","type":"rss","url":"https://news.google.com/rss/search?q=Rajasthan+MP+Maharashtra+scholarship+scheme+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"scholarship","bucket":"state","priority":84},
+  {"name":"Central Govt Scholarship Fellowship","type":"rss","url":"https://news.google.com/rss/search?q=central+government+scholarship+fellowship+stipend+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"scholarship","bucket":"central","priority":87},
+
+  {"name":"Board Exam Form 10th 12th","type":"rss","url":"https://news.google.com/rss/search?q=board+exam+form+10th+12th+registration+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"exam-form","bucket":"central","priority":88},
+  {"name":"UPSC SSC Competitive Exam Form","type":"rss","url":"https://news.google.com/rss/search?q=UPSC+SSC+exam+form+application+registration+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"exam-form","bucket":"central","priority":90},
+  {"name":"NEET JEE Entrance Exam Form","type":"rss","url":"https://news.google.com/rss/search?q=NEET+JEE+entrance+exam+form+registration+apply+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"exam-form","bucket":"central","priority":89},
+  {"name":"State PSC Exam Form","type":"rss","url":"https://news.google.com/rss/search?q=BPSC+UPPSC+RPSC+MPPSC+exam+form+registration+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"exam-form","bucket":"state","priority":85},
+  {"name":"University Semester Exam Form","type":"rss","url":"https://news.google.com/rss/search?q=university+semester+exam+form+registration+2026&hl=en-IN&gl=IN&ceid=IN:en","category":"exam-form","bucket":"state","priority":82}
 ]

@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     'admission notification', 'sarkari scholarship',
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.com'),
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || '',
+  },
   openGraph: {
     type: 'website',
     locale: 'hi_IN',

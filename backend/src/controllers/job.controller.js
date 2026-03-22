@@ -3,6 +3,8 @@ import { runJobIngestion } from '../cron/job.cron.js';
 import { logger } from '../utils/logger.js';
 import { env } from '../config/env.js';
 
+const RELATED_SELECT = 'title slug category summary state organization vacancyCount lastDate tags createdAt';
+
 const cleanLimit = (input, fallback = 10, max = 50) => {
   const parsed = Number(input);
   if (Number.isNaN(parsed) || parsed < 1) return fallback;
@@ -238,4 +240,26 @@ export const triggerCronNow = async (_req, res) => {
   const result = await runJobIngestion();
   logger.info('POST /api/cron/run completed', result);
   res.json({ message: 'Cron executed', ...result });
+};
+
+export const getRelatedJobs = async (req, res) => {
+  const { slug } = req.params;
+  const job = await Job.findOne({ slug, status: 'active' }).lean();
+  if (!job) return res.status(404).json({ error: 'Not found' });
+
+  const related = await Job.find({
+    status: 'active',
+    _id: { $ne: job._id },
+    $or: [
+      { category: job.category, state: job.state },
+      { category: job.category },
+      { tags: { $in: job.tags || [] } }
+    ]
+  })
+    .sort({ createdAt: -1 })
+    .limit(6)
+    .select(RELATED_SELECT)
+    .lean();
+
+  res.json({ data: related });
 };

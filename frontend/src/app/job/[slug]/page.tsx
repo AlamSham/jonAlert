@@ -1,10 +1,12 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getJobBySlug } from '@/lib/api';
+import { getJobBySlug, getRelatedJobs } from '@/lib/api';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { ShareButtons } from '@/components/ShareButtons';
+import { JobCard } from '@/components/JobCard';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate } from '@/lib/seo';
-import { CATEGORY_EMOJI, CATEGORY_COLORS } from '@/lib/types';
+import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
 export const revalidate = 60;
 
@@ -35,7 +37,7 @@ export default async function JobDetailPage({ params }: Props) {
 
   const emoji = CATEGORY_EMOJI[job.category] || '📢';
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';
-  const categoryLabel = job.category === 'admit-card' ? 'Admit Card' : job.category;
+  const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
 
   const breadcrumbs = [
     { label: categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1), href: job.category === 'job' ? '/jobs' : `/${job.category}` },
@@ -183,6 +185,30 @@ export default async function JobDetailPage({ params }: Props) {
           </p>
         )}
       </article>
+
+      {/* Share Buttons */}
+      <div className="max-w-4xl mt-8 p-5 rounded-2xl border border-stone-200 bg-white">
+        <ShareButtons title={job.title} slug={slug} category={job.category} />
+      </div>
+
+      {/* Related Jobs */}
+      <RelatedJobsSection slug={slug} />
     </div>
+  );
+}
+
+async function RelatedJobsSection({ slug }: { slug: string }) {
+  const related = await getRelatedJobs(slug);
+  if (!related || related.length === 0) return null;
+
+  return (
+    <section className="max-w-4xl mt-10">
+      <h2 className="text-lg font-black text-ink mb-4">📌 Similar Updates</h2>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((job, i) => (
+          <JobCard key={job.slug} job={job} index={i} />
+        ))}
+      </div>
+    </section>
   );
 }

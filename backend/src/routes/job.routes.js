@@ -9,7 +9,8 @@ import {
   getTrendingJobs,
   getStats,
   getSitemap,
-  triggerCronNow
+  triggerCronNow,
+  getRelatedJobs
 } from '../controllers/job.controller.js';
 import { catchAsync } from '../utils/catchAsync.js';
 import { validateRequest } from '../middleware/validation.js';
@@ -35,6 +36,7 @@ jobRouter.get('/jobs/search', searchJobsValidator, validateRequest, catchAsync(s
 jobRouter.get('/jobs/category/:category', categoryJobsValidator, validateRequest, catchAsync(getJobsByCategory));
 jobRouter.get('/jobs/state/:state', stateJobsValidator, validateRequest, catchAsync(getJobsByState));
 jobRouter.get('/jobs/:slug', jobSlugValidator, validateRequest, catchAsync(getJobBySlug));
+jobRouter.get('/jobs/:slug/related', catchAsync(getRelatedJobs));
 
 // Stats & SEO
 jobRouter.get('/stats', catchAsync(getStats));

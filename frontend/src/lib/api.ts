@@ -60,3 +60,12 @@ export async function getStats(): Promise<StatsData> {
   const data = await safeFetch<{ data: StatsData }>('/api/stats', 120);
   return data.data;
 }
+
+export async function getRelatedJobs(slug: string): Promise<JobListItem[]> {
+  try {
+    const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/${slug}/related`, 120);
+    return data.data;
+  } catch {
+    return [];
+  }
+}
