@@ -1,0 +1,26 @@
+[
+  {
+    "sourceId": "upsc-cds-2026",
+    "title": "UPSC CDS II 2026 Notification Out",
+    "description": "Union Public Service Commission has released Combined Defence Services Examination II 2026 notification. Eligible candidates can apply online from 20 March 2026 to 9 April 2026.",
+    "category": "job",
+    "sourceName": "Sample UPSC Feed",
+    "sourceUrl": "https://example.com/upsc-cds-2026"
+  },
+  {
+    "sourceId": "ssc-gd-result-2026",
+    "title": "SSC GD Constable Result 2026 Declared",
+    "description": "Staff Selection Commission released GD Constable 2026 result. Candidates can check scorecard and cutoff marks on official portal.",
+    "category": "result",
+    "sourceName": "Sample SSC Feed",
+    "sourceUrl": "https://example.com/ssc-gd-result-2026"
+  },
+  {
+    "sourceId": "rrb-ntpc-admit-card-2026",
+    "title": "RRB NTPC CBT 1 Admit Card 2026 Available",
+    "description": "Railway Recruitment Board activated NTPC CBT 1 admit card download link for all zones. Exam starts from 5 April 2026.",
+    "category": "admit-card",
+    "sourceName": "Sample RRB Feed",
+    "sourceUrl": "https://example.com/rrb-ntpc-admit-card-2026"
+  }
+]

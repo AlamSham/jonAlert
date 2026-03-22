@@ -1,0 +1,202 @@
+{
+  "info": {
+    "_postman_id": "7d0f4c2f-5f9a-4fd4-b0d2-6fd43ef6a001",
+    "name": "Job Automation Backend - Security + API Tests",
+    "description": "Collection for core API testing, error testing, Telegram, AI integration, and rate-limit checks.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "cronSecret",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Core API Tests",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Get Jobs (GET /api/jobs)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs?limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Manual Cron Trigger (POST /api/cron/run)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-cron-secret",
+                "value": "{{cronSecret}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cron/run",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cron", "run"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Integration Tests",
+      "item": [
+        {
+          "name": "AI Integration Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Railway Group D Recruitment 2026\",\n  \"description\": \"Railway Recruitment Board ne Group D notification release kiya hai, jisme application dates aur eligibility details di gayi hain.\",\n  \"category\": \"job\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/test/ai",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "ai"]
+            }
+          }
+        },
+        {
+          "name": "Telegram Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Backend Telegram integration test from Postman\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/test/telegram",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "telegram"]
+            }
+          }
+        },
+        {
+          "name": "Config Status Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "config"]
+            }
+          }
+        },
+        {
+          "name": "Missing Keys Test",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/keys?scope=all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "keys"],
+              "query": [
+                {
+                  "key": "scope",
+                  "value": "all"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Error & Security Tests",
+      "item": [
+        {
+          "name": "Invalid Input: limit too high",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs?limit=9999",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "9999"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Invalid Input: short search query",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/search?q=a",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "a"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rate Limit Ping Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/test/ping",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "test", "ping"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
