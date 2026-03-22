@@ -6,8 +6,11 @@ import { useState } from 'react';
 const links = [
   { href: '/', label: 'Home', icon: '🏠' },
   { href: '/jobs', label: 'Jobs', icon: '💼' },
+  { href: '/admission', label: 'Admission', icon: '🎓' },
+  { href: '/scholarship', label: 'Scholarship', icon: '💰' },
   { href: '/result', label: 'Results', icon: '📊' },
   { href: '/admit-card', label: 'Admit Card', icon: '🎫' },
+  { href: '/exam-form', label: 'Exam Form', icon: '📝' },
 ];
 
 export function Header() {

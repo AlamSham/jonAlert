@@ -17,8 +17,11 @@ export default async function HomePage() {
 
   const categories = [
     { key: 'job', label: 'Sarkari Naukri', emoji: '💼', href: '/jobs', desc: 'Latest govt job notifications' },
+    { key: 'admission', label: 'Admission', emoji: '🎓', href: '/admission', desc: 'College admission updates' },
+    { key: 'scholarship', label: 'Scholarship', emoji: '💰', href: '/scholarship', desc: 'Sarkari scholarship schemes' },
     { key: 'result', label: 'Results', emoji: '📊', href: '/result', desc: 'Exam results & scorecards' },
     { key: 'admit-card', label: 'Admit Card', emoji: '🎫', href: '/admit-card', desc: 'Download admit cards' },
+    { key: 'exam-form', label: 'Exam Form', emoji: '📝', href: '/exam-form', desc: 'Application forms & registration' },
   ];
 
   return (
@@ -30,7 +33,7 @@ export default async function HomePage() {
             Sarkari Naukri Ka <span className="gradient-text">Pulse</span>
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted sm:text-base leading-relaxed">
-            UPSC, SSC, Railway, Police, Banking — sabhi sarkari jobs, results aur admit cards ek jagah.
+            UPSC, SSC, Railway, Police, Banking — jobs, admission, scholarship, results aur admit cards ek jagah.
             <br className="hidden sm:block" />
             AI-powered updates har 10 minute. Koi update miss nahi hoga! 🚀
           </p>
@@ -49,7 +52,7 @@ export default async function HomePage() {
         {/* Category Cards */}
         <section id="categories">
           <SectionHeader title="Browse by Category" icon="📂" />
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
             {categories.map((cat) => (
               <Link
                 key={cat.key}

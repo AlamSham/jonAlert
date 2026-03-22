@@ -34,7 +34,7 @@ const JobSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ['job', 'result', 'admit-card'],
+      enum: ['job', 'result', 'admit-card', 'admission', 'scholarship', 'exam-form'],
       required: true,
       index: true
     },

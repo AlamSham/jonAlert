@@ -1,6 +1,6 @@
 import { param, query } from 'express-validator';
 
-const validCategories = ['job', 'result', 'admit-card'];
+const validCategories = ['job', 'result', 'admit-card', 'admission', 'scholarship', 'exam-form'];
 
 export const latestJobsValidator = [
   query('limit')

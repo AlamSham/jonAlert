@@ -82,5 +82,96 @@
     "type": "rss",
     "url": "https://news.google.com/rss/search?q=sarkari+admit+card+released+hall+ticket&hl=en-IN&gl=IN&ceid=IN:en",
     "category": "admit-card"
+  },
+  {
+    "name": "Google News - College Admission India",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=college+admission+notification+2026+India&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "admission"
+  },
+  {
+    "name": "Google News - DU JNU BHU Admission",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=DU+JNU+BHU+AMU+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "admission"
+  },
+  {
+    "name": "Google News - Bihar UP College Admission",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=Bihar+UP+college+university+admission+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "admission"
+  },
+  {
+    "name": "Google News - Rajasthan MP Maharashtra Admission",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=Rajasthan+MP+Maharashtra+college+admission+notification+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "admission"
+  },
+  {
+    "name": "Google News - IGNOU SOL Admission",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=IGNOU+SOL+distance+admission+registration+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "admission"
+  },
+  {
+    "name": "Google News - Engineering Medical Admission",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=engineering+medical+NEET+JEE+admission+counselling+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "admission"
+  },
+  {
+    "name": "Google News - Government Scholarship India",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=government+scholarship+scheme+students+India+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "scholarship"
+  },
+  {
+    "name": "Google News - SC ST OBC Scholarship",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=SC+ST+OBC+minority+scholarship+2026+apply&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "scholarship"
+  },
+  {
+    "name": "Google News - Post Matric Pre Matric Scholarship",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=post+matric+pre+matric+scholarship+notification+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "scholarship"
+  },
+  {
+    "name": "Google News - State Scholarship Schemes",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=Bihar+UP+Rajasthan+MP+scholarship+scheme+students+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "scholarship"
+  },
+  {
+    "name": "Google News - National Scholarship Portal",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=national+scholarship+portal+NSP+apply+registration+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "scholarship"
+  },
+  {
+    "name": "Google News - Board Exam Form",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=board+exam+form+10th+12th+registration+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "exam-form"
+  },
+  {
+    "name": "Google News - Competitive Exam Form",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=UPSC+SSC+NEET+JEE+exam+form+registration+apply+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "exam-form"
+  },
+  {
+    "name": "Google News - State Exam Form",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=state+exam+form+BPSC+UPPSC+RPSC+MPPSC+registration+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "exam-form"
+  },
+  {
+    "name": "Google News - University Exam Form",
+    "type": "rss",
+    "url": "https://news.google.com/rss/search?q=university+exam+form+semester+registration+2026&hl=en-IN&gl=IN&ceid=IN:en",
+    "category": "exam-form"
   }
 ]
+

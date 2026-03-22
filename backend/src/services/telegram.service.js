@@ -4,7 +4,10 @@ import { logger } from '../utils/logger.js';
 const categoryEmoji = {
   job: '💼',
   result: '📊',
-  'admit-card': '🎫'
+  'admit-card': '🎫',
+  admission: '🎓',
+  scholarship: '💰',
+  'exam-form': '📝'
 };
 
 export const buildJobNotificationMessage = (job) => {

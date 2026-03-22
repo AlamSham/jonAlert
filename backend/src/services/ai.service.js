@@ -17,7 +17,10 @@ const CONFIG_ERROR_COOLDOWN_MS = 12 * 60 * 60 * 1000;
 const categoryLabels = {
   job: 'Sarkari Naukri',
   result: 'Sarkari Result',
-  'admit-card': 'Admit Card'
+  'admit-card': 'Admit Card',
+  admission: 'College Admission',
+  scholarship: 'Scholarship',
+  'exam-form': 'Exam Form'
 };
 
 const inferStateFromText = (text = '') => {
@@ -69,7 +72,22 @@ const fallbackTransform = (job) => {
       `${descClean}\n\n` +
       `Candidates apna admit card official website se download karein. ` +
       `Exam mein jaane se pehle admit card print karke saath rakhein. ` +
-      `Admit card par exam center, timing aur zaroori instructions di hain.`
+      `Admit card par exam center, timing aur zaroori instructions di hain.`,
+    admission: `${title} mein admission ke liye notification jaari ho chuki hai. ` +
+      `${descClean}\n\n` +
+      `Is ${cat} mein apply karne ke liye eligibility criteria, zaroori documents, aur last date neeche di gayi hai. ` +
+      `Students ko salah di jaati hai ki official website par jaake form carefully fill karein. ` +
+      `Admission process online hai — form bharne se pehle prospectus aur eligibility dhyan se padhein.`,
+    scholarship: `${title} ke liye scholarship scheme ka notification jaari hua hai. ` +
+      `${descClean}\n\n` +
+      `Is ${cat} mein kaun apply kar sakta hai, kitna paisa milega, aur kaise apply karein — sab details neeche di gayi hain. ` +
+      `Eligible students jald se jald apply karein — last date miss karne par dobara mauka nahi milega. ` +
+      `Scholarship amount seedha bank account mein aayega.`,
+    'exam-form': `${title} ka exam form bharne ki notification jaari ho chuki hai. ` +
+      `${descClean}\n\n` +
+      `Form bharne ke liye official website par jayein aur step by step form fill karein. ` +
+      `Zaroori documents jaise photo, signature, aur certificates pehle se ready rakhein. ` +
+      `Form submit karne ke baad confirmation page ka printout zaroor lein.`
   };
 
   const combinedText = `${title} ${descClean}`;
@@ -95,7 +113,10 @@ const buildPrompt = (job) => `
 You are an expert SEO content writer for a popular Indian government jobs website (SarkariPulse).
 Your audience searches in Hindi + English mix. Write in natural, conversational Hinglish.
 
-TASK: Rewrite this job notification as a unique, engaging Hinglish article.
+TASK: Rewrite this notification as a unique, engaging Hinglish article.
+For admission: focus on college details, eligibility, fees, documents, how to apply step-by-step.
+For scholarship: focus on who can apply, how much money, eligibility, application process.
+For exam-form: focus on how to fill form step-by-step, documents needed, fees, last date.
 
 INPUT:
 Title: ${job.title}

@@ -1,4 +1,4 @@
-export type JobCategory = 'job' | 'result' | 'admit-card';
+export type JobCategory = 'job' | 'result' | 'admit-card' | 'admission' | 'scholarship' | 'exam-form';
 
 export type JobListItem = {
   _id: string;
@@ -54,16 +54,25 @@ export const CATEGORY_LABELS: Record<JobCategory, string> = {
   job: 'Sarkari Naukri',
   result: 'Result',
   'admit-card': 'Admit Card',
+  admission: 'Admission',
+  scholarship: 'Scholarship',
+  'exam-form': 'Exam Form',
 };
 
 export const CATEGORY_EMOJI: Record<JobCategory, string> = {
   job: '💼',
   result: '📊',
   'admit-card': '🎫',
+  admission: '🎓',
+  scholarship: '💰',
+  'exam-form': '📝',
 };
 
 export const CATEGORY_COLORS: Record<JobCategory, string> = {
   job: 'bg-emerald-100 text-emerald-700',
   result: 'bg-blue-100 text-blue-700',
   'admit-card': 'bg-purple-100 text-purple-700',
+  admission: 'bg-amber-100 text-amber-700',
+  scholarship: 'bg-teal-100 text-teal-700',
+  'exam-form': 'bg-rose-100 text-rose-700',
 };

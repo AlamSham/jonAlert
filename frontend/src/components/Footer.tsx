@@ -5,8 +5,11 @@ const footerLinks = [
     title: 'Categories',
     links: [
       { href: '/jobs', label: 'All Jobs' },
+      { href: '/admission', label: 'Admission' },
+      { href: '/scholarship', label: 'Scholarship' },
       { href: '/result', label: 'Results' },
       { href: '/admit-card', label: 'Admit Cards' },
+      { href: '/exam-form', label: 'Exam Forms' },
     ],
   },
   {
@@ -23,7 +26,7 @@ const footerLinks = [
   {
     title: 'Quick Links',
     links: [
-      { href: '/search', label: 'Search Jobs' },
+      { href: '/search', label: 'Search' },
       { href: '/jobs', label: 'Trending Jobs' },
       { href: '/', label: 'Latest Updates' },
     ],
@@ -46,7 +49,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-muted leading-relaxed">
-              Latest Sarkari Naukri, Exam Results, aur Admit Card updates — AI-powered, auto-updated har 10 minute.
+              Sarkari Naukri, College Admission, Scholarship, Exam Results aur Admit Card updates — AI-powered, auto-updated har 10 minute.
             </p>
           </div>
 

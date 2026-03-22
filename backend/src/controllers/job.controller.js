@@ -217,7 +217,7 @@ export const getSitemap = async (_req, res) => {
   xml += `  <url>\n    <loc>${baseUrl}/</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>hourly</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
 
   // Category pages
-  for (const cat of ['job', 'result', 'admit-card']) {
+  for (const cat of ['job', 'result', 'admit-card', 'admission', 'scholarship', 'exam-form']) {
     xml += `  <url>\n    <loc>${baseUrl}/${cat}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>hourly</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
   }
 

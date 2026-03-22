@@ -17,11 +17,12 @@ export const metadata: Metadata = {
     template: '%s | SarkariPulse',
   },
   description:
-    'SarkariPulse par paayein latest Sarkari Naukri, exam results, aur admit card updates — AI-powered, auto-updated har 10 minute. UPSC, SSC, Railway, State jobs sab ek jagah.',
+    'SarkariPulse par paayein latest Sarkari Naukri, college admission, scholarship, exam results, aur admit card updates — AI-powered, auto-updated har 10 minute.',
   keywords: [
     'sarkari naukri', 'government jobs', 'sarkari result', 'admit card',
     'UPSC', 'SSC', 'Railway', 'police vacancy', 'govt jobs 2026',
-    'sarkari bharti', 'sarkari job notification',
+    'college admission', 'scholarship', 'exam form', 'sarkari bharti',
+    'admission notification', 'sarkari scholarship',
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.com'),
   openGraph: {

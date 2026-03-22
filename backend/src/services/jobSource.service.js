@@ -15,7 +15,7 @@ const parser = new Parser({
 });
 
 const MAX_ITEMS_PER_SOURCE = 30;
-const allowedCategories = new Set(['job', 'result', 'admit-card']);
+const allowedCategories = new Set(['job', 'result', 'admit-card', 'admission', 'scholarship', 'exam-form']);
 const allowedTypes = new Set(['rss', 'html']);
 
 const cleanText = (value = '') => {
@@ -35,9 +35,12 @@ const absoluteUrl = (url, baseUrl) => {
 };
 
 const inferCategory = (title = '', description = '', fallback = 'job') => {
-  if (['job', 'result', 'admit-card'].includes(fallback)) return fallback;
+  if (['job', 'result', 'admit-card', 'admission', 'scholarship', 'exam-form'].includes(fallback)) return fallback;
 
   const text = `${title} ${description}`.toLowerCase();
+  if (text.includes('admission') || text.includes('counselling') || text.includes('registration open') || text.includes('enrollment')) return 'admission';
+  if (text.includes('scholarship') || text.includes('fellowship') || text.includes('stipend') || text.includes('financial aid')) return 'scholarship';
+  if (text.includes('exam form') || text.includes('application form') || text.includes('registration form') || text.includes('form fill')) return 'exam-form';
   if (text.includes('result') || text.includes('scorecard') || text.includes('cutoff')) return 'result';
   if (text.includes('admit card') || text.includes('hall ticket') || text.includes('exam city')) return 'admit-card';
   return 'job';
