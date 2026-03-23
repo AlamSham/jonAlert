@@ -12,6 +12,8 @@ import {
   triggerCronNow,
   getRelatedJobs
 } from '../controllers/job.controller.js';
+import { getRssFeed } from '../controllers/rss.controller.js';
+import { subscribeNewsletter } from '../controllers/subscriber.controller.js';
 import { catchAsync } from '../utils/catchAsync.js';
 import { validateRequest } from '../middleware/validation.js';
 import { requireCronSecret } from '../middleware/cronAuth.js';
@@ -41,6 +43,10 @@ jobRouter.get('/jobs/:slug/related', catchAsync(getRelatedJobs));
 // Stats & SEO
 jobRouter.get('/stats', catchAsync(getStats));
 jobRouter.get('/sitemap.xml', catchAsync(getSitemap));
+jobRouter.get('/rss.xml', catchAsync(getRssFeed));
+
+// Newsletter
+jobRouter.post('/subscribe', catchAsync(subscribeNewsletter));
 
 // Admin
 jobRouter.post('/cron/run', requireCronSecret, cronTriggerValidator, validateRequest, catchAsync(triggerCronNow));

@@ -4,6 +4,8 @@ import './globals.css';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { websiteJsonLd } from '@/lib/seo';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -61,11 +63,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
         />
+        <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="beforeInteractive" />
       </head>
       <body className={`${inter.className} flex min-h-screen flex-col`}>
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        {process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID && (
+          <Script id="onesignal-init" strategy="afterInteractive" dangerouslySetInnerHTML={{
+            __html: `
+              window.OneSignalDeferred = window.OneSignalDeferred || [];
+              OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.init({
+                  appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
+                  notifyButton: { enable: true },
+                });
+              });
+            `
+          }} />
+        )}
       </body>
     </html>
   );
