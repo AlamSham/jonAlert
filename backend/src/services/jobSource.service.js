@@ -15,7 +15,34 @@ const parser = new Parser({
 });
 
 const MAX_ITEMS_PER_SOURCE = 30;
+const MAX_AGE_DAYS = 30;
 const allowedCategories = new Set(['job', 'result', 'admit-card', 'admission', 'scholarship', 'exam-form']);
+
+// Spam / irrelevant content keywords — items matching these are news articles, not job notifications
+const IRRELEVANT_KEYWORDS = [
+  'corruption', 'scam', 'arrest', 'protest', 'strike', 'controversy',
+  'passenger ship', 'tourism', 'murder', 'accident', 'politics',
+  'election', 'vote', 'cricket', 'bollywood', 'entertainment',
+  'weather', 'earthquake', 'flood', 'cyclone'
+];
+
+const isRelevantJobContent = (title = '', description = '') => {
+  if (title.length < 20) return false; // Too short to be a real notification
+  const combined = `${title} ${description}`.toLowerCase();
+  for (const kw of IRRELEVANT_KEYWORDS) {
+    if (combined.includes(kw)) return false;
+  }
+  return true;
+};
+
+const isFreshEnough = (publishedAt) => {
+  if (!publishedAt) return true; // No date = benefit of doubt
+  const pubDate = new Date(publishedAt);
+  if (Number.isNaN(pubDate.getTime())) return true;
+  const ageMs = Date.now() - pubDate.getTime();
+  const ageDays = ageMs / (1000 * 60 * 60 * 24);
+  return ageDays <= MAX_AGE_DAYS;
+};
 const allowedTypes = new Set(['rss', 'html']);
 
 const cleanText = (value = '') => {
@@ -75,6 +102,18 @@ const normalizeJob = (item) => {
     });
 
   if (!title || !description || !sourceId) {
+    return null;
+  }
+
+  // Reject items older than MAX_AGE_DAYS
+  if (!isFreshEnough(publishedAt)) {
+    logger.info('Skipped (too old)', { title: title.slice(0, 60), publishedAt });
+    return null;
+  }
+
+  // Reject irrelevant news/spam content
+  if (!isRelevantJobContent(title, description)) {
+    logger.info('Skipped (irrelevant content)', { title: title.slice(0, 60) });
     return null;
   }
 
