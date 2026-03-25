@@ -29,7 +29,7 @@ export function SearchForm({ initialQuery = '', large = false }: { initialQuery?
         />
         <button
           type="submit"
-          className={`absolute right-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 font-bold text-white shadow-md transition hover:shadow-lg active:scale-95 ${
+          className={`absolute right-2 rounded-xl bg-accent font-bold text-white shadow-sm transition hover:bg-accent-dark active:scale-95 ${
             large ? 'px-5 py-2.5 text-sm' : 'px-4 py-2 text-xs'
           }`}
           id="search-submit"

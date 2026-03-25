@@ -63,7 +63,7 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
       {/* Bottom — Vacancy + LastDate + Tags */}
       <div className="mt-3.5 flex flex-wrap items-center gap-2">
         {job.vacancyCount > 0 && (
-          <span className="badge bg-amber-50 text-amber-700">
+          <span className="badge bg-blue-50 text-blue-700">
             👥 {job.vacancyCount.toLocaleString('en-IN')} Vacancies
           </span>
         )}

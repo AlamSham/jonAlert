@@ -62,12 +62,12 @@ export function SubscribeCTA() {
               onChange={(e) => setEmail(e.target.value)}
               disabled={status === 'loading'}
               placeholder="Enter your email address..."
-              className="flex-1 rounded-l-xl border-y border-l border-stone-200 px-4 py-3 text-sm outline-none transition focus:border-purple-500 focus:ring-1 focus:ring-purple-500 disabled:bg-stone-50"
+              className="flex-1 rounded-l-xl border-y border-l border-stone-200 px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-1 focus:ring-accent disabled:bg-stone-50"
             />
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="rounded-r-xl border border-purple-600 bg-purple-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-purple-700 active:scale-95 disabled:bg-purple-400 disabled:border-purple-400"
+              className="rounded-r-xl border border-accent bg-accent px-6 py-3 text-sm font-bold text-white transition hover:bg-accent-dark active:scale-95 disabled:bg-accent/50 disabled:border-accent/50"
             >
               {status === 'loading' ? 'Loading...' : 'Subscribe'}
             </button>

@@ -26,11 +26,11 @@ export function Header() {
     <header className="sticky top-0 z-50 glass border-b border-stone-200/60">
       <div className="container-wrap flex items-center justify-between py-3">
         <Link href="/" className="flex items-center gap-2 group" id="header-logo">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-lg font-black text-white shadow-md transition group-hover:shadow-glow">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent text-lg font-black text-white shadow-sm transition group-hover:bg-accent-dark">
             S
           </span>
           <span className="text-xl font-black tracking-tight">
-            Sarkari<span className="gradient-text">Pulse</span>
+            Sarkari<span className="text-accent">Pulse</span>
           </span>
         </Link>
 

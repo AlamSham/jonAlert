@@ -61,7 +61,7 @@ export default async function HomePage() {
                 className="card flex items-center gap-4 !p-5 group"
                 id={`cat-${cat.key}`}
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-50 text-2xl transition group-hover:scale-110">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-stone-50 text-2xl transition group-hover:scale-110">
                   {cat.emoji}
                 </span>
                 <div>
@@ -132,7 +132,7 @@ export default async function HomePage() {
           <div className="mt-8 text-center sm:hidden">
             <Link
               href="/jobs"
-              className="inline-block rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3 text-sm font-bold text-white shadow-md transition hover:shadow-lg"
+              className="inline-block rounded-2xl bg-accent px-8 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-dark hover:shadow-md"
             >
               View All Jobs →
             </Link>

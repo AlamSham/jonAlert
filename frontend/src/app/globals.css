@@ -8,10 +8,6 @@
 
 body {
   @apply bg-paper text-ink antialiased;
-  background-image:
-    radial-gradient(circle at 10% 10%, rgba(217, 119, 6, 0.06) 0%, transparent 45%),
-    radial-gradient(circle at 90% 5%, rgba(15, 23, 42, 0.04) 0%, transparent 35%),
-    radial-gradient(circle at 50% 100%, rgba(217, 119, 6, 0.03) 0%, transparent 50%);
   min-height: 100vh;
 }
 
@@ -21,7 +17,7 @@ body {
 
 /* Premium card component */
 .card {
-  @apply rounded-2xl border border-stone-200/80 bg-white p-5 shadow-card transition-all duration-300;
+  @apply rounded-xl border border-stone-200/60 bg-white p-5 shadow-card transition-all duration-300;
 }
 .card:hover {
   @apply shadow-card-hover -translate-y-0.5 border-stone-300/60;
@@ -34,7 +30,7 @@ body {
 
 /* Gradient text */
 .gradient-text {
-  @apply bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
 }
 
 /* Glassmorphism */
@@ -67,7 +63,8 @@ body {
 
 /* Hero gradient */
 .hero-gradient {
-  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 30%, #FDE68A 60%, #FCD34D 100%);
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border-bottom: 1px solid #f1f5f9;
 }
 
 /* Stat card glow */

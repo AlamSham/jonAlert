@@ -2,10 +2,10 @@ import { StatsData } from '@/lib/types';
 
 export function StatsBanner({ stats }: { stats: StatsData }) {
   const items = [
-    { label: 'Total Jobs', value: stats.totalJobs, icon: '💼', color: 'from-amber-500 to-orange-500' },
-    { label: 'Added Today', value: stats.last24Hours, icon: '🔥', color: 'from-rose-500 to-pink-500' },
-    { label: 'Categories', value: Object.keys(stats.categories).length, icon: '📂', color: 'from-blue-500 to-indigo-500' },
-    { label: 'States', value: stats.topStates.length, icon: '📍', color: 'from-emerald-500 to-teal-500' },
+    { label: 'Total Jobs', value: stats.totalJobs, icon: '💼', color: 'from-blue-500 to-indigo-600' },
+    { label: 'Added Today', value: stats.last24Hours, icon: '🔥', color: 'from-emerald-500 to-teal-500' },
+    { label: 'Categories', value: Object.keys(stats.categories).length, icon: '📂', color: 'from-indigo-400 to-purple-500' },
+    { label: 'States', value: stats.topStates.length, icon: '📍', color: 'from-cyan-500 to-blue-500' },
   ];
 
   return (
