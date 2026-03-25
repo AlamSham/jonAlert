@@ -1,7 +1,7 @@
 import { JobDetail, CATEGORY_LABELS } from './types';
 
 const SITE_NAME = 'SarkariPulse';
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
 export function getCanonicalUrl(path: string) {
   return `${SITE_URL}${path}`;

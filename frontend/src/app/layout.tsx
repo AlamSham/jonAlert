@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     'college admission', 'scholarship', 'exam form', 'sarkari bharti',
     'admission notification', 'sarkari scholarship',
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net'),
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || '',
   },
@@ -52,7 +52,12 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true },
+    googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
+  appleWebApp: {
+    title: 'SarkariPulse',
+    statusBarStyle: 'default',
+    capable: true,
   },
 };
 

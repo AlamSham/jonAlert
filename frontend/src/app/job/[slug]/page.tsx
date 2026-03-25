@@ -229,7 +229,7 @@ export default async function JobDetailPage({ params }: Props) {
       {/* Sticky Mobile WhatsApp Share */}
       <div className="fixed bottom-4 right-4 md:hidden z-40">
         <a
-          href={`https://wa.me/?text=${encodeURIComponent(`📢 ${job.title}\n👉 https://sarkaripulse.com/job/${slug}`)}`}
+          href={`https://wa.me/?text=${encodeURIComponent(`📢 ${job.title}\n👉 https://sarkaripulse.net/job/${slug}`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-2xl text-white shadow-xl transition hover:bg-green-600 active:scale-90"
