@@ -5,6 +5,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { websiteJsonLd } from '@/lib/seo';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { Analytics } from '@vercel/analytics/react';
 import Script from 'next/script';
 
 const inter = Inter({
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
         {process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID && (
           <Script id="onesignal-init" strategy="afterInteractive" dangerouslySetInnerHTML={{
