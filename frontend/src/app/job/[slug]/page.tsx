@@ -173,7 +173,7 @@ export default async function JobDetailPage({ params }: Props) {
           </header>
 
           {/* Mobile TOC */}
-          <TableOfContents items={tocItems} />
+          <TableOfContents items={tocItems} variant="mobile" />
 
           {/* Summary */}
           <section className="mb-8 rounded-2xl bg-amber-50/60 border border-amber-200/40 p-5" id="section-summary">
@@ -276,7 +276,7 @@ export default async function JobDetailPage({ params }: Props) {
         </article>
 
         {/* Desktop Sidebar TOC */}
-        <TableOfContents items={tocItems} />
+        <TableOfContents items={tocItems} variant="desktop" />
       </div>
 
       {/* Share Buttons */}
