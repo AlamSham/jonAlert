@@ -30,6 +30,15 @@ import {
 
 export const jobRouter = Router();
 
+// Set cache headers for GET requests to improve API performance and reduce bounce
+jobRouter.use((req, res, next) => {
+  if (req.method === 'GET') {
+    // 60 seconds browser cache, 5 minutes CDN cache
+    res.set('Cache-Control', 'public, max-age=60, s-maxage=300');
+  }
+  next();
+});
+
 // Public read endpoints
 jobRouter.get('/jobs', allJobsValidator, validateRequest, catchAsync(getJobs));
 jobRouter.get('/jobs/latest', latestJobsValidator, validateRequest, catchAsync(getLatestJobs));

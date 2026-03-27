@@ -1,12 +1,27 @@
 import cron from 'node-cron';
 import { fetchJobNotifications } from '../services/jobSource.service.js';
 import { processAndSaveJob } from '../services/job.service.js';
+import { Job } from '../models/Job.js';
 import { logger } from '../utils/logger.js';
 import { env } from '../config/env.js';
 
 let isRunning = false;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const expireOldJobs = async () => {
+  try {
+    const result = await Job.updateMany(
+      { status: 'active', lastDate: { $lt: new Date() } },
+      { $set: { status: 'expired' } }
+    );
+    if (result.modifiedCount > 0) {
+      logger.info(`Auto-expired ${result.modifiedCount} outdated jobs`);
+    }
+  } catch (error) {
+    logger.error('Failed to auto-expire jobs', { error: error.message });
+  }
+};
 
 export const runJobIngestion = async () => {
   if (isRunning) {
@@ -17,6 +32,8 @@ export const runJobIngestion = async () => {
   isRunning = true;
   const startedAt = Date.now();
   logger.info('Cron started: fetching job notifications');
+
+  await expireOldJobs();
 
   try {
     const notifications = await fetchJobNotifications();

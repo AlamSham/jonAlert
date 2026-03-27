@@ -25,6 +25,23 @@ export function websiteJsonLd() {
   };
 }
 
+export function organizationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/icon-512x512.png`,
+    description: 'AI-powered sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India.',
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'customer support',
+      url: `${SITE_URL}/contact`,
+    },
+  };
+}
+
 export function jobPostingJsonLd(job: JobDetail) {
   const jsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',

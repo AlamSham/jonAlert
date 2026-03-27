@@ -228,7 +228,7 @@ export const getSitemap = async (_req, res) => {
   // Job detail pages
   for (const job of jobs) {
     const lastmod = job.createdAt ? new Date(job.createdAt).toISOString() : now;
-    xml += `  <url>\n    <loc>${baseUrl}/${job.category}/${job.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+    xml += `  <url>\n    <loc>${baseUrl}/job/${job.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
   }
 
   xml += '</urlset>';

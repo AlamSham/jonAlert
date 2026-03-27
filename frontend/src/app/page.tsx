@@ -5,6 +5,7 @@ import { StatsBanner } from '@/components/StatsBanner';
 import { SectionHeader } from '@/components/SectionHeader';
 import { SearchForm } from '@/components/SearchForm';
 import { SubscribeCTA } from '@/components/SubscribeCTA';
+import { TrendingTags, QualificationLinks } from '@/components/TrendingTags';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
 export const revalidate = 60;
@@ -50,6 +51,25 @@ export default async function HomePage() {
           <StatsBanner stats={stats} />
         </section>
 
+        {/* Why SarkariPulse — Trust Signals */}
+        <section id="why-sarkaripulse">
+          <SectionHeader title="Kyun Chune SarkariPulse?" icon="⭐" />
+          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
+            {[
+              { emoji: '🤖', title: 'AI-Powered', desc: 'Har 10 minute automatic update — koi notification miss nahi hoga' },
+              { emoji: '⚡', title: 'Real-Time Alerts', desc: 'Turant push notification WhatsApp, Telegram aur email par' },
+              { emoji: '🎯', title: '100% Free', desc: 'Koi registration ya hidden charges nahi — sab free hai' },
+              { emoji: '🛡️', title: 'Trusted Source', desc: 'Sirf official government sources se verified data' },
+            ].map((item) => (
+              <div key={item.title} className="card !p-5 text-center group">
+                <span className="text-3xl block mb-2 transition group-hover:scale-110">{item.emoji}</span>
+                <h3 className="font-bold text-ink text-sm">{item.title}</h3>
+                <p className="text-xs text-muted mt-1 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Category Cards */}
         <section id="categories">
           <SectionHeader title="Browse by Category" icon="📂" />
@@ -79,6 +99,12 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
+        {/* Trending Tags — Popular Searches */}
+        <TrendingTags />
+
+        {/* Jobs by Qualification */}
+        <QualificationLinks />
 
         {/* Top States */}
         {stats.topStates.length > 0 && (

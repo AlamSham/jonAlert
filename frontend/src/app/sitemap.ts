@@ -1,20 +1,24 @@
 import { MetadataRoute } from 'next';
-import { getLatestJobs } from '@/lib/api';
+import { getLatestJobs, getStats } from '@/lib/api';
 import { JobCategory } from '@/lib/types';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
-  // Fetch the latest jobs to include in the sitemap
+  // Fetch latest jobs and stats for state pages
   let latestJobs: any[] = [];
+  let stats: any = { topStates: [] };
   try {
-    latestJobs = await getLatestJobs(100);
+    [latestJobs, stats] = await Promise.all([
+      getLatestJobs(500),
+      getStats(),
+    ]);
   } catch (error) {
-    console.error('Failed to fetch jobs for sitemap:', error);
+    console.error('Failed to fetch data for sitemap:', error);
   }
 
   const jobUrls = latestJobs.map((job) => ({
-    url: `${siteUrl}/jobs/${job.slug}`,
+    url: `${siteUrl}/job/${job.slug}`,
     lastModified: new Date(job.createdAt || new Date()),
     changeFrequency: 'daily' as const,
     priority: 0.8,
@@ -27,6 +31,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
     priority: 0.9,
+  }));
+
+  // State-wise pages
+  const stateUrls = (stats.topStates || []).map((s: { state: string }) => ({
+    url: `${siteUrl}/jobs/state/${encodeURIComponent(s.state)}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.7,
   }));
 
   const staticUrls = [
@@ -42,7 +54,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
+    {
+      url: `${siteUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/privacy-policy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${siteUrl}/disclaimer`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${siteUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    },
   ];
 
-  return [...staticUrls, ...categoryUrls, ...jobUrls];
+  return [...staticUrls, ...categoryUrls, ...stateUrls, ...jobUrls];
 }
+
