@@ -13,7 +13,6 @@ import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateFAQSchema, generateArticleSchema } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
-import { trackApplyClick } from '@/lib/analytics';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
 export const revalidate = 60;
@@ -284,7 +283,6 @@ export default async function JobDetailPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95"
                 id="apply-btn"
-                onClick={() => trackApplyClick(slug, job.title, job.organization, job.category)}
               >
                 🔗 Apply Now / Official Link
               </a>

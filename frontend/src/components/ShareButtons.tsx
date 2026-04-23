@@ -10,9 +10,7 @@ type Props = {
 };
 
 export function ShareButtons({ title, slug, category }: Props) {
-  const pageUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/job/${slug}`
-    : `https://sarkaripulse.net/job/${slug}`;
+  const pageUrl = `https://sarkaripulse.net/job/${slug}`;
 
   const categoryLabel = CATEGORY_LABELS[category] || category;
   const shareText = `📢 ${title}\n\n🔗 ${categoryLabel} update on SarkariPulse\n👉 ${pageUrl}`;
