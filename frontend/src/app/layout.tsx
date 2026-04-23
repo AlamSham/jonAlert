@@ -7,7 +7,6 @@ import { websiteJsonLd, organizationJsonLd } from '@/lib/seo';
 import { BackToTop } from '@/components/BackToTop';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
-import { sendWebVitals } from '@/lib/analytics';
 import Script from 'next/script';
 
 const inter = Inter({
