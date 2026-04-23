@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { FAQ } from '@/components/FAQ';
+import { FAQItem } from '@/lib/internal-links';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy — SarkariPulse',
@@ -8,10 +10,33 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPolicyPage() {
+  const faqItems: FAQItem[] = [
+    {
+      question: "Aap hamara kya data collect karte hain?",
+      answer: "Hum sirf email address collect karte hain agar aap notifications ke liye subscribe karte hain. Usage data (pages visited, time spent) Google Analytics ke through collect hoti hai jo anonymous hoti hai."
+    },
+    {
+      question: "Cookies ka use kyun karte hain?",
+      answer: "Cookies hamein website performance improve karne, analytics ke liye, aur relevant ads dikhane mein help karti hain. Hum Google Analytics, AdSense, OneSignal, aur Vercel Analytics use karte hain."
+    },
+    {
+      question: "Email notifications se kaise unsubscribe karein?",
+      answer: "Har email mein unsubscribe link hota hai. Aap us link par click karke easily unsubscribe kar sakte hain. Ya phir humse contact page se bhi request kar sakte hain."
+    },
+    {
+      question: "Apna data delete kaise karwayein?",
+      answer: "Agar aap chahte hain ki hum aapka data delete kar dein, toh humse contact page par message karein. Hum 48 hours mein aapka data delete kar denge."
+    },
+    {
+      question: "Third-party services safe hain?",
+      answer: "Hum sirf trusted third-party services use karte hain jaise Google, OneSignal, aur Vercel. Ye sab companies apni privacy policies follow karti hain aur industry standards maintain karti hain."
+    }
+  ];
+
   return (
     <div className="container-wrap py-12 animate-fade-in max-w-3xl">
       <h1 className="text-3xl font-black text-ink mb-2">Privacy Policy</h1>
-      <p className="text-sm text-muted mb-8">Last Updated: March 27, 2026</p>
+      <p className="text-sm text-muted mb-8">Last Updated: December 15, 2024</p>
 
       <div className="space-y-6 text-sm leading-relaxed text-ink/85">
         <section>
@@ -91,6 +116,49 @@ export default function PrivacyPolicyPage() {
             par sampark karein.
           </p>
         </section>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="mt-12">
+        <FAQ 
+          items={faqItems}
+          title="🤔 Frequently Asked Questions"
+        />
+      </div>
+
+      {/* Related Pages Section */}
+      <div className="mt-12">
+        <h2 className="text-lg font-bold text-ink mb-4">📄 Related Pages</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/cookie-policy"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🍪 Cookie Policy</h3>
+            <p className="text-xs text-muted">Cookies aur third-party services ke baare mein</p>
+          </Link>
+          <Link
+            href="/disclaimer"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">⚠️ Disclaimer</h3>
+            <p className="text-xs text-muted">Important disclaimers aur limitations</p>
+          </Link>
+          <Link
+            href="/about"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">ℹ️ About Us</h3>
+            <p className="text-xs text-muted">SarkariPulse ke baare mein jaaniye</p>
+          </Link>
+          <Link
+            href="/contact"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">📞 Contact Us</h3>
+            <p className="text-xs text-muted">Humse sampark karein</p>
+          </Link>
+        </div>
       </div>
 
       <div className="mt-10">

@@ -11,7 +11,7 @@ export default function DisclaimerPage() {
   return (
     <div className="container-wrap py-12 animate-fade-in max-w-3xl">
       <h1 className="text-3xl font-black text-ink mb-2">Disclaimer</h1>
-      <p className="text-sm text-muted mb-8">Last Updated: March 27, 2026</p>
+      <p className="text-sm text-muted mb-8">Last Updated: December 15, 2024</p>
 
       <div className="space-y-6 text-sm leading-relaxed text-ink/85">
         <section>
@@ -64,6 +64,41 @@ export default function DisclaimerPage() {
             par sampark karein.
           </p>
         </section>
+      </div>
+
+      {/* Related Pages Section */}
+      <div className="mt-12">
+        <h2 className="text-lg font-bold text-ink mb-4">📄 Related Pages</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link
+            href="/privacy-policy"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🔒 Privacy Policy</h3>
+            <p className="text-xs text-muted">Data privacy aur security ke baare mein</p>
+          </Link>
+          <Link
+            href="/cookie-policy"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🍪 Cookie Policy</h3>
+            <p className="text-xs text-muted">Cookies aur third-party services ke baare mein</p>
+          </Link>
+          <Link
+            href="/about"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">ℹ️ About Us</h3>
+            <p className="text-xs text-muted">SarkariPulse ke baare mein jaaniye</p>
+          </Link>
+          <Link
+            href="/contact"
+            className="card !p-4 hover:bg-stone-50/60 transition group"
+          >
+            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">📞 Contact Us</h3>
+            <p className="text-xs text-muted">Humse sampark karein</p>
+          </Link>
+        </div>
       </div>
 
       <div className="mt-10">

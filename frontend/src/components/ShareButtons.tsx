@@ -1,6 +1,7 @@
 'use client';
 
 import { CATEGORY_LABELS, type JobCategory } from '@/lib/types';
+import { trackSocialShare } from '@/lib/analytics';
 
 type Props = {
   title: string;
@@ -20,9 +21,22 @@ export function ShareButtons({ title, slug, category }: Props) {
   const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(pageUrl)}&text=${encodeURIComponent(`📢 ${title} — ${categoryLabel} update`)}`;
   const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`📢 ${title}`)}&url=${encodeURIComponent(pageUrl)}`;
 
+  const handleWhatsAppShare = () => {
+    trackSocialShare('whatsapp', 'job', slug);
+  };
+
+  const handleTelegramShare = () => {
+    trackSocialShare('telegram', 'job', slug);
+  };
+
+  const handleTwitterShare = () => {
+    trackSocialShare('twitter', 'job', slug);
+  };
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(pageUrl);
+      trackSocialShare('copy_link', 'job', slug);
       const btn = document.getElementById('copy-btn');
       if (btn) {
         btn.textContent = '✅ Copied!';
@@ -42,6 +56,7 @@ export function ShareButtons({ title, slug, category }: Props) {
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3.5 py-1.5 text-xs font-bold text-green-700 transition hover:bg-green-200 active:scale-95"
         id="share-whatsapp"
+        onClick={handleWhatsAppShare}
       >
         💬 WhatsApp
       </a>
@@ -51,6 +66,7 @@ export function ShareButtons({ title, slug, category }: Props) {
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3.5 py-1.5 text-xs font-bold text-blue-700 transition hover:bg-blue-200 active:scale-95"
         id="share-telegram"
+        onClick={handleTelegramShare}
       >
         ✈️ Telegram
       </a>
@@ -60,6 +76,7 @@ export function ShareButtons({ title, slug, category }: Props) {
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1.5 rounded-full bg-sky-100 px-3.5 py-1.5 text-xs font-bold text-sky-700 transition hover:bg-sky-200 active:scale-95"
         id="share-twitter"
+        onClick={handleTwitterShare}
       >
         🐦 Twitter
       </a>

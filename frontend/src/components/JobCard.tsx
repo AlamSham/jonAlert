@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { JobListItem, CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 import { timeAgo, formatDate } from '@/lib/seo';
+import { trackApplyClick, trackInternalLinkClick } from '@/lib/analytics';
 
 function getLastDateStatus(lastDate?: string) {
   if (!lastDate) return null;
@@ -16,6 +19,24 @@ function getLastDateStatus(lastDate?: string) {
 export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }) {
   const emoji = CATEGORY_EMOJI[job.category] || '📢';
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';
+
+  const handleJobTitleClick = () => {
+    trackInternalLinkClick('job_title', `/job/${job.slug}`, job.title);
+  };
+
+  const handleStateClick = () => {
+    if (job.state) {
+      trackInternalLinkClick('state', `/jobs/state/${encodeURIComponent(job.state)}`, job.state);
+    }
+  };
+
+  const handleTagClick = (tag: string) => {
+    trackInternalLinkClick('tag', `/search?q=${encodeURIComponent(tag)}`, tag);
+  };
+
+  const handleReadMoreClick = () => {
+    trackInternalLinkClick('read_more', `/job/${job.slug}`, 'Read Full Details');
+  };
 
   return (
     <article
@@ -34,7 +55,11 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
 
       {/* Title */}
       <h3 className="line-clamp-2 text-[15px] font-extrabold leading-snug text-ink group-hover:text-accent transition-colors">
-        <Link href={`/job/${job.slug}`} className="hover:underline underline-offset-2">
+        <Link 
+          href={`/job/${job.slug}`} 
+          className="hover:underline underline-offset-2"
+          onClick={handleJobTitleClick}
+        >
           {job.title}
         </Link>
       </h3>
@@ -50,7 +75,11 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
         {job.state && (
           <span className="flex items-center gap-1">
             <span className="text-stone-400">📍</span>
-            <Link href={`/jobs/state/${encodeURIComponent(job.state)}`} className="hover:text-accent transition">
+            <Link 
+              href={`/jobs/state/${encodeURIComponent(job.state)}`} 
+              className="hover:text-accent transition"
+              onClick={handleStateClick}
+            >
               {job.state}
             </Link>
           </span>
@@ -82,7 +111,12 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
       {job.tags && job.tags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {job.tags.slice(0, 3).map((tag) => (
-            <Link key={tag} href={`/search?q=${encodeURIComponent(tag)}`} className="tag-chip hover:bg-accent/15 hover:text-accent transition">
+            <Link 
+              key={tag} 
+              href={`/search?q=${encodeURIComponent(tag)}`} 
+              className="tag-chip hover:bg-accent/15 hover:text-accent transition"
+              onClick={() => handleTagClick(tag)}
+            >
               #{tag}
             </Link>
           ))}
@@ -94,6 +128,7 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
         <Link
           href={`/job/${job.slug}`}
           className="text-xs font-bold text-accent hover:text-accent-dark transition inline-flex items-center gap-1"
+          onClick={handleReadMoreClick}
         >
           Read Full Details
           <span className="transition-transform group-hover:translate-x-0.5">→</span>

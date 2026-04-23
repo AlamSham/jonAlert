@@ -6,6 +6,9 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { SearchForm } from '@/components/SearchForm';
 import { SubscribeCTA } from '@/components/SubscribeCTA';
 import { TrendingTags, QualificationLinks } from '@/components/TrendingTags';
+import { HowItWorks } from '@/components/HowItWorks';
+import { TrustSignals } from '@/components/TrustSignals';
+import { getTopStateLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
 export const revalidate = 60;
@@ -16,6 +19,9 @@ export default async function HomePage() {
     getTrendingJobs(6),
     getStats(),
   ]);
+
+  // Generate state links for internal linking
+  const stateLinks = getTopStateLinks(stats.topStates || []);
 
   const categories = [
     { key: 'job', label: 'Sarkari Naukri', emoji: '💼', href: '/jobs', desc: 'Latest govt job notifications' },
@@ -51,23 +57,14 @@ export default async function HomePage() {
           <StatsBanner stats={stats} />
         </section>
 
-        {/* Why SarkariPulse — Trust Signals */}
-        <section id="why-sarkaripulse">
-          <SectionHeader title="Kyun Chune SarkariPulse?" icon="⭐" />
-          <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-            {[
-              { emoji: '🤖', title: 'AI-Powered', desc: 'Har 10 minute automatic update — koi notification miss nahi hoga' },
-              { emoji: '⚡', title: 'Real-Time Alerts', desc: 'Turant push notification WhatsApp, Telegram aur email par' },
-              { emoji: '🎯', title: '100% Free', desc: 'Koi registration ya hidden charges nahi — sab free hai' },
-              { emoji: '🛡️', title: 'Trusted Source', desc: 'Sirf official government sources se verified data' },
-            ].map((item) => (
-              <div key={item.title} className="card !p-5 text-center group">
-                <span className="text-3xl block mb-2 transition group-hover:scale-110">{item.emoji}</span>
-                <h3 className="font-bold text-ink text-sm">{item.title}</h3>
-                <p className="text-xs text-muted mt-1 leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
-          </div>
+        {/* How It Works */}
+        <section id="how-it-works">
+          <HowItWorks />
+        </section>
+
+        {/* Trust Signals - Why SarkariPulse */}
+        <section id="trust-signals">
+          <TrustSignals />
         </section>
 
         {/* Category Cards */}
@@ -106,18 +103,18 @@ export default async function HomePage() {
         {/* Jobs by Qualification */}
         <QualificationLinks />
 
-        {/* Top States */}
-        {stats.topStates.length > 0 && (
+        {/* Top States - Enhanced with internal links */}
+        {stateLinks.length > 0 && (
           <section id="top-states">
             <SectionHeader title="Jobs by State" subtitle="State-wise sarkari naukri" icon="📍" />
             <div className="flex flex-wrap gap-2">
-              {stats.topStates.map((s) => (
+              {stateLinks.slice(0, 10).map((link) => (
                 <Link
-                  key={s.state}
-                  href={`/jobs/state/${encodeURIComponent(s.state)}`}
+                  key={link.href}
+                  href={link.href}
                   className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-muted shadow-sm transition hover:border-accent hover:text-accent hover:shadow-md"
                 >
-                  {s.state} <span className="ml-1 text-xs text-stone-400">({s.count})</span>
+                  {link.label} {link.count && <span className="ml-1 text-xs text-stone-400">({link.count})</span>}
                 </Link>
               ))}
             </div>

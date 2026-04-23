@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useState, FormEvent } from 'react';
+import { trackSearch, trackFormSubmission } from '@/lib/analytics';
 
 export function SearchForm({ initialQuery = '', large = false }: { initialQuery?: string; large?: boolean }) {
   const router = useRouter();
@@ -9,7 +10,15 @@ export function SearchForm({ initialQuery = '', large = false }: { initialQuery?
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+      const trimmedQuery = query.trim();
+      
+      // Track the search query
+      trackSearch(trimmedQuery, 0, 'general'); // Results count will be updated on search page
+      trackFormSubmission('search', true);
+      
+      router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+    } else {
+      trackFormSubmission('search', false);
     }
   };
 

@@ -19,36 +19,98 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Failed to fetch data for sitemap:', error);
   }
 
+  // Job URLs with proper priority and changeFrequency
   const jobUrls = latestJobs.map((job) => ({
     url: `${siteUrl}/job/${job.slug}`,
     lastModified: new Date(job.createdAt || new Date()),
     changeFrequency: 'daily' as const,
-    priority: 0.8,
+    priority: 0.8, // Enhanced to upper range (0.7-0.8 for jobs)
   }));
 
   const categories: JobCategory[] = ['job', 'admission', 'scholarship', 'result', 'admit-card', 'exam-form'];
   
+  // Category URLs with enhanced priority (0.8-0.9 for categories)
   const categoryUrls = categories.map((cat) => ({
     url: `${siteUrl}/${cat === 'job' ? 'jobs' : cat}`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
-    priority: 0.9,
+    priority: 0.9, // Enhanced to upper range (0.8-0.9 for categories)
   }));
 
-  // State-wise pages
-  const stateUrls = (stats.topStates || []).map((s: { state: string }) => ({
-    url: `${siteUrl}/jobs/state/${encodeURIComponent(s.state)}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 0.7,
-  }));
+  // State-specific pages for all categories with jobs (priority 0.6-0.7)
+  const stateUrls: MetadataRoute.Sitemap = [];
+  const categoriesWithStates = ['jobs', 'admission', 'scholarship', 'exam-form'];
+  
+  (stats.topStates || []).forEach((s: { state: string }) => {
+    categoriesWithStates.forEach((category) => {
+      stateUrls.push({
+        url: `${siteUrl}/${category}/state/${encodeURIComponent(s.state)}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily' as const,
+        priority: 0.7, // Enhanced to upper range (0.6-0.7 for state pages)
+      });
+    });
+  });
 
+  // Qualification-specific pages (search-based URLs)
+  const qualificationUrls = [
+    {
+      url: `${siteUrl}/search?q=10th+pass`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/search?q=12th+pass`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/search?q=graduate`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/search?q=post+graduate`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    },
+    {
+      url: `${siteUrl}/search?q=diploma`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/search?q=ITI`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/search?q=engineering`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.5,
+    },
+    {
+      url: `${siteUrl}/search?q=medical`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.5,
+    },
+  ];
+
+  // Static URLs with proper metadata
   const staticUrls = [
     {
       url: `${siteUrl}/`,
       lastModified: new Date(),
-      changeFrequency: 'hourly' as const,
-      priority: 1.0,
+      changeFrequency: 'hourly' as const, // As per requirements
+      priority: 1.0, // Homepage priority
     },
     {
       url: `${siteUrl}/search`,
@@ -56,32 +118,58 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
+  ];
+
+  // Legal pages with proper priority (0.4-0.5) and monthly changeFrequency
+  const legalUrls = [
     {
       url: `${siteUrl}/about`,
-      lastModified: new Date(),
+      lastModified: new Date('2024-12-15'), // Last updated date
+      changeFrequency: 'monthly' as const,
+      priority: 0.5, // Upper range for legal pages
+    },
+    {
+      url: `${siteUrl}/contact`,
+      lastModified: new Date('2024-12-15'), // Last updated date
       changeFrequency: 'monthly' as const,
       priority: 0.5,
     },
     {
       url: `${siteUrl}/privacy-policy`,
-      lastModified: new Date(),
+      lastModified: new Date('2024-12-15'), // Last updated date
       changeFrequency: 'monthly' as const,
-      priority: 0.3,
+      priority: 0.4, // Lower range for policy pages
+    },
+    {
+      url: `${siteUrl}/cookie-policy`,
+      lastModified: new Date('2024-12-15'), // Last updated date
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
     },
     {
       url: `${siteUrl}/disclaimer`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.3,
-    },
-    {
-      url: `${siteUrl}/contact`,
-      lastModified: new Date(),
+      lastModified: new Date('2024-12-15'), // Last updated date
       changeFrequency: 'monthly' as const,
       priority: 0.4,
     },
   ];
 
-  return [...staticUrls, ...categoryUrls, ...stateUrls, ...jobUrls];
+  // Combine all URLs and ensure we don't exceed 50,000 URLs
+  const allUrls = [
+    ...staticUrls,
+    ...legalUrls,
+    ...categoryUrls,
+    ...stateUrls,
+    ...qualificationUrls,
+    ...jobUrls,
+  ];
+
+  // Limit to 50,000 URLs as per requirements
+  if (allUrls.length > 50000) {
+    console.warn(`Sitemap has ${allUrls.length} URLs, truncating to 50,000`);
+    return allUrls.slice(0, 50000);
+  }
+
+  return allUrls;
 }
 

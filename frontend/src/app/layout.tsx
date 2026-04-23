@@ -7,6 +7,7 @@ import { websiteJsonLd, organizationJsonLd } from '@/lib/seo';
 import { BackToTop } from '@/components/BackToTop';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
+import { sendWebVitals } from '@/lib/analytics';
 import Script from 'next/script';
 
 const inter = Inter({
@@ -44,6 +45,14 @@ export const metadata: Metadata = {
     siteName: 'SarkariPulse',
     title: 'SarkariPulse — Latest Sarkari Naukri, Result, Admit Card',
     description: 'AI-powered sarkari job alerts in Hinglish. UPSC, SSC, Railway, State jobs sab ek jagah.',
+    images: [
+      {
+        url: 'https://sarkaripulse.net/api/og?title=SarkariPulse&subtitle=Latest%20Sarkari%20Naukri%20Updates',
+        width: 1200,
+        height: 630,
+        alt: 'SarkariPulse - Latest Sarkari Naukri Updates',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
@@ -98,6 +107,52 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `
           }} />
         )}
+        {/* Core Web Vitals Reporting */}
+        <Script id="web-vitals" strategy="afterInteractive" dangerouslySetInnerHTML={{
+          __html: `
+            import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+              // Import sendWebVitals function
+              import('/src/lib/analytics.js').then(({ sendWebVitals }) => {
+                onCLS(sendWebVitals);
+                onFID(sendWebVitals);
+                onFCP(sendWebVitals);
+                onLCP(sendWebVitals);
+                onTTFB(sendWebVitals);
+              }).catch(() => {
+                // Fallback if analytics module fails to load
+                function sendToAnalytics(metric) {
+                  const body = JSON.stringify(metric);
+                  if ('sendBeacon' in navigator) {
+                    navigator.sendBeacon('/api/analytics', body);
+                  } else {
+                    fetch('/api/analytics', { body, method: 'POST', keepalive: true });
+                  }
+                  
+                  // Also send to Google Analytics via gtag
+                  if (typeof window !== 'undefined' && window.gtag) {
+                    window.gtag('event', 'web_vitals', {
+                      metric_name: metric.name,
+                      metric_value: Math.round(metric.value),
+                      metric_id: metric.id,
+                      metric_delta: metric.delta ? Math.round(metric.delta) : undefined,
+                      metric_rating: metric.rating,
+                      event_category: 'Performance',
+                      event_label: metric.name,
+                      value: Math.round(metric.value),
+                      non_interaction: true,
+                    });
+                  }
+                }
+                
+                onCLS(sendToAnalytics);
+                onFID(sendToAnalytics);
+                onFCP(sendToAnalytics);
+                onLCP(sendToAnalytics);
+                onTTFB(sendToAnalytics);
+              });
+            });
+          `
+        }} />
       </body>
     </html>
   );

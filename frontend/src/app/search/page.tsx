@@ -16,7 +16,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     description: q
       ? `Search results for "${q}" — sarkari jobs, results, admit cards on SarkariPulse.`
       : 'Search sarkari naukri, exam results, aur admit cards. Type keywords to find relevant notifications.',
-    robots: { index: false }, // Don't index search pages
+    robots: { index: false, follow: true }, // Don't index search pages but follow links
   };
 }
 

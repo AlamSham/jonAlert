@@ -7,7 +7,13 @@ import { ShareButtons } from '@/components/ShareButtons';
 import { JobCard } from '@/components/JobCard';
 import { ReadingTime } from '@/components/ReadingTime';
 import { TableOfContents } from '@/components/TableOfContents';
-import { jobPostingJsonLd, breadcrumbJsonLd, formatDate } from '@/lib/seo';
+import { FAQ } from '@/components/FAQ';
+import { HowToApply } from '@/components/HowToApply';
+import { ApplicationTips } from '@/components/ApplicationTips';
+import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
+import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateFAQSchema, generateArticleSchema } from '@/lib/seo';
+import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
+import { trackApplyClick } from '@/lib/analytics';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
 export const revalidate = 60;
@@ -19,15 +25,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const job = await getJobBySlug(slug);
   if (!job) return { title: 'Job Not Found' };
 
+  // Use enhanced meta description generator
+  const metaDescription = generateJobMetaDescription(job);
+
   return {
     title: job.metaTitle || job.title,
-    description: job.metaDescription || job.summary,
-    alternates: { canonical: `/job/${slug}` },
+    description: metaDescription,
+    alternates: { canonical: `https://sarkaripulse.net/job/${slug}` },
     openGraph: {
       title: job.metaTitle || job.title,
-      description: job.metaDescription || job.summary,
+      description: metaDescription,
       type: 'article',
       publishedTime: job.createdAt,
+      locale: 'hi_IN',
+      siteName: 'SarkariPulse',
+      images: [
+        {
+          url: `https://sarkaripulse.net/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'SarkariPulse')}`,
+          width: 1200,
+          height: 630,
+          alt: job.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: job.metaTitle || job.title,
+      description: metaDescription.slice(0, 100),
+      images: [
+        `https://sarkaripulse.net/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'SarkariPulse')}`,
+      ],
     },
   };
 }
@@ -41,10 +68,44 @@ export default async function JobDetailPage({ params }: Props) {
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';
   const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
 
+  // Generate contextual links and breadcrumbs
+  const contextualLinks = generateJobContextualLinks(job);
+  const breadcrumbItems = generateBreadcrumbLinks(job.category, job.state, job.title);
+  
   const breadcrumbs = [
     { label: categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1), href: job.category === 'job' ? '/jobs' : `/${job.category}` },
     { label: job.title.slice(0, 50) + (job.title.length > 50 ? '...' : '') },
   ];
+
+  // Generate FAQ items for the job
+  const faqItems = [
+    job.eligibility && {
+      question: `${job.title} ke liye eligibility criteria kya hai?`,
+      answer: job.eligibility
+    },
+    (job.lastDate || job.importantDates) && {
+      question: `${job.title} ki last date kya hai?`,
+      answer: job.lastDate 
+        ? `Last date to apply: ${formatDate(job.lastDate)}`
+        : job.importantDates
+    },
+    job.applyLink && {
+      question: `${job.title} ke liye kaise apply karein?`,
+      answer: `Official website par jaayiye: ${job.applyLink}. Online application form bhariye, zaroori documents upload kariye, aur fee payment (agar applicable hai) kariye. Application submit karne ke baad receipt save kar liye.`
+    },
+    job.qualificationLevel && {
+      question: `${job.title} ke liye minimum qualification kya hai?`,
+      answer: `Minimum qualification: ${job.qualificationLevel}. Complete eligibility criteria ke liye official notification check kariye.`
+    },
+    job.salary && {
+      question: `${job.title} ki salary kitni hai?`,
+      answer: `Salary: ${job.salary}. Complete pay scale aur allowances ke liye official notification dekhiye.`
+    },
+    job.vacancyCount && job.vacancyCount > 0 && {
+      question: `${job.title} mein kitni vacancies hain?`,
+      answer: `Total vacancies: ${job.vacancyCount}. Category-wise breakdown ke liye official notification check kariye.`
+    }
+  ].filter(Boolean) as Array<{ question: string; answer: string }>;
 
   // Build TOC items based on available data
   const tocItems = [
@@ -52,6 +113,9 @@ export default async function JobDetailPage({ params }: Props) {
     { id: 'section-details', label: 'Full Details', emoji: '📄' },
     { id: 'section-eligibility', label: 'Eligibility', emoji: '✅' },
     { id: 'section-dates', label: 'Important Dates', emoji: '📅' },
+    job.applyLink && { id: 'section-how-to-apply', label: 'How to Apply', emoji: '🚀' },
+    { id: 'section-tips', label: 'Application Tips', emoji: '💡' },
+    faqItems.length > 0 && { id: 'section-faq', label: 'FAQ', emoji: '❓' },
     job.applyLink && { id: 'section-apply', label: 'Apply Now', emoji: '🔗' },
     { id: 'section-share', label: 'Share', emoji: '📤' },
     { id: 'section-related', label: 'Similar Updates', emoji: '📌' },
@@ -62,6 +126,14 @@ export default async function JobDetailPage({ params }: Props) {
 
   return (
     <div className="container-wrap py-8 animate-fade-in">
+      {/* Analytics Component */}
+      <JobDetailAnalytics 
+        jobSlug={slug}
+        jobTitle={job.title}
+        organization={job.organization}
+        category={job.category}
+      />
+      
       {/* JSON-LD */}
       <script
         type="application/ld+json"
@@ -69,47 +141,26 @@ export default async function JobDetailPage({ params }: Props) {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            breadcrumbJsonLd([
-              { name: 'Home', url: '/' },
-              ...breadcrumbs.map((b) => ({ name: b.label, url: b.href || `/job/${slug}` })),
-            ])
-          ),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(generateArticleSchema(job)) }}
       />
-      {/* FAQ JSON-LD for Google Rich Snippets */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: [
-              job.eligibility && {
-                '@type': 'Question',
-                name: `${job.title} ke liye eligibility kya hai?`,
-                acceptedAnswer: { '@type': 'Answer', text: job.eligibility },
-              },
-              job.lastDate && {
-                '@type': 'Question',
-                name: `${job.title} ki last date kab hai?`,
-                acceptedAnswer: { '@type': 'Answer', text: `Last date: ${formatDate(job.lastDate)}` },
-              },
-              job.applyLink && {
-                '@type': 'Question',
-                name: `${job.title} ke liye kaise apply karein?`,
-                acceptedAnswer: { '@type': 'Answer', text: `Official website par jaake online form bhare: ${job.applyLink}` },
-              },
-              job.qualificationLevel && {
-                '@type': 'Question',
-                name: `${job.title} ke liye qualification kya chahiye?`,
-                acceptedAnswer: { '@type': 'Answer', text: `Minimum qualification: ${job.qualificationLevel}` },
-              },
-            ].filter(Boolean),
-          }),
+          __html: JSON.stringify(
+            breadcrumbJsonLd(breadcrumbItems.map(item => ({ name: item.name, url: item.url })))
+          ),
         }}
       />
+      {/* Enhanced FAQ JSON-LD */}
+      {(() => {
+        const faqSchema = generateFAQSchema(job);
+        return faqSchema ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        ) : null;
+      })()}
 
       <Breadcrumb items={breadcrumbs} />
 
@@ -205,6 +256,25 @@ export default async function JobDetailPage({ params }: Props) {
             </div>
           </section>
 
+          {/* How to Apply Section */}
+          {job.applyLink && (
+            <section className="mb-8" id="section-how-to-apply">
+              <HowToApply applyLink={job.applyLink} title={job.title} />
+            </section>
+          )}
+
+          {/* Application Tips */}
+          <section className="mb-8" id="section-tips">
+            <ApplicationTips />
+          </section>
+
+          {/* FAQ Section */}
+          {faqItems.length > 0 && (
+            <section className="mb-8" id="section-faq">
+              <FAQ items={faqItems} title="Frequently Asked Questions" />
+            </section>
+          )}
+
           {/* Apply Link */}
           {job.applyLink && (
             <section className="mb-8" id="section-apply">
@@ -214,6 +284,7 @@ export default async function JobDetailPage({ params }: Props) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95"
                 id="apply-btn"
+                onClick={() => trackApplyClick(slug, job.title, job.organization, job.category)}
               >
                 🔗 Apply Now / Official Link
               </a>
@@ -234,24 +305,25 @@ export default async function JobDetailPage({ params }: Props) {
             </section>
           )}
 
-          {/* Internal Links: More from this Category & State */}
+          {/* Internal Links: Enhanced with contextual links */}
           <section className="mb-8 rounded-2xl border border-stone-200 bg-stone-50 p-5">
             <h2 className="text-sm font-bold uppercase tracking-wider text-muted mb-3">🔗 Explore More</h2>
             <div className="flex flex-wrap gap-2">
-              <Link
-                href={job.category === 'job' ? '/jobs' : `/${job.category}`}
-                className="rounded-full border border-accent/30 bg-accent/5 px-4 py-2 text-sm font-medium text-accent transition hover:bg-accent/10 hover:border-accent"
-              >
-                More {categoryLabel} →
-              </Link>
-              {job.state && (
+              {contextualLinks.map((link, index) => (
                 <Link
-                  href={`/jobs/state/${encodeURIComponent(job.state)}`}
-                  className="rounded-full border border-emerald-300/50 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100 hover:border-emerald-400"
+                  key={index}
+                  href={link.href}
+                  className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
+                    link.type === 'category' 
+                      ? 'border-accent/30 bg-accent/5 text-accent hover:bg-accent/10 hover:border-accent'
+                      : link.type === 'state'
+                      ? 'border-emerald-300/50 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400'
+                      : 'border-stone-200 bg-white text-muted hover:border-accent hover:text-accent'
+                  }`}
                 >
-                  Jobs in {job.state} →
+                  {link.label} →
                 </Link>
-              )}
+              ))}
               <Link
                 href="/"
                 className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-muted transition hover:border-accent hover:text-accent"
