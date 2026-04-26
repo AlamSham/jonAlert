@@ -1,5 +1,6 @@
 import express from 'express';
 import { jobRouter } from './routes/job.routes.js';
+import { schemeRouter } from './routes/scheme.routes.js';
 import { testRouter } from './routes/test.routes.js';
 import { env } from './config/env.js';
 import { logger } from './utils/logger.js';
@@ -29,6 +30,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api', jobRouter);
+app.use('/api', schemeRouter);
 
 if (env.nodeEnv !== 'production') {
   app.use('/api/test', testRouter);

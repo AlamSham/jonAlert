@@ -5,6 +5,7 @@ const footerLinks = [
     title: 'Categories',
     links: [
       { href: '/jobs', label: 'All Jobs' },
+      { href: '/schemes', label: 'Government Schemes' },
       { href: '/admission', label: 'Admission' },
       { href: '/scholarship', label: 'Scholarship' },
       { href: '/result', label: 'Results' },

@@ -76,3 +76,56 @@ export const CATEGORY_COLORS: Record<JobCategory, string> = {
   scholarship: 'bg-teal-100 text-teal-700',
   'exam-form': 'bg-rose-100 text-rose-700',
 };
+
+// Scheme Types
+export type SchemeType = 'central' | 'state';
+
+export type SchemeListItem = {
+  _id: string;
+  title: string;
+  slug: string;
+  summary: string;
+  schemeType: SchemeType;
+  state: string;
+  department: string;
+  thumbnailUrl?: string;
+  tags: string[];
+  viewCount: number;
+  createdAt: string;
+};
+
+export type SchemeDetail = SchemeListItem & {
+  description: string;
+  launchDate?: string;
+  eligibility: string;
+  benefits: string;
+  applicationProcess: string;
+  applyLink?: string;
+  officialWebsite?: string;
+  helplineNumber?: string;
+  metaTitle: string;
+  metaDescription: string;
+  lastVerified?: string;
+  updatedAt?: string;
+};
+
+export type SchemeFilters = {
+  schemeType?: SchemeType;
+  state?: string;
+  search?: string;
+};
+
+export const SCHEME_TYPE_LABELS: Record<SchemeType, string> = {
+  central: 'Central Scheme',
+  state: 'State Scheme',
+};
+
+export const SCHEME_TYPE_EMOJI: Record<SchemeType, string> = {
+  central: '🇮🇳',
+  state: '🏛️',
+};
+
+export const SCHEME_TYPE_COLORS: Record<SchemeType, string> = {
+  central: 'bg-blue-100 text-blue-700',
+  state: 'bg-green-100 text-green-700',
+};

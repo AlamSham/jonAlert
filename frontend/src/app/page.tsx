@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { getLatestJobs, getTrendingJobs, getStats } from '@/lib/api';
+import { getLatestJobs, getTrendingJobs, getStats, getLatestSchemes } from '@/lib/api';
 import { JobCard } from '@/components/JobCard';
+import { SchemeCard } from '@/components/SchemeCard';
 import { StatsBanner } from '@/components/StatsBanner';
 import { SectionHeader } from '@/components/SectionHeader';
 import { SearchForm } from '@/components/SearchForm';
@@ -14,10 +15,11 @@ import { CATEGORY_EMOJI } from '@/lib/types';
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [latestJobs, trendingJobs, stats] = await Promise.all([
+  const [latestJobs, trendingJobs, stats, latestSchemes] = await Promise.all([
     getLatestJobs(12),
     getTrendingJobs(6),
     getStats(),
+    getLatestSchemes(6).catch(() => []), // Gracefully handle schemes API failure
   ]);
 
   // Generate state links for internal linking
@@ -129,6 +131,34 @@ export default async function HomePage() {
               {trendingJobs.map((job, i) => (
                 <JobCard key={job.slug} job={job} index={i} />
               ))}
+            </div>
+          </section>
+        )}
+
+        {/* Government Schemes */}
+        {latestSchemes.length > 0 && (
+          <section id="schemes">
+            <div className="flex items-center justify-between mb-6">
+              <SectionHeader title="Government Schemes" subtitle="Central aur state yojanas" icon="🏛️" />
+              <Link
+                href="/schemes"
+                className="text-sm font-bold text-accent hover:text-accent-dark transition hidden sm:block"
+              >
+                View All →
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {latestSchemes.map((scheme, i) => (
+                <SchemeCard key={scheme.slug} scheme={scheme} index={i} />
+              ))}
+            </div>
+            <div className="mt-6 text-center sm:hidden">
+              <Link
+                href="/schemes"
+                className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-accent-dark active:scale-95"
+              >
+                View All Schemes →
+              </Link>
             </div>
           </section>
         )}
