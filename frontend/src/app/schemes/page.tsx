@@ -38,7 +38,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   
   const metadata: Metadata = {
     title: page > 1 ? `Government Schemes 2026 — Page ${page}` : 'Government Schemes 2026 - Central & State Yojana | SarkariPulse',
-    description: 'Latest government schemes 2026 - PM Kisan, Ayushman Bharat, state yojanas. Check eligibility, benefits, apply online. Free information in Hinglish.',
+    description: 'Latest government schemes 2026 - PM Kisan, Ayushman Bharat, PM Awas, Mudra Loan, state yojanas. Check eligibility, benefits, online apply. Free information in Hinglish.',
+    keywords: [
+      'government schemes', 'sarkari yojana', 'PM Kisan', 'Ayushman Bharat',
+      'PM Awas Yojana', 'Mudra loan', 'central government schemes', 'state government schemes',
+      'pradhan mantri yojana', 'farmer schemes', 'women schemes', 'education schemes',
+      'Sukanya Samriddhi', 'Atal Pension', 'Ujjwala Yojana', 'Beti Bachao Beti Padhao',
+      'government schemes 2026', 'sarkari yojana list', 'how to apply government schemes',
+      'eligibility criteria', 'scheme benefits', 'online apply schemes',
+    ],
     alternates: { 
       canonical: page > 1 ? `https://sarkaripulse.net/schemes?page=${page}` : 'https://sarkaripulse.net/schemes'
     },
@@ -145,23 +153,35 @@ export default async function SchemesPage({ searchParams }: Props) {
   const schemesFAQ: FAQItem[] = [
     {
       question: 'SarkariPulse par kitni government schemes available hain?',
-      answer: `Currently ${pagination.total.toLocaleString('en-IN')} government schemes ki jankari available hai. Central aur state dono schemes included hain.`
+      answer: `Currently ${pagination.total.toLocaleString('en-IN')} government schemes ki jankari available hai. Central aur state dono schemes included hain - PM Kisan, Ayushman Bharat, PM Awas, Mudra Loan jaise popular schemes.`
     },
     {
       question: 'Kya central aur state schemes dono milte hain?',
-      answer: 'Haan bilkul! Yahan PM Kisan, Ayushman Bharat jaise central schemes aur state-specific schemes dono available hain. Aap filter karke dekh sakte hain.'
+      answer: 'Haan bilkul! Yahan PM Kisan, Ayushman Bharat, PM Awas jaise central schemes aur Jharkhand, UP, Bihar jaise state-specific schemes dono available hain. Aap filter karke dekh sakte hain.'
     },
     {
-      question: 'Scheme ke liye kaise apply karein?',
-      answer: 'Scheme details page par jaayiye, eligibility check kariye, aur "Apply Online" button par click karke official website par jaayiye. Wahan application form bhariye.'
+      question: 'Government scheme ke liye kaise apply karein?',
+      answer: 'Scheme details page par jaayiye, eligibility criteria check kariye, required documents ready rakhiye, aur "Apply Online" button par click karke official website par jaayiye. Wahan application form bhariye aur submit kariye.'
     },
     {
       question: 'Kya scheme ki eligibility check kar sakte hain?',
-      answer: 'Haan, har scheme ke detail page par complete eligibility criteria di gayi hai. Aap apni qualification, income, aur category check kar sakte hain.'
+      answer: 'Haan, har scheme ke detail page par complete eligibility criteria di gayi hai. Aap apni age, income, qualification, aur category check kar sakte hain. Farmer schemes, women schemes, education schemes - sabke liye alag criteria hai.'
     },
     {
       question: 'State wise schemes kaise dekhein?',
-      answer: 'Aap state filter use kar sakte hain ya phir direct state-specific page par jaa sakte hain. Har state ke liye alag page available hai.'
+      answer: 'Aap state filter use kar sakte hain ya phir direct state-specific page par jaa sakte hain. Har state ke liye alag schemes available hain - Jharkhand schemes, UP schemes, Bihar schemes etc.'
+    },
+    {
+      question: 'Popular government schemes kaun kaun si hain?',
+      answer: 'Popular schemes: PM Kisan Samman Nidhi (farmers), Ayushman Bharat (health), PM Awas Yojana (housing), Mudra Loan (business), Sukanya Samriddhi (girl child), Atal Pension (retirement), Ujjwala (LPG), Beti Bachao Beti Padhao.'
+    },
+    {
+      question: 'Scheme ka benefit kab milta hai?',
+      answer: 'Har scheme ka benefit alag hai. PM Kisan mein 3 installments mein ₹6000/year, Ayushman Bharat mein ₹5 lakh health cover, PM Awas mein interest subsidy. Application approval ke baad benefit milna start hota hai.'
+    },
+    {
+      question: 'Kya schemes free hain?',
+      answer: 'Haan, government schemes apply karna completely free hai. Koi application fee nahi lagti. Agar koi agent paisa maange to fraud hai. Direct official website se apply karein.'
     }
   ];
 
@@ -194,8 +214,10 @@ export default async function SchemesPage({ searchParams }: Props) {
         <h2 className="text-lg font-bold text-ink mb-3">Latest Government Schemes 2026</h2>
         <p className="text-sm text-muted leading-relaxed mb-4">
           SarkariPulse par sabse latest government schemes ki complete jankari milti hai. PM Kisan Yojana, Ayushman Bharat, 
-          PM Awas Yojana, Mudra Loan, aur state-specific schemes - sab ek jagah. Har scheme ke liye eligibility criteria, 
-          benefits, application process, aur direct apply links provided hain.
+          PM Awas Yojana, Mudra Loan, Sukanya Samriddhi Yojana aur state-specific schemes - sab ek jagah. Central government schemes 
+          aur state government schemes dono available hain. Har scheme ke liye eligibility criteria, benefits, application process, 
+          online apply links, aur helpline numbers provided hain. Farmer schemes, women empowerment schemes, education schemes, 
+          housing schemes - sabhi categories covered hain.
         </p>
         
         {/* Statistics */}

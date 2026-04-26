@@ -43,9 +43,9 @@ export default async function HomePage() {
             Sarkari Naukri Ka <span className="gradient-text">Pulse</span>
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted sm:text-base leading-relaxed">
-            UPSC, SSC, Railway, Police, Banking — jobs, admission, scholarship, results aur admit cards ek jagah.
+            UPSC, SSC, Railway, Police, Banking, State Govt Jobs — latest sarkari naukri, admission, scholarship, results aur admit cards ek jagah.
             <br className="hidden sm:block" />
-            AI-powered updates har 10 minute. Koi update miss nahi hoga! 🚀
+            AI-powered updates har 10 minute. Government schemes, PM Kisan, Ayushman Bharat bhi available. Koi update miss nahi hoga! 🚀
           </p>
           <div className="mt-6 sm:mt-8">
             <SearchForm large />

@@ -7,13 +7,16 @@ export const revalidate = 3600; // Background revalidation every 1 hour
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
-  // Fetch latest jobs and stats for state pages
+  // Fetch latest jobs, stats, and schemes for sitemap
   let latestJobs: any[] = [];
   let stats: any = { topStates: [] };
+  let latestSchemes: any[] = [];
   try {
-    [latestJobs, stats] = await Promise.all([
+    const { getLatestSchemes } = await import('@/lib/api');
+    [latestJobs, stats, latestSchemes] = await Promise.all([
       getLatestJobs(3000),
       getStats(),
+      getLatestSchemes(100).catch(() => []), // Fetch up to 100 schemes
     ]);
   } catch (error) {
     console.error('Failed to fetch data for sitemap:', error);
@@ -104,6 +107,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Scheme URLs with proper priority and changeFrequency
+  const schemeUrls: MetadataRoute.Sitemap = [
+    {
+      url: `${siteUrl}/schemes`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9, // High priority for main schemes page
+    },
+    ...latestSchemes.map((scheme: any) => ({
+      url: `${siteUrl}/schemes/${scheme.slug}`,
+      lastModified: new Date(scheme.updatedAt || scheme.createdAt || new Date()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8, // High priority for scheme detail pages
+    })),
+  ];
+
   // Static URLs with proper metadata
   const staticUrls = [
     {
@@ -161,6 +180,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categoryUrls,
     ...stateUrls,
     ...qualificationUrls,
+    ...schemeUrls, // Add scheme URLs
     ...jobUrls,
   ];
 

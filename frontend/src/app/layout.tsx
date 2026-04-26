@@ -24,10 +24,39 @@ export const metadata: Metadata = {
   description:
     'SarkariPulse par paayein latest Sarkari Naukri, college admission, scholarship, exam results, aur admit card updates — AI-powered, auto-updated har 10 minute.',
   keywords: [
+    // Primary Keywords (High Volume)
     'sarkari naukri', 'government jobs', 'sarkari result', 'admit card',
-    'UPSC', 'SSC', 'Railway', 'police vacancy', 'govt jobs 2026',
+    'sarkari naukri 2026', 'govt jobs 2026', 'latest sarkari naukri',
+    
+    // Organization Keywords
+    'UPSC', 'SSC', 'Railway', 'Railway jobs', 'police vacancy', 'banking jobs',
+    'UPSC notification', 'SSC CGL', 'SSC CHSL', 'RRB', 'IBPS',
+    
+    // Category Keywords
     'college admission', 'scholarship', 'exam form', 'sarkari bharti',
-    'admission notification', 'sarkari scholarship',
+    'admission notification', 'sarkari scholarship', 'exam result',
+    'answer key', 'cut off marks', 'merit list',
+    
+    // Government Schemes Keywords (NEW)
+    'government schemes', 'sarkari yojana', 'PM Kisan', 'Ayushman Bharat',
+    'pradhan mantri yojana', 'central government schemes', 'state government schemes',
+    'PM Awas Yojana', 'Mudra loan', 'farmer schemes', 'women schemes',
+    
+    // Qualification Keywords
+    '10th pass jobs', '12th pass jobs', 'graduate jobs', 'ITI jobs',
+    'diploma jobs', 'engineering jobs', 'medical jobs',
+    
+    // State Keywords (Top States)
+    'UP sarkari naukri', 'Bihar govt jobs', 'Jharkhand jobs', 'MP jobs',
+    'Rajasthan jobs', 'Maharashtra jobs', 'Delhi jobs',
+    
+    // Action Keywords
+    'online apply', 'application form', 'how to apply', 'eligibility',
+    'last date', 'vacancy details', 'notification PDF',
+    
+    // Hinglish Keywords
+    'sarkari naukri kaise milegi', 'government job kaise paye',
+    'admit card download', 'result kaise check kare',
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net'),
   verification: {
