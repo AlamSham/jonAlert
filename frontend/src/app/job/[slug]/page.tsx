@@ -11,7 +11,7 @@ import { FAQ } from '@/components/FAQ';
 import { HowToApply } from '@/components/HowToApply';
 import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
-import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateFAQSchema, generateArticleSchema } from '@/lib/seo';
+import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
@@ -26,21 +26,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   // Use enhanced meta description generator
   const metaDescription = generateJobMetaDescription(job);
+  const jobUrl = getCanonicalUrl(`/job/${slug}`);
+  const ogImageUrl = getCanonicalUrl(`/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'SarkariPulse')}`);
 
   return {
     title: job.metaTitle || job.title,
     description: metaDescription,
-    alternates: { canonical: `https://sarkaripulse.net/job/${slug}` },
+    alternates: { canonical: jobUrl },
     openGraph: {
       title: job.metaTitle || job.title,
       description: metaDescription,
+      url: jobUrl,
       type: 'article',
       publishedTime: job.createdAt,
       locale: 'hi_IN',
       siteName: 'SarkariPulse',
       images: [
         {
-          url: `https://sarkaripulse.net/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'SarkariPulse')}`,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: job.title,
@@ -51,9 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: job.metaTitle || job.title,
       description: metaDescription.slice(0, 100),
-      images: [
-        `https://sarkaripulse.net/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'SarkariPulse')}`,
-      ],
+      images: [ogImageUrl],
     },
   };
 }
@@ -391,4 +392,3 @@ async function RelatedJobsSection({ slug }: { slug: string }) {
     </section>
   );
 }
-

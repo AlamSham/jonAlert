@@ -2,6 +2,7 @@ import { Job } from '../models/Job.js';
 import { rewriteJobWithAi } from './ai.service.js';
 import { makeSlug } from '../utils/slugify.js';
 import { sendTelegramMessage, buildJobNotificationMessage } from './telegram.service.js';
+import { enqueueFacebookJobPost } from './facebook.service.js';
 import crypto from 'node:crypto';
 
 const normalizeUrl = (url = '') => {
@@ -115,6 +116,7 @@ export const processAndSaveJob = async (rawJob) => {
   }
 
   await sendTelegramMessage(buildJobNotificationMessage(saved));
+  enqueueFacebookJobPost(saved);
 
   return { status: 'created', job: saved };
 };
