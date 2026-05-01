@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { fetchJobNotifications } from '../services/jobSource.service.js';
 import { processAndSaveJob } from '../services/job.service.js';
+import { waitForFacebookPostQueue } from '../services/facebook.service.js';
 import { Job } from '../models/Job.js';
 import { logger } from '../utils/logger.js';
 import { env } from '../config/env.js';
@@ -82,6 +83,10 @@ export const runJobIngestion = async () => {
       }
     }
 
+    const facebookQueueDrained = await waitForFacebookPostQueue({
+      timeoutMs: env.facebookQueueWaitTimeoutMs
+    });
+
     logger.info('Cron completed successfully', {
       fetched: notifications.length,
       created,
@@ -89,6 +94,7 @@ export const runJobIngestion = async () => {
       skipped,
       failed,
       capped,
+      facebookQueueDrained,
       durationMs: Date.now() - startedAt
     });
 
@@ -99,6 +105,7 @@ export const runJobIngestion = async () => {
       skipped,
       failed,
       capped,
+      facebookQueueDrained,
       durationMs: Date.now() - startedAt
     };
   } catch (error) {

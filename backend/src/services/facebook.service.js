@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { env } from '../config/env.js';
+import { Job } from '../models/Job.js';
 import { logger } from '../utils/logger.js';
+import { getValidPageAccessToken } from './facebookToken.service.js';
 
 const categoryLabels = {
   job: 'Sarkari Naukri',
@@ -15,6 +17,7 @@ const postQueue = [];
 const queuedKeys = new Set();
 let isQueueRunning = false;
 let resolvedPageAccessToken = env.metaPageAccessToken;
+const FACEBOOK_DB_ERROR_MAX_LENGTH = 500;
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -34,6 +37,12 @@ export const buildFacebookJobUrl = (job) => {
 };
 
 const truncate = (value = '', max = 260) => {
+  const text = String(value).replace(/\s+/g, ' ').trim();
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 3).trim()}...`;
+};
+
+const truncateForDb = (value = '', max = FACEBOOK_DB_ERROR_MAX_LENGTH) => {
   const text = String(value).replace(/\s+/g, ' ').trim();
   if (text.length <= max) return text;
   return `${text.slice(0, max - 3).trim()}...`;
@@ -93,6 +102,21 @@ const requestJson = async (url, options = {}) => {
 };
 
 export const resolveFacebookPageAccessToken = async () => {
+  // Try to get from automatic token management system first
+  try {
+    const token = await getValidPageAccessToken();
+    if (token) {
+      resolvedPageAccessToken = token;
+      logger.info('Using page access token from automatic token management');
+      return resolvedPageAccessToken;
+    }
+  } catch (error) {
+    logger.warn('Failed to get token from automatic management, falling back to manual resolution', {
+      error: error.message
+    });
+  }
+
+  // Fallback to manual resolution (legacy behavior)
   if (resolvedPageAccessToken) return resolvedPageAccessToken;
 
   if (!env.metaUserAccessToken) {
@@ -147,7 +171,7 @@ export const publishFacebookPost = async ({ message, link }) => {
 };
 
 const serializeJobForQueue = (job) => ({
-  id: String(job._id || job.id || job.slug),
+  id: job._id ? String(job._id) : '',
   title: job.title,
   slug: job.slug,
   category: job.category,
@@ -156,8 +180,72 @@ const serializeJobForQueue = (job) => ({
   state: job.state,
   vacancyCount: job.vacancyCount,
   lastDate: job.lastDate,
+  facebookPostId: job.facebookPostId,
+  facebookPostedAt: job.facebookPostedAt,
   createdAt: job.createdAt
 });
+
+const updateFacebookPostState = async (job, update, logMessage) => {
+  if (!job?.id) return;
+
+  try {
+    await Job.updateOne({ _id: job.id }, update);
+  } catch (error) {
+    logger.warn(logMessage, {
+      slug: job.slug,
+      error: error.message
+    });
+  }
+};
+
+const markFacebookPostQueued = async (job) => {
+  if (!job?._id) return;
+
+  try {
+    await Job.updateOne(
+      { _id: job._id },
+      {
+        $set: {
+          facebookPostQueuedAt: new Date(),
+          facebookPostLastError: ''
+        }
+      }
+    );
+  } catch (error) {
+    logger.warn('Failed to record Facebook queued state', {
+      slug: job.slug,
+      error: error.message
+    });
+  }
+};
+
+const markFacebookPostPublished = (job, postId) =>
+  updateFacebookPostState(
+    job,
+    {
+      $set: {
+        facebookPostId: postId || '',
+        facebookPostedAt: new Date(),
+        facebookPostLastAttemptAt: new Date(),
+        facebookPostLastError: ''
+      },
+      $inc: { facebookPostAttempts: 1 }
+    },
+    'Failed to record Facebook published state'
+  );
+
+const markFacebookPostFailed = (job, error) =>
+  updateFacebookPostState(
+    job,
+    {
+      $set: {
+        facebookPostLastAttemptAt: new Date(),
+        facebookPostLastError: truncateForDb(error.message)
+      },
+      $inc: { facebookPostAttempts: 1 }
+    },
+    'Failed to record Facebook failed state'
+  );
 
 const processQueue = async () => {
   if (isQueueRunning) return;
@@ -179,6 +267,7 @@ const processQueue = async () => {
         const link = buildFacebookJobUrl(item.job);
         const message = buildFacebookJobPostMessage(item.job);
         const result = await publishFacebookPost({ message, link });
+        await markFacebookPostPublished(item.job, result?.id);
 
         logger.info('Facebook job post published', {
           slug: item.job.slug,
@@ -190,6 +279,7 @@ const processQueue = async () => {
         postQueue.shift();
       } catch (error) {
         item.attempts += 1;
+        await markFacebookPostFailed(item.job, error);
 
         if (item.attempts >= maxRetries) {
           logger.error('Facebook job post failed after retries', {
@@ -240,6 +330,11 @@ export const enqueueFacebookJobPost = (job) => {
     return { queued: false, reason: 'invalid job' };
   }
 
+  if (job.facebookPostedAt || job.facebookPostId) {
+    logger.info('Facebook autopost already published, skipping queue', { slug: job.slug });
+    return { queued: false, reason: 'already published' };
+  }
+
   const key = String(job._id || job.id || job.slug);
   if (queuedKeys.has(key)) {
     logger.info('Facebook autopost already queued', { slug: job.slug });
@@ -252,6 +347,7 @@ export const enqueueFacebookJobPost = (job) => {
     attempts: 0
   });
   queuedKeys.add(key);
+  void markFacebookPostQueued(job);
 
   logger.info('Facebook job post queued', {
     slug: job.slug,

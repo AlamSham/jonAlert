@@ -3,6 +3,8 @@ import { rewriteJobWithAi } from './ai.service.js';
 import { makeSlug } from '../utils/slugify.js';
 import { sendTelegramMessage, buildJobNotificationMessage } from './telegram.service.js';
 import { enqueueFacebookJobPost } from './facebook.service.js';
+import { env } from '../config/env.js';
+import { logger } from '../utils/logger.js';
 import crypto from 'node:crypto';
 
 const normalizeUrl = (url = '') => {
@@ -50,17 +52,48 @@ const ensureUniqueSlug = async (baseTitle) => {
   return slug;
 };
 
+const shouldRetryDuplicateFacebookPost = (job) => {
+  if (!job || job.facebookPostedAt || job.facebookPostId) return false;
+
+  const windowHours = Number(env.facebookRetryDuplicateWindowHours);
+  if (!Number.isFinite(windowHours) || windowHours <= 0) return false;
+
+  const createdAt = job.createdAt ? new Date(job.createdAt).getTime() : 0;
+  if (!createdAt || Number.isNaN(createdAt)) return false;
+
+  return Date.now() - createdAt <= windowHours * 60 * 60 * 1000;
+};
+
+const enqueueRecentDuplicateFacebookPost = (job, duplicateMatch) => {
+  if (!shouldRetryDuplicateFacebookPost(job)) {
+    return { queued: false, reason: 'not eligible' };
+  }
+
+  const result = enqueueFacebookJobPost(job);
+  if (result.queued) {
+    logger.info('Facebook autopost queued for recent duplicate job', {
+      slug: job.slug,
+      duplicateMatch,
+      retryWindowHours: env.facebookRetryDuplicateWindowHours
+    });
+  }
+
+  return result;
+};
+
 export const processAndSaveJob = async (rawJob) => {
   const normalizedSourceUrl = normalizeUrl(rawJob.sourceUrl || '');
 
   const existsBySource = await Job.findOne({ sourceId: rawJob.sourceId }).lean();
   if (existsBySource) {
-    return { status: 'duplicate', job: existsBySource };
+    const facebook = enqueueRecentDuplicateFacebookPost(existsBySource, 'sourceId');
+    return { status: 'duplicate', job: existsBySource, facebook };
   }
 
   const existsByUrl = normalizedSourceUrl ? await Job.findOne({ sourceUrl: normalizedSourceUrl }).lean() : null;
   if (existsByUrl) {
-    return { status: 'duplicate', job: existsByUrl };
+    const facebook = enqueueRecentDuplicateFacebookPost(existsByUrl, 'sourceUrl');
+    return { status: 'duplicate', job: existsByUrl, facebook };
   }
 
   const aiData = await rewriteJobWithAi(rawJob);
@@ -68,7 +101,8 @@ export const processAndSaveJob = async (rawJob) => {
 
   const existsByFingerprint = await Job.findOne({ contentFingerprint }).lean();
   if (existsByFingerprint) {
-    return { status: 'duplicate', job: existsByFingerprint };
+    const facebook = enqueueRecentDuplicateFacebookPost(existsByFingerprint, 'contentFingerprint');
+    return { status: 'duplicate', job: existsByFingerprint, facebook };
   }
 
   const MAX_SLUG_RETRIES = 3;
@@ -116,7 +150,7 @@ export const processAndSaveJob = async (rawJob) => {
   }
 
   await sendTelegramMessage(buildJobNotificationMessage(saved));
-  enqueueFacebookJobPost(saved);
+  const facebook = enqueueFacebookJobPost(saved);
 
-  return { status: 'created', job: saved };
+  return { status: 'created', job: saved, facebook };
 };

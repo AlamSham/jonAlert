@@ -117,6 +117,27 @@ const JobSchema = new mongoose.Schema(
     publishedAt: {
       type: Date
     },
+    facebookPostId: {
+      type: String,
+      default: ''
+    },
+    facebookPostedAt: {
+      type: Date
+    },
+    facebookPostQueuedAt: {
+      type: Date
+    },
+    facebookPostLastAttemptAt: {
+      type: Date
+    },
+    facebookPostAttempts: {
+      type: Number,
+      default: 0
+    },
+    facebookPostLastError: {
+      type: String,
+      default: ''
+    },
     createdAt: {
       type: Date,
       default: Date.now,
@@ -138,4 +159,3 @@ JobSchema.index({ state: 1, category: 1 });
 JobSchema.index({ status: 1, category: 1 });
 
 export const Job = mongoose.model('Job', JobSchema);
-

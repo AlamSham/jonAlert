@@ -18,11 +18,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'SarkariPulse — Latest Sarkari Naukri, Result, Admit Card 2026',
+    default: '🔥 Latest Sarkari Naukri 2026 - UPSC, SSC, Railway Jobs | SarkariPulse',
     template: '%s | SarkariPulse',
   },
   description:
-    'SarkariPulse par paayein latest Sarkari Naukri, college admission, scholarship, exam results, aur admit card updates — AI-powered, auto-updated har 10 minute.',
+    '⚡ BREAKING: Latest Sarkari Naukri alerts! UPSC, SSC, Railway, Police jobs - har 10 minute update. 50,000+ students trust us. Free notifications, instant alerts! 🚀',
   keywords: [
     // Primary Keywords (High Volume)
     'sarkari naukri', 'government jobs', 'sarkari result', 'admit card',

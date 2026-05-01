@@ -156,6 +156,11 @@ GEMINI_QUOTA_COOLDOWN_MINUTES=60
 GROK_QUOTA_COOLDOWN_MINUTES=60
 TELEGRAM_BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_CHAT_ID=your_telegram_chat_id
+META_PAGE_ID=your_facebook_page_id
+META_PAGE_ACCESS_TOKEN=your_facebook_page_access_token
+FACEBOOK_AUTOPOST_ENABLED=true
+FACEBOOK_QUEUE_WAIT_TIMEOUT_MS=180000
+FACEBOOK_RETRY_DUPLICATE_WINDOW_HOURS=24
 CRON_ENABLED=true
 FRONTEND_URL=http://localhost:3000
 SCRAPER_USER_AGENT=JobAutomationBot/1.0 (+https://example.com/bot)
@@ -178,6 +183,14 @@ Optional manual cron run:
 ```bash
 npm run cron:once
 ```
+
+Verify the scrape-to-Facebook flow:
+
+```bash
+npm run verify:facebook-flow
+```
+
+Production note: when `POST /api/cron/run` is used from Cloud Scheduler/Cloud Run, the request now waits for the Facebook queue to finish before responding. If a job was saved but the Facebook post did not complete, the next cron run can retry recent unposted duplicates within `FACEBOOK_RETRY_DUPLICATE_WINDOW_HOURS`.
 
 ## 2) Frontend Setup
 

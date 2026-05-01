@@ -8,7 +8,16 @@
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "cron:once": "node src/scripts/runCronOnce.js",
-    "facebook:test-post": "node src/scripts/testFacebookPost.js"
+    "verify:facebook-flow": "node src/scripts/verifyFacebookFlow.js",
+    "facebook:test-post": "node src/scripts/testFacebookPost.js",
+    "test:job-flow": "node src/scripts/testJobFlow.js",
+    "test:job-flow:debug": "node src/scripts/testJobFlow.js --debug",
+    "test:job-flow:quick": "node src/scripts/testJobFlow.js --count 2",
+    "test:facebook": "node src/scripts/debugFacebook.js --all",
+    "test:facebook:verbose": "node src/scripts/debugFacebook.js --all --verbose",
+    "debug:facebook": "node src/scripts/debugFacebook.js",
+    "setup:facebook-token": "node src/scripts/setupFacebookToken.js",
+    "verify:token": "node src/scripts/verifyFacebookToken.js"
   },
   "dependencies": {
     "axios": "^1.13.6",

@@ -25,8 +25,10 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const { pagination } = await getJobs(page, 18);
   
   const metadata: Metadata = {
-    title: page > 1 ? `All Sarkari Naukri — Page ${page}` : 'All Sarkari Naukri — Latest Government Jobs 2026',
-    description: generateCategoryMetaDescription('job'),
+    title: page > 1 ? `🔥 Latest Sarkari Naukri — Page ${page} | 50,000+ Jobs` : '🔥 Latest Sarkari Naukri 2026 - UPSC, SSC, Railway Jobs | 50,000+ Vacancies',
+    description: page > 1 
+      ? `Page ${page} - Latest government jobs, UPSC, SSC, Railway notifications. Apply now! Free alerts, instant updates.`
+      : '⚡ BREAKING: 50,000+ Sarkari Naukri! UPSC, SSC, Railway, Police, Banking jobs. Daily updates, instant alerts. Apply now - Last dates approaching! 🚨',
     alternates: { 
       canonical: page > 1 ? `https://sarkaripulse.net/jobs?page=${page}` : 'https://sarkaripulse.net/jobs'
     },
