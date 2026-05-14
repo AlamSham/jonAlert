@@ -30,11 +30,13 @@ export class SchemaGenerator {
         return cached;
       }
 
+      const jobAddress = this.buildJobAddress(job);
       const schema: JobPostingSchema = {
         '@context': 'https://schema.org',
         '@type': 'JobPosting',
         title: job.title,
         description: job.content || job.summary || job.title,
+        datePosted: (job as any).createdAt,
         hiringOrganization: {
           '@type': 'Organization',
           name: job.organization || 'Government of India',
@@ -42,11 +44,8 @@ export class SchemaGenerator {
         },
         jobLocation: {
           '@type': 'Place',
-          address: {
-            '@type': 'PostalAddress',
-            addressCountry: 'IN',
-            addressRegion: job.state && job.state !== 'All India' ? job.state : undefined
-          }
+          name: jobAddress.addressLocality || jobAddress.addressRegion || 'India',
+          address: jobAddress
         },
         employmentType: 'FULL_TIME'
       };
@@ -522,6 +521,7 @@ export class SchemaGenerator {
    */
   private generateFallbackJobSchema(job: ContentData | null): JobPostingSchema {
     const safeJob = job || { title: 'Government Job', summary: 'Government job opportunity' };
+    const jobAddress = this.buildJobAddress(safeJob as ContentData);
     return {
       '@context': 'https://schema.org',
       '@type': 'JobPosting',
@@ -533,10 +533,8 @@ export class SchemaGenerator {
       },
       jobLocation: {
         '@type': 'Place',
-        address: {
-          '@type': 'PostalAddress',
-          addressCountry: 'IN'
-        }
+        name: jobAddress.addressLocality || jobAddress.addressRegion || 'India',
+        address: jobAddress
       },
       employmentType: 'FULL_TIME'
     };
@@ -586,6 +584,74 @@ export class SchemaGenerator {
       return parseInt(match[0].replace(/,/g, ''), 10);
     }
     return 0;
+  }
+
+  private buildJobAddress(job: ContentData): {
+    '@type': 'PostalAddress';
+    addressCountry: string;
+    addressRegion?: string;
+    addressLocality?: string;
+    streetAddress?: string;
+    postalCode?: string;
+  } {
+    const locationDefaults: Record<string, { locality: string; region: string; postalCode: string }> = {
+      chandigarh: { locality: 'Chandigarh', region: 'Chandigarh', postalCode: '160017' },
+      coimbatore: { locality: 'Coimbatore', region: 'Tamil Nadu', postalCode: '641001' },
+      delhi: { locality: 'Delhi', region: 'Delhi', postalCode: '110001' },
+      jaipur: { locality: 'Jaipur', region: 'Rajasthan', postalCode: '302005' },
+      bhopal: { locality: 'Bhopal', region: 'Madhya Pradesh', postalCode: '462001' },
+      chennai: { locality: 'Chennai', region: 'Tamil Nadu', postalCode: '600001' },
+      bengaluru: { locality: 'Bengaluru', region: 'Karnataka', postalCode: '560001' },
+      hyderabad: { locality: 'Hyderabad', region: 'Telangana', postalCode: '500001' }
+    };
+    const stateDefaults: Record<string, { locality: string; region: string; postalCode: string }> = {
+      Chandigarh: locationDefaults.chandigarh,
+      Delhi: locationDefaults.delhi,
+      Rajasthan: locationDefaults.jaipur,
+      'Madhya Pradesh': locationDefaults.bhopal,
+      'Tamil Nadu': locationDefaults.chennai,
+      Karnataka: locationDefaults.bengaluru,
+      Telangana: locationDefaults.hyderabad
+    };
+    const text = [job.title, job.organization, job.state, job.content]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    const matchedLocation = Object.keys(locationDefaults)
+      .sort((a, b) => b.length - a.length)
+      .find(location => text.includes(location));
+    const defaults = matchedLocation
+      ? locationDefaults[matchedLocation]
+      : job.state && job.state !== 'All India'
+        ? stateDefaults[job.state]
+        : undefined;
+    const explicitPostalCode = [job.content, job.summary].filter(Boolean).join(' ').match(/\b[1-9][0-9]{5}\b/)?.[0];
+
+    const address: {
+      '@type': 'PostalAddress';
+      addressCountry: string;
+      addressRegion?: string;
+      addressLocality?: string;
+      streetAddress?: string;
+      postalCode?: string;
+    } = {
+      '@type': 'PostalAddress',
+      addressCountry: 'IN'
+    };
+
+    if (defaults) {
+      address.addressRegion = defaults.region;
+      address.addressLocality = defaults.locality;
+      address.streetAddress = `${job.organization || 'Government Recruitment Office'}, ${defaults.locality}`;
+      address.postalCode = explicitPostalCode || defaults.postalCode;
+    } else if (job.state && job.state !== 'All India') {
+      address.addressRegion = job.state;
+      address.addressLocality = job.state;
+      address.streetAddress = `${job.organization || 'Government Recruitment Office'}, ${job.state}`;
+      if (explicitPostalCode) address.postalCode = explicitPostalCode;
+    }
+
+    return address;
   }
 
   private slugify(text: string): string {

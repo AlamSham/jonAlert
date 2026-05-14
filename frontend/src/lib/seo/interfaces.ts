@@ -90,6 +90,7 @@ export interface JobPostingSchema {
   '@type': 'JobPosting';
   title: string;
   description: string;
+  datePosted?: string;
   hiringOrganization: Organization;
   jobLocation: Place;
   employmentType: string;
@@ -417,6 +418,8 @@ export interface PostalAddress {
   addressCountry: string;
   addressRegion?: string;
   addressLocality?: string;
+  streetAddress?: string;
+  postalCode?: string;
 }
 
 export interface MonetaryAmount {
@@ -428,6 +431,8 @@ export interface MonetaryAmount {
 export interface QuantitativeValue {
   '@type': 'QuantitativeValue';
   value: number;
+  minValue?: number;
+  maxValue?: number;
   unitText?: string;
 }
 

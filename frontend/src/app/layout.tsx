@@ -8,7 +8,7 @@ import { BackToTop } from '@/components/BackToTop';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { WebVitals } from '@/components/WebVitals';
-import Script from 'next/script';
+import { ThirdPartyScripts } from '@/components/ThirdPartyScripts';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -109,11 +109,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Google AdSense */}
         <meta name="google-adsense-account" content="ca-pub-4518508932731576" />
         <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4518508932731576"
-          crossOrigin="anonymous"
-        />
-        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
         />
@@ -121,7 +116,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
         />
-        <Script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" strategy="beforeInteractive" />
       </head>
       <body className={`${inter.className} flex min-h-screen flex-col`}>
         <Header />
@@ -131,20 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <WebVitals />
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
-        {process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID && (
-          <Script id="onesignal-init" strategy="afterInteractive" dangerouslySetInnerHTML={{
-            __html: `
-              window.OneSignalDeferred = window.OneSignalDeferred || [];
-              OneSignalDeferred.push(async function(OneSignal) {
-                await OneSignal.init({
-                  appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
-                  notifyButton: { enable: true },
-                });
-              });
-            `
-          }} />
-        )}
-
+        <ThirdPartyScripts />
       </body>
     </html>
   );

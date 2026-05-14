@@ -11,7 +11,7 @@ import { FAQ } from '@/components/FAQ';
 import { HowToApply } from '@/components/HowToApply';
 import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
-import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
+import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateJobPageTitle, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
@@ -25,16 +25,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!job) return { title: 'Job Not Found' };
 
   // Use enhanced meta description generator
+  const pageTitle = generateJobPageTitle(job);
   const metaDescription = generateJobMetaDescription(job);
   const jobUrl = getCanonicalUrl(`/job/${slug}`);
   const ogImageUrl = getCanonicalUrl(`/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'SarkariPulse')}`);
 
   return {
-    title: job.metaTitle || job.title,
+    title: pageTitle,
     description: metaDescription,
     alternates: { canonical: jobUrl },
     openGraph: {
-      title: job.metaTitle || job.title,
+      title: pageTitle,
       description: metaDescription,
       url: jobUrl,
       type: 'article',
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: 'summary_large_image',
-      title: job.metaTitle || job.title,
+      title: pageTitle,
       description: metaDescription.slice(0, 100),
       images: [ogImageUrl],
     },
@@ -165,8 +166,8 @@ export default async function JobDetailPage({ params }: Props) {
       <Breadcrumb items={breadcrumbs} />
 
       {/* Desktop layout: Content + Sidebar TOC */}
-      <div className="flex gap-8 items-start">
-        <article className="max-w-4xl flex-1" id="job-detail">
+      <div className="flex gap-8 items-start mobile-job-layout">
+        <article className="max-w-4xl flex-1 mobile-responsive-content" id="job-detail">
           {/* Header */}
           <header className="mb-8">
             <span className={`badge ${colorClass} mb-3`}>
@@ -195,27 +196,27 @@ export default async function JobDetailPage({ params }: Props) {
             </div>
 
             {/* Quick Info Cards */}
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mobile-quick-info-grid">
               {job.vacancyCount > 0 && (
-                <div className="card !p-4 text-center">
+                <div className="card !p-4 text-center mobile-info-card">
                   <p className="text-2xl font-black text-accent">{job.vacancyCount.toLocaleString('en-IN')}</p>
                   <p className="text-xs font-semibold uppercase text-muted mt-1">Total Vacancies</p>
                 </div>
               )}
               {job.lastDate && (
-                <div className="card !p-4 text-center">
+                <div className="card !p-4 text-center mobile-info-card">
                   <p className="text-lg font-black text-red-600">{formatDate(job.lastDate)}</p>
                   <p className="text-xs font-semibold uppercase text-muted mt-1">Last Date</p>
                 </div>
               )}
               {job.qualificationLevel && (
-                <div className="card !p-4 text-center">
+                <div className="card !p-4 text-center mobile-info-card">
                   <p className="text-lg font-black text-ink">{job.qualificationLevel.toUpperCase()}</p>
                   <p className="text-xs font-semibold uppercase text-muted mt-1">Min. Qualification</p>
                 </div>
               )}
               {job.salary && (
-                <div className="card !p-4 text-center">
+                <div className="card !p-4 text-center mobile-info-card">
                   <p className="text-lg font-black text-emerald-600">{job.salary}</p>
                   <p className="text-xs font-semibold uppercase text-muted mt-1">Salary</p>
                 </div>
@@ -227,31 +228,31 @@ export default async function JobDetailPage({ params }: Props) {
           <TableOfContents items={tocItems} variant="mobile" />
 
           {/* Summary */}
-          <section className="mb-8 rounded-2xl bg-amber-50/60 border border-amber-200/40 p-5" id="section-summary">
+          <section className="mb-8 rounded-2xl bg-amber-50/60 border border-amber-200/40 p-5 mobile-content-section" id="section-summary">
             <h2 className="text-sm font-bold uppercase tracking-wider text-amber-700 mb-2">📝 Summary</h2>
-            <p className="text-sm leading-relaxed text-ink">{job.summary}</p>
+            <p className="text-sm leading-relaxed text-ink mobile-text-content">{job.summary}</p>
           </section>
 
           {/* Content */}
-          <section className="mb-8" id="section-details">
+          <section className="mb-8 mobile-content-section" id="section-details">
             <h2 className="text-lg font-black text-ink mb-3">📄 Full Details</h2>
-            <div className="prose-custom rounded-2xl border border-stone-200 bg-white p-6 text-sm leading-relaxed text-ink/90 whitespace-pre-line">
+            <div className="prose-custom rounded-2xl border border-stone-200 bg-white p-6 text-sm leading-relaxed text-ink/90 whitespace-pre-line mobile-text-content">
               {job.content}
             </div>
           </section>
 
           {/* Eligibility */}
-          <section className="mb-8" id="section-eligibility">
+          <section className="mb-8 mobile-content-section" id="section-eligibility">
             <h2 className="text-lg font-black text-ink mb-3">✅ Eligibility</h2>
-            <div className="card !p-5 text-sm leading-relaxed text-ink/90 whitespace-pre-line">
+            <div className="card !p-5 text-sm leading-relaxed text-ink/90 whitespace-pre-line mobile-text-content">
               {job.eligibility}
             </div>
           </section>
 
           {/* Important Dates */}
-          <section className="mb-8" id="section-dates">
+          <section className="mb-8 mobile-content-section" id="section-dates">
             <h2 className="text-lg font-black text-ink mb-3">📅 Important Dates</h2>
-            <div className="card !p-5 text-sm leading-relaxed text-ink/90 whitespace-pre-line">
+            <div className="card !p-5 text-sm leading-relaxed text-ink/90 whitespace-pre-line mobile-text-content">
               {job.importantDates}
             </div>
           </section>
@@ -271,7 +272,7 @@ export default async function JobDetailPage({ params }: Props) {
           {/* FAQ Section */}
           {faqItems.length > 0 && (
             <section className="mb-8" id="section-faq">
-              <FAQ items={faqItems} title="Frequently Asked Questions" />
+              <FAQ items={faqItems} title="Frequently Asked Questions" includeJsonLd={false} />
             </section>
           )}
 

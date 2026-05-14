@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { JobListItem, CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
-import { timeAgo, formatDate } from '@/lib/seo';
+import { formatDate } from '@/lib/seo';
 import { trackApplyClick, trackInternalLinkClick } from '@/lib/analytics';
 
 function getLastDateStatus(lastDate?: string) {
@@ -40,7 +40,7 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
 
   return (
     <article
-      className="card group animate-fade-in"
+      className="card group animate-fade-in mobile-job-card"
       style={{ animationDelay: `${index * 60}ms` }}
       id={`job-card-${job.slug}`}
     >
@@ -50,7 +50,13 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
           <span>{emoji}</span>
           {CATEGORY_LABELS[job.category] || job.category}
         </span>
-        <time className="text-[11px] text-stone-400 font-medium">{timeAgo(job.createdAt)}</time>
+        <time
+          className="text-[11px] text-stone-400 font-medium"
+          dateTime={job.createdAt}
+          suppressHydrationWarning
+        >
+          {formatDate(job.createdAt)}
+        </time>
       </div>
 
       {/* Title */}

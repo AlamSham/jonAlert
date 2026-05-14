@@ -19,24 +19,44 @@ export function TableOfContents({ items, variant = 'both' }: { items: TOCItem[],
     <div className="lg:hidden mb-6">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm font-bold text-ink transition hover:bg-stone-100"
+        className="w-full flex items-center justify-between rounded-xl border border-stone-200 bg-stone-50 px-4 py-4 text-base font-bold text-ink transition hover:bg-stone-100 min-h-[48px]"
         id="toc-toggle"
+        aria-expanded={open}
+        aria-controls="toc-mobile"
+        style={{ fontSize: '16px' }}
       >
-        <span>📑 Table of Contents</span>
-        <span className={`transition-transform ${open ? 'rotate-180' : ''}`}>▼</span>
+        <span className="flex items-center gap-2" style={{ fontSize: '16px' }}>
+          <span style={{ fontSize: '16px' }}>📑</span>
+          <span style={{ fontSize: '16px' }}>Table of Contents</span>
+        </span>
+        <span 
+          className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`} 
+          aria-hidden="true"
+          style={{ fontSize: '16px' }}
+        >
+          ▼
+        </span>
       </button>
       {open && (
-        <nav className="mt-2 rounded-xl border border-stone-200 bg-white p-3 animate-slide-up" id="toc-mobile">
-          <ol className="space-y-1">
+        <nav 
+          className="mt-2 rounded-xl border border-stone-200 bg-white p-4 animate-slide-up mobile-toc-nav shadow-sm" 
+          id="toc-mobile" 
+          style={{ maxHeight: '30vh', overflowY: 'auto' }}
+          role="navigation"
+          aria-label="Table of Contents"
+        >
+          <ol className="space-y-2">
             {items.map((item, i) => (
               <li key={item.id}>
                 <button
                   onClick={() => scrollTo(item.id)}
-                  className="w-full text-left rounded-lg px-3 py-2 text-sm text-muted transition hover:bg-accent/5 hover:text-accent"
+                  className="w-full text-left rounded-lg px-4 py-3 text-base text-ink transition hover:bg-accent/10 hover:text-accent min-h-[48px] flex items-center touch-manipulation"
+                  aria-label={`Navigate to ${item.label}`}
+                  style={{ fontSize: '16px' }}
                 >
-                  <span className="mr-2 text-stone-400">{i + 1}.</span>
-                  <span className="mr-1.5">{item.emoji}</span>
-                  {item.label}
+                  <span className="mr-3 text-stone-500 font-medium" style={{ fontSize: '14px' }}>{i + 1}.</span>
+                  <span className="mr-2" style={{ fontSize: '16px' }}>{item.emoji}</span>
+                  <span className="font-medium" style={{ fontSize: '16px' }}>{item.label}</span>
                 </button>
               </li>
             ))}

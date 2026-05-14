@@ -7,9 +7,10 @@ interface FAQProps {
   items: FAQItem[];
   title?: string;
   variant?: 'accordion' | 'list';
+  includeJsonLd?: boolean;
 }
 
-export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'accordion' }: FAQProps) {
+export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'accordion', includeJsonLd = true }: FAQProps) {
   const [openItems, setOpenItems] = useState<Set<number>>(new Set());
 
   // Return null if no items provided
@@ -27,8 +28,7 @@ export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'ac
     setOpenItems(newOpenItems);
   };
 
-  // Generate FAQ Schema JSON-LD
-  const faqSchema = {
+  const faqSchema = includeJsonLd ? {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: items.map(item => ({
@@ -39,15 +39,17 @@ export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'ac
         text: item.answer
       }
     }))
-  };
+  } : null;
 
   if (variant === 'list') {
     return (
       <section className="faq-section">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-        />
+        {faqSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          />
+        )}
         
         <h2 className="text-lg font-bold text-ink mb-4">{title}</h2>
         <div className="space-y-4">
@@ -64,10 +66,12 @@ export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'ac
 
   return (
     <section className="faq-section">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       
       <h2 className="text-lg font-bold text-ink mb-4">{title}</h2>
       <div className="space-y-3">

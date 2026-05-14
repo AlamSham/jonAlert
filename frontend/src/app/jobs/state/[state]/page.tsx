@@ -8,7 +8,6 @@ import { FAQ } from '@/components/FAQ';
 import { 
   generateCollectionPageSchema, 
   breadcrumbJsonLd, 
-  generateCategoryMetaDescription,
   generateLocalBusinessSchema
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
@@ -25,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { state } = await params;
   const decodedState = decodeURIComponent(state);
   return {
-    title: `Sarkari Naukri in ${decodedState} — Government Jobs ${decodedState} 2026`,
-    description: generateCategoryMetaDescription('job', decodedState),
+    title: `${decodedState} Govt Jobs 2026: Latest Vacancy, Sarkari Naukri`,
+    description: `Latest ${decodedState} Govt Jobs 2026: sarkari naukri, vacancy, eligibility, last date, salary aur apply online links. Daily government job updates.`,
     alternates: { canonical: `https://sarkaripulse.net/jobs/state/${encodeURIComponent(decodedState)}` },
   };
 }

@@ -25,15 +25,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const { pagination } = await getJobs(page, 18);
   
   const metadata: Metadata = {
-    title: page > 1 ? `🔥 Latest Sarkari Naukri — Page ${page} | 50,000+ Jobs` : '🔥 Latest Sarkari Naukri 2026 - UPSC, SSC, Railway Jobs | 50,000+ Vacancies',
+    title: page > 1 ? `Sarkari Job 2026 - Page ${page} | Latest Govt Jobs` : 'Sarkari Job 2026: Latest Govt Jobs, Vacancy, Apply Online',
     description: page > 1 
-      ? `Page ${page} - Latest government jobs, UPSC, SSC, Railway notifications. Apply now! Free alerts, instant updates.`
-      : '⚡ BREAKING: 50,000+ Sarkari Naukri! UPSC, SSC, Railway, Police, Banking jobs. Daily updates, instant alerts. Apply now - Last dates approaching! 🚨',
+      ? `Page ${page} - latest Sarkari Job 2026, govt jobs, vacancy notifications, eligibility, last date aur apply online links.`
+      : 'Latest Sarkari Job 2026, govt jobs, sarkari naukri vacancy, eligibility, last date aur apply online links. Daily UPSC, SSC, Railway updates.',
     alternates: { 
       canonical: page > 1 ? `https://sarkaripulse.net/jobs?page=${page}` : 'https://sarkaripulse.net/jobs'
     },
     openGraph: {
-      title: page > 1 ? `All Sarkari Naukri — Page ${page}` : 'All Sarkari Naukri — Latest Government Jobs 2026',
+      title: page > 1 ? `Sarkari Job 2026 - Page ${page}` : 'Sarkari Job 2026 - Latest Govt Jobs',
       description: generateCategoryMetaDescription('job'),
       type: 'website',
       locale: 'hi_IN',
@@ -49,7 +49,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     },
     twitter: {
       card: 'summary_large_image',
-      title: page > 1 ? `All Sarkari Naukri — Page ${page}` : 'All Sarkari Naukri — Latest Government Jobs 2026',
+      title: page > 1 ? `Sarkari Job 2026 - Page ${page}` : 'Sarkari Job 2026 - Latest Govt Jobs',
       description: generateCategoryMetaDescription('job').slice(0, 100),
     },
   };

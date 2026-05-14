@@ -15,6 +15,210 @@ body {
   @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
 }
 
+/* Mobile-optimized search form container */
+@media (max-width: 767px) {
+  .container-wrap {
+    @apply px-4; /* Ensures 16px padding on each side for mobile */
+  }
+
+  /* Mobile responsive content for job details page */
+  .mobile-responsive-content {
+    @apply px-4; /* 16px horizontal padding */
+  }
+
+  /* Mobile content sections with proper spacing */
+  .mobile-content-section {
+    @apply mb-3; /* 12px vertical spacing between sections */
+  }
+
+  /* Mobile text content with proper readability */
+  .mobile-text-content {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Ensure all text elements have minimum 14px font size */
+  p, span, div, h1, h2, h3, h4, h5, h6, input, button, a {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Ensure all interactive elements have minimum 44px touch targets */
+  button, a, input, [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    padding: 8px !important;
+  }
+
+  /* Mobile quick info cards grid optimization */
+  .mobile-quick-info-grid {
+    @apply grid-cols-1 gap-3; /* Single column layout on mobile */
+  }
+
+  /* Mobile info cards with proper sizing */
+  .mobile-info-card {
+    @apply min-h-[44px]; /* Minimum 44px height for touch targets */
+  }
+
+  /* Convert content tables to card-based layout */
+  .prose-custom table {
+    @apply hidden; /* Hide tables on mobile */
+  }
+
+  .prose-custom table + * {
+    @apply block; /* Show alternative content */
+  }
+
+  /* Mobile card-based layout for table content */
+  .mobile-table-card {
+    @apply block rounded-lg border border-stone-200 bg-white p-4 mb-3;
+  }
+
+  .mobile-table-card .table-row {
+    @apply flex flex-col gap-2 py-2 border-b border-stone-100 last:border-b-0;
+  }
+
+  .mobile-table-card .table-cell {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .mobile-table-card .table-header {
+    @apply font-semibold text-ink;
+  }
+
+  .mobile-table-card .table-data {
+    @apply text-muted;
+  }
+
+  /* Mobile TOC with proper height constraints and improved UX */
+  .mobile-toc-nav {
+    max-height: 30vh !important;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db #f3f4f6;
+  }
+
+  /* Webkit scrollbar styling for mobile TOC */
+  .mobile-toc-nav::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .mobile-toc-nav::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    border-radius: 3px;
+  }
+
+  .mobile-toc-nav::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+  }
+
+  .mobile-toc-nav::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* Ensure TOC buttons have proper touch targets and accessibility */
+  .mobile-toc-nav button {
+    min-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    touch-action: manipulation;
+  }
+
+  /* Improve touch target spacing */
+  .mobile-toc-nav ol {
+    gap: 8px !important;
+  }
+
+  /* Ensure toggle button has proper touch target */
+  #toc-toggle {
+    min-height: 48px !important;
+    font-size: 16px !important;
+    touch-action: manipulation;
+  }
+
+  /* Mobile job layout - single column */
+  .mobile-job-layout {
+    @apply flex-col gap-4; /* Single column layout with proper spacing */
+  }
+
+  /* Ensure proper spacing between all mobile sections */
+  .mobile-job-layout section {
+    margin-bottom: 12px !important;
+  }
+
+  /* Prevent horizontal overflow on all elements */
+  * {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Ensure cards are full width on mobile */
+  .card {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Mobile-specific adjustments for job details */
+  #job-detail {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Mobile header adjustments */
+  #job-detail h1 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+  }
+
+  #job-detail h2 {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Mobile meta information */
+  #job-detail .text-sm {
+    font-size: 14px !important;
+  }
+
+  /* Mobile badge adjustments */
+  .badge {
+    font-size: 12px !important;
+    min-height: 32px !important;
+    padding: 6px 12px !important;
+  }
+
+  /* Mobile tag chips */
+  .tag-chip {
+    font-size: 12px !important;
+    min-height: 32px !important;
+    padding: 6px 10px !important;
+  }
+
+  /* Mobile job card specific styling */
+  .mobile-job-card {
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  .mobile-job-card * {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .mobile-job-card h3 {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+  }
+
+  .mobile-job-card .badge {
+    font-size: 12px !important;
+  }
+}
+
 /* Premium card component */
 .card {
   @apply rounded-xl border border-stone-200/60 bg-white p-5 shadow-card transition-all duration-300;

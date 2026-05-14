@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { SchemeListItem, SCHEME_TYPE_EMOJI, SCHEME_TYPE_COLORS, SCHEME_TYPE_LABELS } from '@/lib/types';
-import { timeAgo } from '@/lib/seo';
+import { formatDate } from '@/lib/seo';
 import { trackInternalLinkClick } from '@/lib/analytics';
 
 export function SchemeCard({ scheme, index = 0 }: { scheme: SchemeListItem; index?: number }) {
@@ -55,8 +55,12 @@ export function SchemeCard({ scheme, index = 0 }: { scheme: SchemeListItem; inde
           </span>
           
           {/* Time */}
-          <time className="block text-[11px] text-stone-400 font-medium">
-            {timeAgo(scheme.createdAt)}
+          <time
+            className="block text-[11px] text-stone-400 font-medium"
+            dateTime={scheme.createdAt}
+            suppressHydrationWarning
+          >
+            {formatDate(scheme.createdAt)}
           </time>
         </div>
       </div>

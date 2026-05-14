@@ -3,8 +3,191 @@ import { JobDetail, CATEGORY_LABELS } from './types';
 const SITE_NAME = 'SarkariPulse';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
+type JobAddressDefaults = {
+  addressLocality: string;
+  addressRegion: string;
+  postalCode: string;
+};
+
+const LOCATION_DEFAULTS: Record<string, JobAddressDefaults> = {
+  chandigarh: { addressLocality: 'Chandigarh', addressRegion: 'Chandigarh', postalCode: '160017' },
+  coimbatore: { addressLocality: 'Coimbatore', addressRegion: 'Tamil Nadu', postalCode: '641001' },
+  'new delhi': { addressLocality: 'New Delhi', addressRegion: 'Delhi', postalCode: '110001' },
+  delhi: { addressLocality: 'Delhi', addressRegion: 'Delhi', postalCode: '110001' },
+  jaipur: { addressLocality: 'Jaipur', addressRegion: 'Rajasthan', postalCode: '302005' },
+  bhopal: { addressLocality: 'Bhopal', addressRegion: 'Madhya Pradesh', postalCode: '462001' },
+  lucknow: { addressLocality: 'Lucknow', addressRegion: 'Uttar Pradesh', postalCode: '226001' },
+  patna: { addressLocality: 'Patna', addressRegion: 'Bihar', postalCode: '800001' },
+  mumbai: { addressLocality: 'Mumbai', addressRegion: 'Maharashtra', postalCode: '400001' },
+  pune: { addressLocality: 'Pune', addressRegion: 'Maharashtra', postalCode: '411001' },
+  chennai: { addressLocality: 'Chennai', addressRegion: 'Tamil Nadu', postalCode: '600001' },
+  bengaluru: { addressLocality: 'Bengaluru', addressRegion: 'Karnataka', postalCode: '560001' },
+  bangalore: { addressLocality: 'Bengaluru', addressRegion: 'Karnataka', postalCode: '560001' },
+  hyderabad: { addressLocality: 'Hyderabad', addressRegion: 'Telangana', postalCode: '500001' },
+  ahmedabad: { addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', postalCode: '380001' },
+  kolkata: { addressLocality: 'Kolkata', addressRegion: 'West Bengal', postalCode: '700001' },
+  ranchi: { addressLocality: 'Ranchi', addressRegion: 'Jharkhand', postalCode: '834001' },
+  raipur: { addressLocality: 'Raipur', addressRegion: 'Chhattisgarh', postalCode: '492001' },
+  dehradun: { addressLocality: 'Dehradun', addressRegion: 'Uttarakhand', postalCode: '248001' },
+  guwahati: { addressLocality: 'Guwahati', addressRegion: 'Assam', postalCode: '781001' },
+};
+
+const STATE_DEFAULTS: Record<string, JobAddressDefaults> = {
+  'Andhra Pradesh': { addressLocality: 'Amaravati', addressRegion: 'Andhra Pradesh', postalCode: '522020' },
+  Assam: { addressLocality: 'Guwahati', addressRegion: 'Assam', postalCode: '781001' },
+  Bihar: { addressLocality: 'Patna', addressRegion: 'Bihar', postalCode: '800001' },
+  Chandigarh: LOCATION_DEFAULTS.chandigarh,
+  Chhattisgarh: { addressLocality: 'Raipur', addressRegion: 'Chhattisgarh', postalCode: '492001' },
+  Delhi: LOCATION_DEFAULTS.delhi,
+  Gujarat: { addressLocality: 'Gandhinagar', addressRegion: 'Gujarat', postalCode: '382010' },
+  Haryana: { addressLocality: 'Chandigarh', addressRegion: 'Haryana', postalCode: '160017' },
+  'Himachal Pradesh': { addressLocality: 'Shimla', addressRegion: 'Himachal Pradesh', postalCode: '171001' },
+  Jharkhand: { addressLocality: 'Ranchi', addressRegion: 'Jharkhand', postalCode: '834001' },
+  Karnataka: { addressLocality: 'Bengaluru', addressRegion: 'Karnataka', postalCode: '560001' },
+  Kerala: { addressLocality: 'Thiruvananthapuram', addressRegion: 'Kerala', postalCode: '695001' },
+  'Madhya Pradesh': LOCATION_DEFAULTS.bhopal,
+  Maharashtra: { addressLocality: 'Mumbai', addressRegion: 'Maharashtra', postalCode: '400001' },
+  Odisha: { addressLocality: 'Bhubaneswar', addressRegion: 'Odisha', postalCode: '751001' },
+  Punjab: { addressLocality: 'Chandigarh', addressRegion: 'Punjab', postalCode: '160017' },
+  Rajasthan: LOCATION_DEFAULTS.jaipur,
+  'Tamil Nadu': LOCATION_DEFAULTS.chennai,
+  Telangana: LOCATION_DEFAULTS.hyderabad,
+  'Uttar Pradesh': LOCATION_DEFAULTS.lucknow,
+  Uttarakhand: LOCATION_DEFAULTS.dehradun,
+  'West Bengal': LOCATION_DEFAULTS.kolkata,
+};
+
 export function getCanonicalUrl(path: string) {
   return `${SITE_URL}${path}`;
+}
+
+function cleanText(value?: string | null) {
+  return value?.replace(/\s+/g, ' ').trim() || '';
+}
+
+function toISODate(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function parseDateParts(day: string, month: string, year: string): string | undefined {
+  const monthMap: Record<string, number> = {
+    jan: 0, january: 0,
+    feb: 1, february: 1,
+    mar: 2, march: 2,
+    apr: 3, april: 3,
+    may: 4,
+    jun: 5, june: 5,
+    jul: 6, july: 6,
+    aug: 7, august: 7,
+    sep: 8, sept: 8, september: 8,
+    oct: 9, october: 9,
+    nov: 10, november: 10,
+    dec: 11, december: 11,
+  };
+  const normalizedYear = year.length === 2 ? `20${year}` : year;
+  const monthIndex = /^\d+$/.test(month) ? Number(month) - 1 : monthMap[month.toLowerCase()];
+  const date = new Date(Date.UTC(Number(normalizedYear), monthIndex, Number(day), 23, 59, 59));
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
+function extractValidThrough(job: JobDetail): string | undefined {
+  const directDate = toISODate(job.lastDate);
+  if (directDate) return directDate;
+
+  const text = cleanText([job.importantDates, job.content, job.summary].filter(Boolean).join(' '));
+  const datePattern = /(?:last date|closing date|apply by|last date to apply|online last date)[^\d]{0,60}(\d{1,2})[\s./-]+([a-zA-Z]+|\d{1,2})[\s,./-]+(\d{2,4})/i;
+  const match = text.match(datePattern);
+  return match ? parseDateParts(match[1], match[2], match[3]) : undefined;
+}
+
+function extractSalaryValue(job: JobDetail): Record<string, unknown> | undefined {
+  const text = cleanText([job.salary, job.content, job.summary].filter(Boolean).join(' '));
+  if (!text) return undefined;
+
+  const salaryPatterns = [
+    /(?:salary|pay scale|pay|stipend)[^₹\d]{0,50}(?:₹|rs\.?|inr)?\s*([\d,]{4,})(?:\s*(?:-|to|–)\s*(?:₹|rs\.?|inr)?\s*([\d,]{4,}))?/i,
+    /(?:₹|rs\.?|inr)\s*([\d,]{4,})(?:\s*(?:-|to|–)\s*(?:₹|rs\.?|inr)?\s*([\d,]{4,}))?/i,
+  ];
+
+  for (const pattern of salaryPatterns) {
+    const match = text.match(pattern);
+    if (!match) continue;
+
+    const firstValue = Number(match[1].replace(/,/g, ''));
+    const secondValue = match[2] ? Number(match[2].replace(/,/g, '')) : undefined;
+    if (!Number.isFinite(firstValue) || firstValue <= 0) continue;
+
+    if (secondValue && Number.isFinite(secondValue) && secondValue > firstValue) {
+      return {
+        '@type': 'QuantitativeValue',
+        minValue: firstValue,
+        maxValue: secondValue,
+        unitText: 'MONTH',
+      };
+    }
+
+    return {
+      '@type': 'QuantitativeValue',
+      value: firstValue,
+      unitText: 'MONTH',
+    };
+  }
+
+  return undefined;
+}
+
+function resolveAddressDefaults(job: JobDetail): JobAddressDefaults | undefined {
+  const text = cleanText([job.title, job.organization, job.state, job.content].filter(Boolean).join(' ')).toLowerCase();
+  const matchingLocation = Object.keys(LOCATION_DEFAULTS)
+    .sort((a, b) => b.length - a.length)
+    .find(location => text.includes(location));
+
+  if (matchingLocation) return LOCATION_DEFAULTS[matchingLocation];
+  if (job.state && job.state !== 'All India') return STATE_DEFAULTS[job.state] || {
+    addressLocality: job.state,
+    addressRegion: job.state,
+    postalCode: '',
+  };
+
+  return undefined;
+}
+
+function buildJobAddress(job: JobDetail): Record<string, string> {
+  const defaults = resolveAddressDefaults(job);
+  const explicitPostalCode = cleanText([job.content, job.summary].join(' ')).match(/\b[1-9][0-9]{5}\b/)?.[0];
+  const address: Record<string, string> = {
+    '@type': 'PostalAddress',
+    addressCountry: 'IN',
+  };
+
+  if (defaults?.addressRegion) address.addressRegion = defaults.addressRegion;
+  if (defaults?.addressLocality) {
+    address.addressLocality = defaults.addressLocality;
+    address.streetAddress = `${job.organization || 'Government Recruitment Office'}, ${defaults.addressLocality}`;
+  }
+  if (explicitPostalCode || defaults?.postalCode) {
+    address.postalCode = explicitPostalCode || defaults?.postalCode || '';
+  }
+
+  return address;
+}
+
+function buildJobBaseSalary(job: JobDetail) {
+  const value = extractSalaryValue(job);
+  if (!value) return undefined;
+
+  return {
+    '@type': 'MonetaryAmount',
+    currency: 'INR',
+    value,
+  };
+}
+
+function truncateTitle(title: string, maxLength = 68) {
+  if (title.length <= maxLength) return title;
+  return `${title.slice(0, maxLength - 3).trim()}...`;
 }
 
 export function websiteJsonLd() {
@@ -65,37 +248,35 @@ export function organizationJsonLd() {
 }
 
 export function jobPostingJsonLd(job: JobDetail) {
+  const address = buildJobAddress(job);
+  const baseSalary = buildJobBaseSalary(job);
+  const validThrough = extractValidThrough(job);
+
   const jsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
     title: job.title,
-    description: job.content,
+    description: job.content || job.summary || job.title,
     datePosted: job.createdAt,
     hiringOrganization: {
       '@type': 'Organization',
       name: job.organization || 'Government of India',
+      sameAs: job.sourceUrl || SITE_URL,
     },
     jobLocation: {
       '@type': 'Place',
-      address: {
-        '@type': 'PostalAddress',
-        addressCountry: 'IN',
-        addressRegion: job.state !== 'All India' ? job.state : undefined,
-      },
+      name: address.addressLocality || address.addressRegion || 'India',
+      address,
     },
     employmentType: 'FULL_TIME',
   };
 
-  if (job.lastDate) {
-    jsonLd.validThrough = job.lastDate;
+  if (validThrough) {
+    jsonLd.validThrough = validThrough;
   }
 
-  if (job.salary) {
-    jsonLd.baseSalary = {
-      '@type': 'MonetaryAmount',
-      currency: 'INR',
-      value: { '@type': 'QuantitativeValue', value: job.salary },
-    };
+  if (baseSalary) {
+    jsonLd.baseSalary = baseSalary;
   }
 
   // Enhanced fields
@@ -141,6 +322,7 @@ export function formatDate(dateStr: string) {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 }
 
@@ -161,6 +343,29 @@ export function categoryMeta(category: string) {
     title: `${label} — Latest Updates | ${SITE_NAME}`,
     description: `Latest ${label.toLowerCase()} updates, notifications aur alerts ${SITE_NAME} par. Jaldi check karein aur koi update miss mat karein!`,
   };
+}
+
+export function generateJobPageTitle(job: JobDetail): string {
+  const providedTitle = cleanText(job.metaTitle);
+  if (providedTitle && providedTitle.length <= 68) return providedTitle;
+
+  const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
+  const title = cleanText(job.title);
+  const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? `${job.vacancyCount} Vacancies` : 'Vacancy';
+
+  const suffixByCategory: Record<string, string> = {
+    job: `${vacancyText}, Eligibility, Last Date`,
+    result: 'Result Link, Merit List, Cut Off',
+    'admit-card': 'Admit Card Download, Exam Date',
+    admission: 'Admission Form, Eligibility, Last Date',
+    scholarship: 'Scholarship, Eligibility, Apply Online',
+    'exam-form': 'Exam Form, Fees, Last Date',
+  };
+
+  const suffix = suffixByCategory[job.category] || `${categoryLabel}, Details`;
+  const optimizedTitle = `${title}: ${suffix}`;
+
+  return truncateTitle(optimizedTitle);
 }
 
 // Meta Description Generators
@@ -188,15 +393,7 @@ export function generateJobMetaDescription(job: JobDetail): string {
       description += ` Last date: ${formattedDate}.`;
     }
     
-    // Add CTA in Hinglish
-    const ctas = [
-      'Jaldi apply karein!',
-      'Details check karein!',
-      'Apply karne se pehle eligibility check karein!',
-      'Official notification padhiye!'
-    ];
-    const cta = ctas[Math.floor(Math.random() * ctas.length)];
-    description += ` ${cta}`;
+    description += ' Eligibility, apply link aur official notification check karein.';
     
     // Ensure length is between 150-160 characters
     if (description.length > 160) {
@@ -224,7 +421,7 @@ export function generateCategoryMetaDescription(category: string, state?: string
     const stateText = state && state !== 'All India' ? ` in ${state}` : '';
     
     const descriptions: Record<string, string> = {
-      job: `Latest Sarkari Naukri${stateText} - Government job notifications, bharti updates, aur vacancy details. UPSC, SSC, Railway jobs check karein!`,
+      job: `Latest Sarkari Job 2026${stateText} - govt jobs, sarkari naukri, vacancy, eligibility, last date aur apply online updates daily check karein.`,
       result: `Latest Sarkari Result${stateText} - Exam results, scorecard download, merit list aur cut-off marks. Apna result check karein!`,
       'admit-card': `Latest Admit Card${stateText} - Hall ticket download, exam center details aur important instructions. Print karke exam mein le jaayein!`,
       admission: `Latest College Admission${stateText} - University admission notifications, application forms aur last dates. Apply karne se pehle check karein!`,
@@ -396,14 +593,11 @@ export function generateCollectionPageSchema(
           '@type': 'ListItem',
           position: index + 1,
           item: {
-            '@type': 'JobPosting',
+            '@type': 'WebPage',
             name: item.title,
             url: `${SITE_URL}/job/${item.slug}`,
-            datePosted: item.createdAt,
-            hiringOrganization: {
-              '@type': 'Organization',
-              name: item.organization || 'Government of India'
-            }
+            datePublished: item.createdAt,
+            description: item.summary
           }
         }))
       }

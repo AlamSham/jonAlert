@@ -55,58 +55,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
-  // Qualification-specific pages (search-based URLs)
-  const qualificationUrls = [
-    {
-      url: `${siteUrl}/search?q=10th+pass`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/search?q=12th+pass`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/search?q=graduate`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/search?q=post+graduate`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    },
-    {
-      url: `${siteUrl}/search?q=diploma`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/search?q=ITI`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/search?q=engineering`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.5,
-    },
-    {
-      url: `${siteUrl}/search?q=medical`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.5,
-    },
-  ];
-
   // Scheme URLs with proper priority and changeFrequency
   const schemeUrls: MetadataRoute.Sitemap = [
     {
@@ -130,12 +78,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'hourly' as const, // As per requirements
       priority: 1.0, // Homepage priority
-    },
-    {
-      url: `${siteUrl}/search`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
     },
   ];
 
@@ -179,7 +121,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...legalUrls,
     ...categoryUrls,
     ...stateUrls,
-    ...qualificationUrls,
     ...schemeUrls, // Add scheme URLs
     ...jobUrls,
   ];
@@ -192,4 +133,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return allUrls;
 }
-
