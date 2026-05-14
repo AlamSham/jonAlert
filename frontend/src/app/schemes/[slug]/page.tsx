@@ -32,9 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       siteName: 'SarkariPulse',
       images: [
         {
-          url: `https://sarkaripulse.net/api/og?title=${encodeURIComponent(scheme.title)}&org=${encodeURIComponent(scheme.department || 'Government Scheme')}`,
-          width: 1200,
-          height: 630,
+          url: 'https://sarkaripulse.net/logo.jpg',
+          width: 1024,
+          height: 1024,
           alt: scheme.title,
         },
       ],
@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: scheme.metaTitle || scheme.title,
       description: metaDescription.slice(0, 100),
+      images: ['https://sarkaripulse.net/logo.jpg'],
     },
   };
 }

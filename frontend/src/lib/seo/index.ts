@@ -203,7 +203,7 @@ export async function generatePageSEO(pageData: {
           description: 'Latest updates on SarkariPulse',
           type: 'website',
           url: pageData.url,
-          image: 'https://sarkaripulse.net/images/default.jpg',
+          image: 'https://sarkaripulse.net/logo.jpg',
           siteName: 'SarkariPulse',
           locale: 'en_IN'
         },

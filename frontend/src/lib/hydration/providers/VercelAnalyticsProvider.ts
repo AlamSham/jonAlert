@@ -166,12 +166,3 @@ export class VercelAnalyticsProvider implements AnalyticsProvider {
     }
   }
 }
-
-// Extend window interface for Vercel Analytics
-declare global {
-  interface Window {
-    va?: {
-      track: (name: string, properties?: Record<string, any>) => void;
-    };
-  }
-}

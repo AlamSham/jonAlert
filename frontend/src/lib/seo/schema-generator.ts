@@ -490,7 +490,7 @@ export class SchemaGenerator {
       '@type': 'Article',
       headline: article.headline,
       description: article.description,
-      image: article.image || `${this.siteUrl}/icon-512x512.png`,
+      image: article.image || `${this.siteUrl}/logo.jpg`,
       author: {
         '@type': 'Organization',
         name: article.author || this.siteName,
@@ -502,7 +502,7 @@ export class SchemaGenerator {
         url: this.siteUrl,
         logo: {
           '@type': 'ImageObject',
-          url: `${this.siteUrl}/icon-512x512.png`
+          url: `${this.siteUrl}/logo.jpg`
         }
       },
       datePublished: article.datePublished,
@@ -563,7 +563,7 @@ export class SchemaGenerator {
       '@type': 'Organization',
       name: this.siteName,
       url: this.siteUrl,
-      logo: `${this.siteUrl}/icon-512x512.png`,
+      logo: `${this.siteUrl}/logo.jpg`,
       description: 'Government job notification portal',
       foundingDate: '2024',
       areaServed: {

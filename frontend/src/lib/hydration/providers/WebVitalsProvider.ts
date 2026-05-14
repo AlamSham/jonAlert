@@ -103,7 +103,6 @@ export class WebVitalsProvider implements AnalyticsProvider {
           non_interaction: true,
         },
         timestamp: Date.now(),
-        priority: 'medium',
       };
 
       // Send to analytics endpoint

@@ -386,7 +386,7 @@ Crawl-delay: 10`;
         description: pageData.description || 'Latest government jobs',
         type: 'website',
         url: this.generateCanonicalUrl(pageData.url),
-        image: `${this.siteUrl}/icon-512x512.png`,
+        image: `${this.siteUrl}/logo.jpg`,
         siteName: this.siteName,
         locale: 'hi_IN'
       },
@@ -420,11 +420,7 @@ Crawl-delay: 10`;
     category?: string;
     pageType: string;
   }): string {
-    // Generate dynamic OG image URL
-    const title = encodeURIComponent(pageData.title);
-    const subtitle = pageData.category ? encodeURIComponent(pageData.category) : '';
-    
-    return `${this.siteUrl}/api/og?title=${title}&subtitle=${subtitle}`;
+    return `${this.siteUrl}/logo.jpg`;
   }
 
   private getPageTypeFromUrl(url: string): string {

@@ -118,7 +118,7 @@ export class ResilientMetaOptimizer {
             description: data.description,
             type: 'website',
             url: data.url,
-            image: 'https://sarkaripulse.net/images/default-og.jpg',
+            image: 'https://sarkaripulse.net/logo.jpg',
             siteName: 'SarkariPulse',
             locale: 'en_IN'
           },
@@ -126,7 +126,7 @@ export class ResilientMetaOptimizer {
             card: 'summary_large_image',
             title: data.title,
             description: data.description,
-            image: 'https://sarkaripulse.net/images/default-twitter.jpg',
+            image: 'https://sarkaripulse.net/logo.jpg',
             site: '@SarkariPulse'
           }
         };

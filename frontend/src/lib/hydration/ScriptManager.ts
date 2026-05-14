@@ -249,10 +249,10 @@ export class ScriptManager {
     }
 
     try {
-      const navigation = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      const navigation = window.performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
       
       return {
-        navigationStart: navigation?.navigationStart || 0,
+        navigationStart: navigation?.startTime || 0,
         domContentLoaded: navigation?.domContentLoadedEventEnd || 0,
         loadComplete: navigation?.loadEventEnd || 0,
       };

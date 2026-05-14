@@ -60,9 +60,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       siteName: 'SarkariPulse',
       images: [
         {
-          url: `https://sarkaripulse.net/api/og?title=Admit%20Card&subtitle=Hall%20Ticket%20Download%202026`,
-          width: 1200,
-          height: 630,
+          url: 'https://sarkaripulse.net/logo.jpg',
+          width: 1024,
+          height: 1024,
           alt: 'Latest Admit Card 2026 - Hall Ticket Download',
         },
       ],
@@ -71,6 +71,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       card: 'summary_large_image',
       title: page > 1 ? `Admit Card — Page ${page}` : 'Latest Admit Card 2026',
       description: `Hall ticket download, exam center details. ${pagination.total}+ admit cards available.`,
+      images: ['https://sarkaripulse.net/logo.jpg'],
     },
   };
 

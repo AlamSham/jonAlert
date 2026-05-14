@@ -40,9 +40,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       siteName: 'SarkariPulse',
       images: [
         {
-          url: `https://sarkaripulse.net/api/og?title=Sarkari%20Naukri&subtitle=Latest%20Government%20Jobs%202026`,
-          width: 1200,
-          height: 630,
+          url: 'https://sarkaripulse.net/logo.jpg',
+          width: 1024,
+          height: 1024,
           alt: 'Latest Sarkari Naukri - Government Jobs 2026',
         },
       ],
@@ -51,6 +51,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       card: 'summary_large_image',
       title: page > 1 ? `Sarkari Job 2026 - Page ${page}` : 'Sarkari Job 2026 - Latest Govt Jobs',
       description: generateCategoryMetaDescription('job').slice(0, 100),
+      images: ['https://sarkaripulse.net/logo.jpg'],
     },
   };
 

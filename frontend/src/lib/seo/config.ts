@@ -251,7 +251,7 @@ export const STRUCTURED_DATA_CONFIG = {
   ORGANIZATION: {
     name: 'SarkariPulse',
     url: 'https://sarkaripulse.net',
-    logo: 'https://sarkaripulse.net/icon-512x512.png',
+    logo: 'https://sarkaripulse.net/logo.jpg',
     description: 'AI-powered sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India.',
     foundingDate: '2024',
     areaServed: 'India',

@@ -43,9 +43,10 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
       });
 
       // Initialize gtag
-      window.dataLayer = window.dataLayer || [];
+      const analyticsWindow = window as Window & { dataLayer?: any[] };
+      analyticsWindow.dataLayer = analyticsWindow.dataLayer || [];
       function gtag(...args: any[]) {
-        window.dataLayer.push(args);
+        analyticsWindow.dataLayer?.push(args);
       }
       
       // Make gtag globally available
@@ -148,13 +149,5 @@ export class GoogleAnalyticsProvider implements AnalyticsProvider {
     } catch (error) {
       console.warn('Failed to set user properties:', error);
     }
-  }
-}
-
-// Extend window interface for Google Analytics
-declare global {
-  interface Window {
-    dataLayer: any[];
-    gtag?: (...args: any[]) => void;
   }
 }

@@ -27,7 +27,7 @@ export {
   HydrationSafeJSONLD, 
   SSRSafeJSONLD, 
   useStructuredData 
-} from '../../../components/HydrationSafeJSONLD';
+} from '../../components/HydrationSafeJSONLD';
 
 // Version and metadata
 export const HYDRATION_SYSTEM_VERSION = '1.0.0';

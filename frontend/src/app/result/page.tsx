@@ -60,9 +60,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       siteName: 'SarkariPulse',
       images: [
         {
-          url: `https://sarkaripulse.net/api/og?title=Sarkari%20Result&subtitle=Latest%20Exam%20Results%202026`,
-          width: 1200,
-          height: 630,
+          url: 'https://sarkaripulse.net/logo.jpg',
+          width: 1024,
+          height: 1024,
           alt: 'Latest Sarkari Result 2026 - Exam Results & Scorecards',
         },
       ],
@@ -71,6 +71,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       card: 'summary_large_image',
       title: page > 1 ? `Sarkari Result — Page ${page}` : 'Latest Sarkari Result 2026',
       description: `Latest exam results, scorecard download. ${pagination.total}+ results available.`,
+      images: ['https://sarkaripulse.net/logo.jpg'],
     },
   };
 

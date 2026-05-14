@@ -22,6 +22,7 @@ export interface HydrationError {
   timestamp: number;
   scriptId?: string;
   originalError?: Error;
+  context?: Record<string, unknown>;
 }
 
 // Hydration state management

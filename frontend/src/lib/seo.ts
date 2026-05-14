@@ -2,6 +2,7 @@ import { JobDetail, CATEGORY_LABELS } from './types';
 
 const SITE_NAME = 'SarkariPulse';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
+const SITE_LOGO_URL = `${SITE_URL}/logo.jpg`;
 
 type JobAddressDefaults = {
   addressLocality: string;
@@ -214,7 +215,7 @@ export function organizationJsonLd() {
     '@type': 'Organization',
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/icon-512x512.png`,
+    logo: SITE_LOGO_URL,
     description: 'AI-powered sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India.',
     sameAs: [
       // Add social media links when available
@@ -540,7 +541,7 @@ export function generateArticleSchema(job: JobDetail): object {
       '@type': 'Article',
       headline: job.title,
       description: job.summary,
-      image: `${SITE_URL}/icon-512x512.png`, // Default image, can be enhanced later
+      image: SITE_LOGO_URL,
       author: {
         '@type': 'Organization',
         name: SITE_NAME,
@@ -552,7 +553,7 @@ export function generateArticleSchema(job: JobDetail): object {
         url: SITE_URL,
         logo: {
           '@type': 'ImageObject',
-          url: `${SITE_URL}/icon-512x512.png`
+          url: SITE_LOGO_URL
         }
       },
       datePublished: job.createdAt,

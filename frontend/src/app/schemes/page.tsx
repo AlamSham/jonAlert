@@ -58,9 +58,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       siteName: 'SarkariPulse',
       images: [
         {
-          url: `https://sarkaripulse.net/api/og?title=Government%20Schemes&subtitle=Central%20%26%20State%20Yojana%202026`,
-          width: 1200,
-          height: 630,
+          url: 'https://sarkaripulse.net/logo.jpg',
+          width: 1024,
+          height: 1024,
           alt: 'Government Schemes 2026 - Central & State Yojana',
         },
       ],
@@ -69,6 +69,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       card: 'summary_large_image',
       title: page > 1 ? `Government Schemes 2026 — Page ${page}` : 'Government Schemes 2026',
       description: 'Latest government schemes - PM Kisan, Ayushman Bharat, state yojanas.',
+      images: ['https://sarkaripulse.net/logo.jpg'],
     },
   };
 

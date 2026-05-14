@@ -76,9 +76,9 @@ export const metadata: Metadata = {
     description: 'AI-powered sarkari job alerts in Hinglish. UPSC, SSC, Railway, State jobs sab ek jagah.',
     images: [
       {
-        url: 'https://sarkaripulse.net/api/og?title=SarkariPulse&subtitle=Latest%20Sarkari%20Naukri%20Updates',
-        width: 1200,
-        height: 630,
+        url: '/logo.jpg',
+        width: 1024,
+        height: 1024,
         alt: 'SarkariPulse - Latest Sarkari Naukri Updates',
       },
     ],
@@ -87,6 +87,12 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'SarkariPulse — Sarkari Naukri Updates',
     description: 'Latest govt jobs, results, admit cards — auto-updated har 10 minute.',
+    images: ['/logo.jpg'],
+  },
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/logo.jpg',
+    apple: '/logo.jpg',
   },
   robots: {
     index: true,
