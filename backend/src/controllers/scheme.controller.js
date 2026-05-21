@@ -53,7 +53,7 @@ export const getSchemes = async (req, res) => {
 };
 
 export const getLatestSchemes = async (req, res) => {
-  const limit = cleanLimit(req.validated?.limit, 6, 20);
+  const limit = cleanLimit(req.validated?.limit, 6, 500);
 
   const schemes = await Scheme.find()
     .sort({ createdAt: -1 })

@@ -41,7 +41,13 @@ export const env = {
   cronSecret: process.env.CRON_SECRET || '',
   jobSourcesJson: process.env.JOB_SOURCES_JSON || '',
   jobSourcesFile: process.env.JOB_SOURCES_FILE || '',
-  scraperUserAgent: process.env.SCRAPER_USER_AGENT || 'JobAutomationBot/1.0 (+https://example.com/bot)'
+  scraperUserAgent: process.env.SCRAPER_USER_AGENT || 'JobAutomationBot/1.0 (+https://example.com/bot)',
+  // SEO Configuration
+  baseUrl: process.env.BASE_URL || 'https://sarkaripulse.net',
+  sitemapCacheTtl: Number(process.env.SITEMAP_CACHE_TTL || 3600),
+  structuredDataCacheTtl: Number(process.env.STRUCTURED_DATA_CACHE_TTL || 3600),
+  metaTagCacheTtl: Number(process.env.META_TAG_CACHE_TTL || 1800),
+  enableSeoValidation: (process.env.ENABLE_SEO_VALIDATION || 'true').toLowerCase() === 'true'
 };
 
 export const validateEnv = () => {

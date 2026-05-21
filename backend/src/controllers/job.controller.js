@@ -14,7 +14,7 @@ const cleanLimit = (input, fallback = 10, max = 50) => {
 const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const getLatestJobs = async (req, res) => {
-  const limit = cleanLimit(req.validated?.limit, 12, 100);
+  const limit = cleanLimit(req.validated?.limit, 12, 5000);
 
   const jobs = await Job.find({ status: 'active' })
     .sort({ createdAt: -1 })

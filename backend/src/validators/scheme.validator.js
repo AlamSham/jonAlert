@@ -27,8 +27,8 @@ export const allSchemesValidator = [
 export const latestSchemesValidator = [
   query('limit')
     .optional()
-    .isInt({ min: 1, max: 20 })
-    .withMessage('limit must be an integer between 1 and 20')
+    .isInt({ min: 1, max: 500 })
+    .withMessage('limit must be an integer between 1 and 500')
     .toInt()
 ];
 

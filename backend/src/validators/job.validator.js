@@ -5,8 +5,8 @@ const validCategories = ['job', 'result', 'admit-card', 'admission', 'scholarshi
 export const latestJobsValidator = [
   query('limit')
     .optional()
-    .isInt({ min: 1, max: 100 })
-    .withMessage('limit must be an integer between 1 and 100')
+    .isInt({ min: 1, max: 5000 })
+    .withMessage('limit must be an integer between 1 and 5000')
     .toInt()
 ];
 

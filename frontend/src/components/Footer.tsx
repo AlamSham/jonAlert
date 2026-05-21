@@ -50,6 +50,7 @@ const footerLinks = [
     title: 'Legal',
     links: [
       { href: '/privacy-policy', label: 'Privacy Policy' },
+      { href: '/terms-and-conditions', label: 'Terms & Conditions' },
       { href: '/cookie-policy', label: 'Cookie Policy' },
       { href: '/disclaimer', label: 'Disclaimer' },
     ],
@@ -102,6 +103,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-4 text-xs text-stone-400">
             <Link href="/privacy-policy" className="hover:text-accent transition">Privacy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-accent transition">Terms</Link>
             <Link href="/cookie-policy" className="hover:text-accent transition">Cookies</Link>
             <Link href="/disclaimer" className="hover:text-accent transition">Disclaimer</Link>
             <Link href="/contact" className="hover:text-accent transition">Contact</Link>

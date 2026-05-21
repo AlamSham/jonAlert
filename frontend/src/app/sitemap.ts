@@ -102,6 +102,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.4, // Lower range for policy pages
     },
     {
+      url: `${siteUrl}/terms-and-conditions`,
+      lastModified: new Date('2024-12-15'), // Last updated date
+      changeFrequency: 'monthly' as const,
+      priority: 0.4,
+    },
+    {
       url: `${siteUrl}/cookie-policy`,
       lastModified: new Date('2024-12-15'), // Last updated date
       changeFrequency: 'monthly' as const,
