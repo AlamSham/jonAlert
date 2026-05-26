@@ -34,6 +34,7 @@ export default function robots(): MetadataRoute.Robots {
           '/jobs/state/',
           '/schemes/',
           '/job/',
+          '/search',
         ],
         disallow: [
           '/api/',

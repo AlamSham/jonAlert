@@ -265,3 +265,68 @@ export const getRelatedJobs = async (req, res) => {
 
   res.json({ data: related });
 };
+
+export const getTodayJobs = async (req, res) => {
+  const limit = cleanLimit(req.validated?.limit, 20, 100);
+  const page = Math.max(1, Number(req.validated?.page) || 1);
+  const skip = (page - 1) * limit;
+
+  // Try 24 hours first
+  let filter = {
+    status: 'active',
+    createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+  };
+  let total = await Job.countDocuments(filter);
+
+  // If very few jobs in 24 hours, fallback to 48 hours
+  if (total < 10) {
+    filter.createdAt = { $gte: new Date(Date.now() - 48 * 60 * 60 * 1000) };
+    total = await Job.countDocuments(filter);
+  }
+
+  const jobs = await Job.find(filter)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .select('title slug category summary state organization vacancyCount lastDate tags createdAt')
+    .lean();
+
+  const totalPages = Math.ceil(total / limit);
+
+  res.json({
+    data: jobs,
+    pagination: { page, limit, total, totalPages, hasNext: page < totalPages, hasPrev: page > 1 }
+  });
+};
+
+export const getClosingSoonJobs = async (req, res) => {
+  const limit = cleanLimit(req.validated?.limit, 20, 100);
+  const page = Math.max(1, Number(req.validated?.page) || 1);
+  const skip = (page - 1) * limit;
+
+  const now = new Date();
+  const nextTenDays = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000);
+
+  const filter = {
+    status: 'active',
+    lastDate: { $gte: now, $lte: nextTenDays }
+  };
+
+  const [jobs, total] = await Promise.all([
+    Job.find(filter)
+      .sort({ lastDate: 1 }) // Closest deadline first
+      .skip(skip)
+      .limit(limit)
+      .select('title slug category summary state organization vacancyCount lastDate tags createdAt')
+      .lean(),
+    Job.countDocuments(filter)
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  res.json({
+    data: jobs,
+    pagination: { page, limit, total, totalPages, hasNext: page < totalPages, hasPrev: page > 1 }
+  });
+};
+

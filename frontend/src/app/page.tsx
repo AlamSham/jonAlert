@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getLatestJobs, getTrendingJobs, getStats, getLatestSchemes } from '@/lib/api';
+import { getLatestJobs, getTrendingJobs, getStats, getLatestSchemes, getClosingSoonJobs } from '@/lib/api';
 import { JobCard } from '@/components/JobCard';
 import { SchemeCard } from '@/components/SchemeCard';
 import { StatsBanner } from '@/components/StatsBanner';
@@ -15,12 +15,15 @@ import { CATEGORY_EMOJI } from '@/lib/types';
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [latestJobs, trendingJobs, stats, latestSchemes] = await Promise.all([
+  const [latestJobs, trendingJobs, stats, latestSchemes, closingSoonRes] = await Promise.all([
     getLatestJobs(12),
     getTrendingJobs(6),
     getStats(),
     getLatestSchemes(6).catch(() => []), // Gracefully handle schemes API failure
+    getClosingSoonJobs(1, 6).catch(() => ({ data: [], pagination: { total: 0 } })),
   ]);
+
+  const closingSoonJobs = closingSoonRes.data;
 
   // Generate state links for internal linking
   const stateLinks = getTopStateLinks(stats.topStates || []);
@@ -118,6 +121,30 @@ export default async function HomePage() {
                 >
                   {link.label} {link.count && <span className="ml-1 text-xs text-stone-400">({link.count})</span>}
                 </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Closing Soon Jobs */}
+        {closingSoonJobs.length > 0 && (
+          <section id="closing-soon-section">
+            <div className="flex items-center justify-between mb-6">
+              <SectionHeader
+                title="Closing Soon (Last Date Apply)"
+                subtitle="Apply before deadline! Last date is near"
+                icon="⏰"
+              />
+              <Link
+                href="/closing-soon"
+                className="text-sm font-bold text-red-600 hover:text-red-700 transition inline-flex items-center gap-1"
+              >
+                View All <span className="animate-pulse">⏰</span>
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {closingSoonJobs.slice(0, 6).map((job, i) => (
+                <JobCard key={job.slug} job={job} index={i} />
               ))}
             </div>
           </section>

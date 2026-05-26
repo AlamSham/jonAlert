@@ -36,12 +36,27 @@ const footerLinks = [
       { href: '/search?q=Post+Graduate', label: 'Post Graduate Jobs' },
       { href: '/search?q=ITI', label: 'ITI Jobs' },
       { href: '/search?q=Engineering', label: 'Engineering Jobs' },
+      { href: '/search?q=Diploma', label: 'Diploma Jobs' },
+      { href: '/search?q=B.Ed', label: 'B.Ed Jobs' },
+    ],
+  },
+  {
+    title: 'Top Organizations',
+    links: [
+      { href: '/search?q=UPSC', label: 'UPSC Jobs' },
+      { href: '/search?q=SSC', label: 'SSC Jobs' },
+      { href: '/search?q=Railway', label: 'Railway Jobs' },
+      { href: '/search?q=IBPS', label: 'IBPS Banking' },
+      { href: '/search?q=Police', label: 'Police Vacancy' },
+      { href: '/search?q=Army', label: 'Army Bharti' },
+      { href: '/search?q=NTA', label: 'NTA Exams' },
+      { href: '/search?q=CTET', label: 'CTET' },
     ],
   },
   {
     title: 'Quick Links',
     links: [
-      { href: '/search', label: 'Search' },
+      { href: '/search', label: 'Search Jobs' },
       { href: '/about', label: 'About Us' },
       { href: '/contact', label: 'Contact Us' },
     ],
@@ -61,7 +76,7 @@ export function Footer() {
   return (
     <footer className="mt-16 border-t border-stone-200 bg-white/60 backdrop-blur" id="site-footer">
       <div className="container-wrap py-12">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
           {/* Brand */}
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">

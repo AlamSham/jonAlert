@@ -28,7 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pageTitle = generateJobPageTitle(job);
   const metaDescription = generateJobMetaDescription(job);
   const jobUrl = getCanonicalUrl(`/job/${slug}`);
-  const ogImageUrl = getCanonicalUrl('/logo.jpg');
+  const ogImageUrl = getCanonicalUrl(
+    `/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'Latest Sarkari Naukri Updates')}`
+  );
 
   return {
     title: pageTitle,
@@ -45,8 +47,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [
         {
           url: ogImageUrl,
-          width: 1024,
-          height: 1024,
+          width: 1200,
+          height: 630,
           alt: job.title,
         },
       ],

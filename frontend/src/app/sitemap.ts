@@ -71,6 +71,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
+  // Search page URLs — high-value keyword pages for SEO
+  const popularSearches = [
+    'SSC CGL', 'UPSC', 'Railway', 'Police', 'Banking', 'Army', 'Navy',
+    'Teacher', 'UPSSSC', 'BPSC', 'NTA', 'IBPS', 'CTET', 'RRB',
+    'defense', 'Left Front', 'MPBSE', 'JPSC', 'CEE', 'Padma Awards',
+    'subsidy', 'board exams', 'BIEAP', 'PGT', 'Tamil Nadu', 'police',
+    'ISC', 'CTET', 'BSTC', 'SEBA', 'farmer', 'WBPSC', 'UKSSSC', 'CSJMU',
+    'environment', 'AP Inter', 'IIIT Bangalore', 'Technician',
+    'Kerala Board of Public Examinations', 'college', 'BTech', 'Careers360',
+    'M.Tech', 'Gujarat ITI', 'hall ticket', 'TNGASA', 'IIIT Hyderabad',
+    'Maharashtra ITI', 'CA Final', 'Himachal Pradesh', 'post-graduate',
+    'exam calendar', 'HP PAT', 'TNEA',
+  ];
+  
+  const qualificationSearches = [
+    '10th pass', '12th pass', 'Graduate', 'Post Graduate', 'ITI',
+    'Diploma', 'Engineering', 'B.Ed',
+  ];
+
+  const searchUrls: MetadataRoute.Sitemap = [
+    // Main search page
+    {
+      url: `${siteUrl}/search`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    },
+    // Popular search pages
+    ...popularSearches.map((q) => ({
+      url: `${siteUrl}/search?q=${encodeURIComponent(q)}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    })),
+    // Qualification-based search pages
+    ...qualificationSearches.map((q) => ({
+      url: `${siteUrl}/search?q=${encodeURIComponent(q)}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.6,
+    })),
+  ];
+
   // Static URLs with proper metadata
   const staticUrls = [
     {
@@ -80,6 +123,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0, // Homepage priority
     },
   ];
+
+  // High-traffic special landing pages
+  const specialTrafficUrls = [
+    {
+      url: `${siteUrl}/today`,
+      lastModified: new Date(),
+      changeFrequency: 'hourly' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/closing-soon`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+  ];
+
 
   // Legal pages with proper priority (0.4-0.5) and monthly changeFrequency
   const legalUrls = [
@@ -124,10 +184,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Combine all URLs and ensure we don't exceed 50,000 URLs
   const allUrls = [
     ...staticUrls,
+    ...specialTrafficUrls,
     ...legalUrls,
     ...categoryUrls,
     ...stateUrls,
     ...schemeUrls, // Add scheme URLs
+    ...searchUrls, // Add search page URLs for SEO
     ...jobUrls,
   ];
 

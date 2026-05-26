@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/Header';
+import { NewsTicker } from '@/components/NewsTicker';
 import { Footer } from '@/components/Footer';
 import { websiteJsonLd, organizationJsonLd } from '@/lib/seo';
 import { BackToTop } from '@/components/BackToTop';
@@ -124,6 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${inter.className} flex min-h-screen flex-col`}>
+        <NewsTicker />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -10,7 +10,9 @@ import {
   getStats,
   getSitemap,
   triggerCronNow,
-  getRelatedJobs
+  getRelatedJobs,
+  getTodayJobs,
+  getClosingSoonJobs
 } from '../controllers/job.controller.js';
 import { getRssFeed } from '../controllers/rss.controller.js';
 import { subscribeNewsletter } from '../controllers/subscriber.controller.js';
@@ -46,6 +48,8 @@ jobRouter.get('/jobs/trending', trendingJobsValidator, validateRequest, catchAsy
 jobRouter.get('/jobs/search', searchJobsValidator, validateRequest, catchAsync(searchJobs));
 jobRouter.get('/jobs/category/:category', categoryJobsValidator, validateRequest, catchAsync(getJobsByCategory));
 jobRouter.get('/jobs/state/:state', stateJobsValidator, validateRequest, catchAsync(getJobsByState));
+jobRouter.get('/jobs/today', allJobsValidator, validateRequest, catchAsync(getTodayJobs));
+jobRouter.get('/jobs/closing-soon', allJobsValidator, validateRequest, catchAsync(getClosingSoonJobs));
 jobRouter.get('/jobs/:slug', jobSlugValidator, validateRequest, catchAsync(getJobBySlug));
 jobRouter.get('/jobs/:slug/related', catchAsync(getRelatedJobs));
 
