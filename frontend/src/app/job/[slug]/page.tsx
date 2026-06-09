@@ -45,10 +45,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     `/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'Latest Sarkari Naukri Updates')}`
   );
 
+  // Set robots meta tag based on job status
+  // Active jobs = indexed by Google, Expired/Upcoming = not indexed
+  const shouldIndex = job.status === 'active';
+
   return {
     title: pageTitle,
     description: metaDescription,
     alternates: { canonical: jobUrl },
+    robots: {
+      index: shouldIndex,
+      follow: true,
+      googleBot: {
+        index: shouldIndex,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large' as const,
+        'max-snippet': -1,
+      },
+    },
     openGraph: {
       title: pageTitle,
       description: metaDescription,
