@@ -2,6 +2,7 @@
 
 import { SEO_CONFIG } from './config';
 import { seoCache, CacheKeys } from './cache';
+import { getLatestJobs, getLatestSchemes } from '../api';
 import type { 
   SitemapEntry,
   SitemapImage,
@@ -399,13 +400,11 @@ export class IndexingManager {
    */
   private async generateJobsSitemap(): Promise<SitemapEntry[]> {
     try {
-      // This would integrate with your job data source
-      // For now, return sample structure
       const jobs = await this.fetchJobsData();
       
       return jobs.map(job => ({
         url: `${this.siteUrl}/job/${job.slug}`,
-        lastModified: new Date(job.lastUpdated || Date.now()),
+        lastModified: new Date(job.createdAt || Date.now()),
         changeFrequency: 'weekly',
         priority: this.calculateJobPriority(job),
         images: job.images ? job.images.map((img: any) => ({
@@ -426,7 +425,7 @@ export class IndexingManager {
       
       return schemes.map(scheme => ({
         url: `${this.siteUrl}/schemes/${scheme.slug}`,
-        lastModified: new Date(scheme.lastUpdated || Date.now()),
+        lastModified: new Date(scheme.updatedAt || scheme.createdAt || Date.now()),
         changeFrequency: 'monthly',
         priority: this.calculateSchemePriority(scheme),
         images: scheme.images ? scheme.images.map((img: any) => ({
@@ -447,8 +446,8 @@ export class IndexingManager {
       const results = await this.fetchResultsData();
       
       return results.map(result => ({
-        url: `${this.siteUrl}/result/${result.slug}`,
-        lastModified: new Date(result.lastUpdated || Date.now()),
+        url: `${this.siteUrl}/job/${result.slug}`,
+        lastModified: new Date(result.createdAt || Date.now()),
         changeFrequency: 'daily',
         priority: 0.9, // High priority for results
       }));
@@ -527,19 +526,31 @@ export class IndexingManager {
   }
 
   private async fetchJobsData(): Promise<any[]> {
-    // This would integrate with your actual job data source
-    // For now, return empty array - will be implemented when integrating with backend
-    return [];
+    try {
+      return await getLatestJobs(3000);
+    } catch (error) {
+      console.error('Failed to fetch jobs for sitemap:', error);
+      return [];
+    }
   }
 
   private async fetchSchemesData(): Promise<any[]> {
-    // This would integrate with your actual schemes data source
-    return [];
+    try {
+      return await getLatestSchemes(100);
+    } catch (error) {
+      console.error('Failed to fetch schemes for sitemap:', error);
+      return [];
+    }
   }
 
   private async fetchResultsData(): Promise<any[]> {
-    // This would integrate with your actual results data source
-    return [];
+    try {
+      const jobs = await getLatestJobs(1000);
+      return jobs.filter(job => job.category === 'result');
+    } catch (error) {
+      console.error('Failed to fetch results for sitemap:', error);
+      return [];
+    }
   }
 
   private calculateJobPriority(job: any): number {

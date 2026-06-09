@@ -353,14 +353,15 @@ export function generateJobPageTitle(job: JobDetail): string {
   const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
   const title = cleanText(job.title);
   const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? `${job.vacancyCount} Vacancies` : 'Vacancy';
+  const currentYear = new Date().getFullYear();
 
   const suffixByCategory: Record<string, string> = {
-    job: `${vacancyText}, Eligibility, Last Date`,
-    result: 'Result Link, Merit List, Cut Off',
-    'admit-card': 'Admit Card Download, Exam Date',
-    admission: 'Admission Form, Eligibility, Last Date',
-    scholarship: 'Scholarship, Eligibility, Apply Online',
-    'exam-form': 'Exam Form, Fees, Last Date',
+    job: `🔥 Online Form, ${vacancyText}, Last Date ${currentYear}`,
+    result: `📊 Result Link, Merit List, Cut Off Marks ${currentYear}`,
+    'admit-card': `🎫 Hall Ticket Download, Exam Date ${currentYear}`,
+    admission: `🎓 Admission Form, Fee, Eligibility ${currentYear}`,
+    scholarship: `💰 Apply Online, Eligibility, Last Date ${currentYear}`,
+    'exam-form': `📝 Application Form, Fee, Registration ${currentYear}`,
   };
 
   const suffix = suffixByCategory[job.category] || `${categoryLabel}, Details`;
@@ -376,35 +377,38 @@ export function generateJobMetaDescription(job: JobDetail): string {
     const organization = job.organization || 'Government';
     const state = job.state && job.state !== 'All India' ? ` in ${job.state}` : '';
     
-    // Build base description
-    let description = `${job.title} - ${categoryLabel} notification by ${organization}${state}.`;
-    
-    // Add vacancy count if available
-    if (job.vacancyCount && job.vacancyCount > 0) {
-      description += ` ${job.vacancyCount} vacancies.`;
-    }
-    
-    // Add last date if available
+    // Hinglish action prompt based on category
+    const categoryPrompts: Record<string, string> = {
+      job: 'Online application form apply link, eligibility criteria, age limit',
+      result: 'Direct result download link, scorecard, cut-off marks, merit list',
+      'admit-card': 'Hall ticket download link, exam date and timing, reporting instructions',
+      admission: 'Registration form link, eligibility, fee structure, guidelines',
+      scholarship: 'Sarkari scholarship yojana registration, eligibility, benefit details',
+      'exam-form': 'Online form registration link, fees, payment guidelines',
+    };
+    const categoryPrompt = categoryPrompts[job.category] || 'Complete notification details, apply link';
+
+    const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? ` ${job.vacancyCount} vacancies.` : '';
+    let lastDateText = '';
     if (job.lastDate) {
       const lastDate = new Date(job.lastDate);
       const formattedDate = lastDate.toLocaleDateString('en-IN', { 
         day: 'numeric', 
         month: 'short' 
       });
-      description += ` Last date: ${formattedDate}.`;
+      lastDateText = ` Last date to apply: ${formattedDate}.`;
     }
-    
-    description += ' Eligibility, apply link aur official notification check karein.';
-    
+
+    // Compelling meta description in Hinglish/English mix (highly popular for search intent)
+    let description = `⚡ BREAKING: ${job.title} details out!${vacancyText}${lastDateText} ${categoryPrompt} aur official notification check karein. 🚀`;
+
     // Ensure length is between 150-160 characters
     if (description.length > 160) {
-      // Truncate and add ellipsis
       description = description.slice(0, 157) + '...';
-    } else if (description.length < 150) {
-      // Add more context if too short
-      const additionalInfo = job.qualificationLevel ? ` ${job.qualificationLevel} eligible.` : ' Check eligibility.';
-      if (description.length + additionalInfo.length <= 160) {
-        description += additionalInfo;
+    } else if (description.length < 140) {
+      description += ' SarkariPulse par latest updates sabse pehle.';
+      if (description.length > 160) {
+        description = description.slice(0, 160);
       }
     }
     

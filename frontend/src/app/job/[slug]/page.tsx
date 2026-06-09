@@ -19,6 +19,19 @@ export const revalidate = 60;
 
 type Props = { params: Promise<{ slug: string }> };
 
+export async function generateStaticParams() {
+  try {
+    const { getLatestJobs } = await import('@/lib/api');
+    const latestJobs = await getLatestJobs(50);
+    return latestJobs.map((job) => ({
+      slug: job.slug,
+    }));
+  } catch (error) {
+    console.error('Failed to generate static params for jobs:', error);
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const job = await getJobBySlug(slug);
@@ -138,10 +151,12 @@ export default async function JobDetailPage({ params }: Props) {
       />
       
       {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd(job)) }}
-      />
+      {job.category === 'job' && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd(job)) }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(generateArticleSchema(job)) }}

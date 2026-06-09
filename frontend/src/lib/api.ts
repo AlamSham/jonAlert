@@ -2,8 +2,59 @@ import { JobDetail, JobListItem, PaginatedResponse, StatsData, SchemeDetail, Sch
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
 
+async function fetchWithRetry(
+  url: string,
+  options?: RequestInit,
+  retries = 5,
+  delayMs = 2000
+): Promise<Response> {
+  let attempt = 0;
+  
+  const bypassKey = process.env.API_BYPASS_KEY || process.env.CRON_SECRET;
+  const mergedOptions: RequestInit = {
+    ...options,
+    headers: {
+      ...options?.headers,
+      ...(bypassKey ? { 'X-API-Bypass-Key': bypassKey } : {}),
+    },
+  };
+
+  while (true) {
+    try {
+      const response = await fetch(url, mergedOptions);
+
+      if (response.status === 429) {
+        attempt++;
+        if (attempt >= retries) {
+          console.error(`[API Rate Limit 429] Max retries reached for ${url}`);
+          return response;
+        }
+        console.warn(
+          `[API Rate Limit 429] Retrying ${url} (attempt ${attempt}/${retries}) in ${delayMs}ms...`
+        );
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        delayMs *= 2; // Exponential backoff
+        continue;
+      }
+
+      return response;
+    } catch (error) {
+      attempt++;
+      if (attempt >= retries) {
+        throw error;
+      }
+      console.warn(
+        `[Network Error] Retrying ${url} (attempt ${attempt}/${retries}) in ${delayMs}ms due to:`,
+        error
+      );
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+      delayMs *= 2;
+    }
+  }
+}
+
 async function safeFetch<T>(path: string, revalidate = 60): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetchWithRetry(`${API_BASE}${path}`, {
     next: { revalidate },
   });
 
@@ -44,7 +95,7 @@ export async function getJobsByState(state: string, page = 1, limit = 20, catego
 }
 
 export async function getJobBySlug(slug: string): Promise<JobDetail | null> {
-  const response = await fetch(`${API_BASE}/api/jobs/${slug}`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/jobs/${slug}`, {
     next: { revalidate: 60 },
   });
 
@@ -99,7 +150,7 @@ export async function getLatestSchemes(limit = 6): Promise<SchemeListItem[]> {
 }
 
 export async function getSchemeBySlug(slug: string): Promise<SchemeDetail | null> {
-  const response = await fetch(`${API_BASE}/api/schemes/${slug}`, {
+  const response = await fetchWithRetry(`${API_BASE}/api/schemes/${slug}`, {
     next: { revalidate: 60 },
   });
 

@@ -32,8 +32,8 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const q = params.q || '';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
-  // Index search pages WITH a query, noindex empty search page
-  const shouldIndex = q.trim().length > 0;
+  // Never index search results pages to prevent thin content penalties
+  const shouldIndex = false;
 
   const title = q
     ? `${q} Jobs 2026 - Latest Sarkari Naukri, Result, Admit Card | SarkariPulse`

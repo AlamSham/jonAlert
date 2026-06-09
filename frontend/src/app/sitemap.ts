@@ -98,20 +98,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily' as const,
       priority: 0.7,
     },
-    // Popular search pages
-    ...popularSearches.map((q) => ({
-      url: `${siteUrl}/search?q=${encodeURIComponent(q)}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    })),
-    // Qualification-based search pages
-    ...qualificationSearches.map((q) => ({
-      url: `${siteUrl}/search?q=${encodeURIComponent(q)}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.6,
-    })),
   ];
 
   // Static URLs with proper metadata

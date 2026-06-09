@@ -218,6 +218,54 @@ export default async function HomePage() {
             </Link>
           </div>
         </section>
+
+        {/* SEO Content Section for Homepage Ranking */}
+        <section id="homepage-seo-content" className="border-t border-stone-200 pt-10 mt-12">
+          <div className="prose-custom max-w-4xl mx-auto text-sm leading-relaxed text-muted">
+            <h2 className="text-xl font-black text-ink mb-4">
+              Sarkari Result 2026 & Sarkari Naukri Latest Updates - SarkariPulse
+            </h2>
+            <p className="mb-4">
+              Welcome to <strong>SarkariPulse</strong>, India's leading AI-powered portal for all <strong>Sarkari Result 2026</strong>, <strong>Sarkari Naukri</strong>, government jobs notifications, college admissions, scholarship yojanas, exam forms, and exam answers keys. Humara primary target hai aapko har state aur central government notifications ko real-time update ke saath sabse pehle deliver karna. Hamara advanced platform direct official links, notification PDFs, eligibility criteria, age limits, aur step-by-step apply karne ka tarika pradan karta hai.
+            </p>
+            
+            <div className="grid gap-6 md:grid-cols-2 mt-6 mb-6">
+              <div>
+                <h3 className="font-bold text-ink mb-2">💼 Central & State Government Jobs</h3>
+                <p>
+                  UPSC (Union Public Service Commission), SSC CGL/CHSL/MTS, Railways (RRB NTPC, Group D, ALP), Banking sector (IBPS, SBI PO/Clerk), Defence (Army, Navy, Airforce), State Police recruitment aur post-graduate sarkari naukri alerts. Chahe aap 10th pass ho, 12th pass ho ya graduate, sabhi qualification-wise jobs yahan direct link ke saath uplabdh hain.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-bold text-ink mb-2">📊 Sarkari Result, Cut-Off & Admit Cards</h3>
+                <p>
+                  Kisi bhi major exams ke results checking, merit lists download, scorecards, previous year question papers aur officially released cut-off marks ko bina kisi hassle ke check karein. Admit card download link release hote hi humare platform par active kar diya jata hai taaki aap exam center ki details turant jaan sakein.
+                </p>
+              </div>
+            </div>
+
+            <h3 className="font-bold text-ink mb-2">🏛️ Government Schemes & Yojanas (Sarkari Yojana)</h3>
+            <p className="mb-4">
+              Sarkari naukri ke sath-sath hum aapko central government aur various state governments dwara chalaye ja rahe beneficial schemes (Sarkari Yojana) jaise <strong>PM Kisan Samman Nidhi</strong>, <strong>Ayushman Bharat Yojana</strong>, PM Awas Yojana, Mudra Loans aur student welfare schemes ki full details aur application links pradan karte hain.
+            </p>
+
+            <h3 className="font-bold text-ink mb-4">❓ FAQ: Frequently Asked Questions</h3>
+            <div className="space-y-4">
+              <div className="border-b border-stone-200 pb-3">
+                <p className="font-bold text-ink">Q1. SarkariPulse par sarkari naukri updates kitni der mein update hoti hain?</p>
+                <p className="text-muted mt-1">Ans: SarkariPulse par notifications har 10 minute mein AI-powered automated bots ke zariye update kiye jaate hain, taaki aap koi bhi notification miss na karein.</p>
+              </div>
+              <div className="border-b border-stone-200 pb-3">
+                <p className="font-bold text-ink">Q2. Kya hum qualification-wise ya state-wise jobs search kar sakte hain?</p>
+                <p className="text-muted mt-1">Ans: Haan! Homepage par Qualification Links (10th pass, 12th pass, Graduate, ITI, etc.) aur Jobs by State categories par click karke aap filter kar sakte hain.</p>
+              </div>
+              <div>
+                <p className="font-bold text-ink">Q3. Yahan par notifications ke documents download karne ka link kahan milta hai?</p>
+                <p className="text-muted mt-1">Ans: Har job detail page ke details section mein direct download official PDF notifications aur online application apply links   diye gaye hain.</p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

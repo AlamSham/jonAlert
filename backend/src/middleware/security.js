@@ -33,6 +33,17 @@ export const helmetMiddleware = helmet({
 export const rateLimitMiddleware = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
+  skip: (req) => {
+    // Skip rate limiting for local loopback connections or if a secret bypass key matches
+    const ip = req.ip || '';
+    const bypassKey = req.headers['x-api-bypass-key'];
+    return (
+      ip === '127.0.0.1' ||
+      ip === '::1' ||
+      ip === '::ffff:127.0.0.1' ||
+      (bypassKey && bypassKey === env.cronSecret)
+    );
+  },
   standardHeaders: 'draft-7',
   legacyHeaders: false,
   handler: (req, res) => {
