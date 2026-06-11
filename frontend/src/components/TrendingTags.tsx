@@ -1,18 +1,18 @@
 import Link from 'next/link';
 
 const POPULAR_SEARCHES = [
-  { label: 'SSC CGL', q: 'SSC CGL' },
-  { label: 'UPSC', q: 'UPSC' },
-  { label: 'Railway', q: 'Railway' },
-  { label: 'Police', q: 'Police' },
-  { label: 'Banking', q: 'Banking' },
-  { label: 'Army', q: 'Army' },
-  { label: 'Navy', q: 'Navy' },
+  { label: 'SSC CGL', orgSlug: 'ssc' },
+  { label: 'UPSC', orgSlug: 'upsc' },
+  { label: 'Railway', orgSlug: 'railway' },
+  { label: 'Police', orgSlug: 'police' },
+  { label: 'Banking', orgSlug: 'banking' },
+  { label: 'Army', orgSlug: 'defense' },
+  { label: 'Navy', orgSlug: 'defense' },
   { label: 'Teacher', q: 'Teacher' },
   { label: 'UPSSSC', q: 'UPSSSC' },
   { label: 'BPSC', q: 'BPSC' },
   { label: 'NTA', q: 'NTA' },
-  { label: 'IBPS', q: 'IBPS' },
+  { label: 'IBPS', orgSlug: 'banking' },
 ];
 
 export function TrendingTags() {
@@ -20,10 +20,10 @@ export function TrendingTags() {
     <section id="trending-tags">
       <h2 className="text-sm font-bold uppercase tracking-wider text-muted mb-3">🔥 Popular Searches</h2>
       <div className="flex flex-wrap gap-2">
-        {POPULAR_SEARCHES.map((tag) => (
+        {POPULAR_SEARCHES.map((tag, index) => (
           <Link
-            key={tag.q}
-            href={`/search?q=${encodeURIComponent(tag.q)}`}
+            key={index}
+            href={tag.orgSlug ? `/jobs/org/${tag.orgSlug}` : `/search?q=${encodeURIComponent(tag.q!)}`}
             className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-muted shadow-sm transition hover:border-accent hover:text-accent hover:shadow-md active:scale-95"
           >
             {tag.label}

@@ -119,6 +119,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Organization-wise landing pages
+  const orgs = ['ssc', 'upsc', 'railway', 'banking', 'defense', 'police'];
+  const orgUrls = orgs.map(org => ({
+    url: `${siteUrl}/jobs/org/${org}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.9,
+  }));
+
 
   // High-traffic special landing pages
   const specialTrafficUrls = [
@@ -184,6 +193,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...legalUrls,
     ...categoryUrls,
     ...qualificationUrls,
+    ...orgUrls,
     ...stateUrls,
     ...schemeUrls, // Add scheme URLs
     ...searchUrls, // Add search page URLs for SEO

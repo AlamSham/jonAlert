@@ -5,6 +5,7 @@ import {
   getJobsByCategory,
   getJobsByState,
   getJobsByQualification,
+  getJobsByOrg,
   getLatestJobs,
   searchJobs,
   getTrendingJobs,
@@ -52,6 +53,7 @@ jobRouter.get('/jobs/state/:state', stateJobsValidator, validateRequest, catchAs
 jobRouter.get('/jobs/today', allJobsValidator, validateRequest, catchAsync(getTodayJobs));
 jobRouter.get('/jobs/closing-soon', allJobsValidator, validateRequest, catchAsync(getClosingSoonJobs));
 jobRouter.get('/jobs/qualification/:qualification', catchAsync(getJobsByQualification));
+jobRouter.get('/jobs/org/:orgSlug', catchAsync(getJobsByOrg));
 jobRouter.get('/jobs/:slug', jobSlugValidator, validateRequest, catchAsync(getJobBySlug));
 jobRouter.get('/jobs/:slug/related', catchAsync(getRelatedJobs));
 

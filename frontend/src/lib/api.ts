@@ -197,3 +197,14 @@ export async function getJobsByQualification(
     `/api/jobs/qualification/${encodeURIComponent(qualification)}?page=${page}&limit=${limit}`
   );
 }
+
+export async function getJobsByOrg(
+  orgSlug: string,
+  page = 1,
+  limit = 20
+): Promise<PaginatedResponse<JobListItem>> {
+  return safeFetch<PaginatedResponse<JobListItem>>(
+    `/api/jobs/org/${encodeURIComponent(orgSlug)}?page=${page}&limit=${limit}`
+  );
+}
+

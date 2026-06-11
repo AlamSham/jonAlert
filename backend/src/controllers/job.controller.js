@@ -366,3 +366,60 @@ export const getJobsByQualification = async (req, res) => {
     },
   });
 };
+
+export const getJobsByOrg = async (req, res) => {
+  const { orgSlug } = req.params;
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  const skip = (page - 1) * limit;
+
+  const ORG_ALIASES = {
+    ssc: ['ssc', 'staff selection commission'],
+    upsc: ['upsc', 'union public service commission'],
+    railway: ['railway', 'rrb', 'rrc', 'rcf'],
+    banking: ['bank', 'ibps', 'sbi', 'rbi', 'nabard'],
+    defense: ['army', 'navy', 'air force', 'defence', 'nda', 'cds', 'agniveer', 'bsf', 'crpf', 'cisf', 'itbp', 'ssb', 'coast guard'],
+    police: ['police', 'constable', 'si', 'sub inspector', 'daroga'],
+  };
+
+  const aliases = ORG_ALIASES[orgSlug.toLowerCase()];
+  
+  if (!aliases) {
+    return res.status(400).json({ message: 'Invalid organization slug' });
+  }
+
+  // Build regex query to search in both title and organization fields
+  const regexPatterns = aliases.map(alias => new RegExp(`\\b${escapeRegex(alias)}\\b`, 'i'));
+  
+  const filter = {
+    status: 'active',
+    $or: [
+      { organization: { $in: regexPatterns } },
+      { title: { $in: regexPatterns } }
+    ]
+  };
+
+  const [data, total] = await Promise.all([
+    Job.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .select('title slug category summary state organization vacancyCount lastDate tags createdAt')
+      .lean(),
+    Job.countDocuments(filter),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  res.json({
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1,
+    },
+  });
+};
