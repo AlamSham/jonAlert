@@ -11,13 +11,11 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: 'Googlebot',
         allow: '/',
         disallow: ['/api/', '/_next/', '/admin/', '/private/'],
-        crawlDelay: 1,
       },
       {
         userAgent: 'Bingbot',
         allow: '/',
         disallow: ['/api/', '/_next/', '/admin/', '/private/'],
-        crawlDelay: 1,
       },
       // All other crawlers
       {
@@ -42,7 +40,6 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/private/',
         ],
-        crawlDelay: 1,
       },
       // Aggressive crawlers - rate limited
       {

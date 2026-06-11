@@ -356,12 +356,14 @@ export function generateJobPageTitle(job: JobDetail): string {
   const currentYear = new Date().getFullYear();
 
   const suffixByCategory: Record<string, string> = {
-    job: `🔥 Online Form, ${vacancyText}, Last Date ${currentYear}`,
-    result: `📊 Result Link, Merit List, Cut Off Marks ${currentYear}`,
-    'admit-card': `🎫 Hall Ticket Download, Exam Date ${currentYear}`,
-    admission: `🎓 Admission Form, Fee, Eligibility ${currentYear}`,
-    scholarship: `💰 Apply Online, Eligibility, Last Date ${currentYear}`,
-    'exam-form': `📝 Application Form, Fee, Registration ${currentYear}`,
+    job: job.vacancyCount && job.vacancyCount > 0
+      ? `${job.vacancyCount.toLocaleString()} Posts, Apply Online ${currentYear}`
+      : `Online Form, Apply Now ${currentYear}`,
+    result: `Result OUT, Merit List, Cut Off ${currentYear}`,
+    'admit-card': `Admit Card OUT, Download Now ${currentYear}`,
+    admission: `Admission Open, Apply Before Last Date ${currentYear}`,
+    scholarship: `Apply Online, ₹ Scholarship Amount ${currentYear}`,
+    'exam-form': `Form OUT, Registration Open ${currentYear}`,
   };
 
   const suffix = suffixByCategory[job.category] || `${categoryLabel}, Details`;
@@ -400,7 +402,8 @@ export function generateJobMetaDescription(job: JobDetail): string {
     }
 
     // Compelling meta description in Hinglish/English mix (highly popular for search intent)
-    let description = `⚡ BREAKING: ${job.title} details out!${vacancyText}${lastDateText} ${categoryPrompt} aur official notification check karein. 🚀`;
+    const orgText = job.organization ? `${job.organization} ` : '';
+    let description = `⚡ ${orgText}${job.title}!${vacancyText}${lastDateText} ${categoryPrompt}. Apply karein! 🚀`;
 
     // Ensure length is between 150-160 characters
     if (description.length > 160) {

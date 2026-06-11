@@ -330,3 +330,39 @@ export const getClosingSoonJobs = async (req, res) => {
   });
 };
 
+export const getJobsByQualification = async (req, res) => {
+  const { qualification } = req.params;
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  const skip = (page - 1) * limit;
+
+  const allowedQualifications = ['10th', '12th', 'graduate', 'post-graduate', 'diploma', 'iti', 'any'];
+  if (!allowedQualifications.includes(qualification)) {
+    return res.status(400).json({ message: 'Invalid qualification level' });
+  }
+
+  const filter = { qualificationLevel: qualification, status: 'active' };
+  const [data, total] = await Promise.all([
+    Job.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .select('title slug category summary state organization vacancyCount lastDate tags qualificationLevel createdAt')
+      .lean(),
+    Job.countDocuments(filter),
+  ]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  res.json({
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1,
+    },
+  });
+};

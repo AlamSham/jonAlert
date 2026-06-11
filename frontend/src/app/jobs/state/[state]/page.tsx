@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { getJobsByState } from '@/lib/api';
 import { JobCard } from '@/components/JobCard';
 import { Pagination } from '@/components/Pagination';
@@ -12,21 +13,41 @@ import {
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 import { getNeighboringStates } from '@/lib/neighboring-states';
+import { getStateSEOInfo } from '@/lib/state-seo-data';
 
 export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const topStates = [
+    'Uttar Pradesh', 'Bihar', 'Rajasthan', 'Madhya Pradesh',
+    'Maharashtra', 'West Bengal', 'Andhra Pradesh', 'Chhattisgarh',
+    'Jharkhand', 'Himachal Pradesh', 'Tamil Nadu', 'Karnataka',
+    'Kerala', 'Gujarat', 'Haryana', 'Punjab', 'Odisha',
+    'Telangana', 'Uttarakhand', 'Delhi', 'Assam'
+  ];
+  return topStates.map(state => ({ state: encodeURIComponent(state) }));
+}
 
 type Props = {
   params: Promise<{ state: string }>;
   searchParams: Promise<{ page?: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { state } = await params;
+  const { page: pageStr } = await searchParams;
+  const page = Math.max(1, Number(pageStr) || 1);
   const decodedState = decodeURIComponent(state);
+  const stateInfo = getStateSEOInfo(decodedState);
+  const canonical = `https://sarkaripulse.net/jobs/state/${encodeURIComponent(decodedState)}`;
   return {
-    title: `${decodedState} Govt Jobs 2026: Latest Vacancy, Sarkari Naukri`,
-    description: `Latest ${decodedState} Govt Jobs 2026: sarkari naukri, vacancy, eligibility, last date, salary aur apply online links. Daily government job updates.`,
-    alternates: { canonical: `https://sarkaripulse.net/jobs/state/${encodeURIComponent(decodedState)}` },
+    title: page > 1
+      ? `${decodedState} Sarkari Naukri 2026 — Page ${page} | SarkariPulse`
+      : `${decodedState} Sarkari Naukri 2026 — ${stateInfo.psc}, ${stateInfo.boards[0]} Vacancy | SarkariPulse`,
+    description: `⚡ ${decodedState} Govt Jobs 2026: ${stateInfo.psc}, ${stateInfo.boards.join(', ')} ki latest sarkari naukri. ${stateInfo.popularExams.slice(0, 3).join(', ')} bharti updates. Apply online now!`,
+    alternates: {
+      canonical: page > 1 ? `${canonical}?page=${page}` : canonical,
+    },
   };
 }
 
@@ -35,6 +56,7 @@ export default async function StatePage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const decodedState = decodeURIComponent(state);
   const page = Math.max(1, Number(sp.page) || 1);
+  const stateInfo = getStateSEOInfo(decodedState);
   const { data: jobs, pagination } = await getJobsByState(decodedState, page, 18);
 
   // Get neighboring states
@@ -60,27 +82,31 @@ export default async function StatePage({ params, searchParams }: Props) {
   ]);
   const localBusinessSchema = generateLocalBusinessSchema(decodedState);
 
-  // FAQ data for state-specific jobs
+  // FAQ data for state-specific jobs (enriched with PSC info)
   const stateFAQ: FAQItem[] = [
     {
       question: `${decodedState} mein kitni government jobs available hain?`,
-      answer: `Currently ${pagination.total} sarkari naukri notifications ${decodedState} mein available hain. State government aur central government dono ki jobs yahan milti hain.`
+      answer: `Currently ${pagination.total} sarkari naukri notifications ${decodedState} mein available hain. ${stateInfo.psc}, ${stateInfo.boards.join(', ')} ki sabhi vacancies yahan regularly update hoti hain.`
     },
     {
-      question: `${decodedState} ki state government jobs kaise apply karein?`,
-      answer: `${decodedState} ki official website par jaayiye, employment section check kariye, ya phir job notification mein diye gaye direct link par click kariye. Online application form bhariye.`
+      question: `${stateInfo.psc} ka agla exam kab hoga?`,
+      answer: `${stateInfo.psc} exam dates ke liye official notification check karein. ${stateInfo.popularExams[0]} aur ${stateInfo.popularExams[1]} jaise popular exams ki dates SarkariPulse par turant update hoti hain.`
     },
     {
-      question: `${decodedState} mein kya qualification ki jobs milti hain?`,
-      answer: '10th pass se lekar Post Graduate tak sabhi qualification ki jobs milti hain. Police, Teacher, Clerk, Engineer, Doctor - har field ki vacancies available hain.'
+      question: `${decodedState} mein 10th/12th pass ke liye kaunsi govt jobs hain?`,
+      answer: `${decodedState} mein Police Constable, Group D, MTS, Peon, Home Guard jaisi posts 10th/12th pass candidates ke liye available hoti hain. ${stateInfo.boards[0]} regularly in posts ki bharti nikalta hai.`
     },
     {
       question: `${decodedState} government job ki salary kitni hoti hai?`,
-      answer: 'Salary post ke according vary hoti hai. Usually ₹15,000 se ₹1,00,000+ per month tak hoti hai. 7th Pay Commission ke according pay scale milti hai.'
+      answer: `${decodedState} mein salary post ke according ₹15,000 se ₹1,00,000+ per month tak hoti hai. 7th Pay Commission ke according pay scale + DA + HRA milti hai.`
     },
     {
       question: `${decodedState} ki jobs ke liye age limit kya hai?`,
-      answer: 'Age limit post ke according alag hoti hai. Usually 18-35 years, lekin SC/ST/OBC candidates ko age relaxation milti hai. Notification mein details check kariye.'
+      answer: `Age limit post ke according alag hoti hai. Usually General: 18-35 years, OBC: +3 years, SC/ST: +5 years relaxation. ${stateInfo.psc} specific rules notification mein check kariye.`
+    },
+    {
+      question: `${stateInfo.psc} ki taiyari kaise karein?`,
+      answer: `${stateInfo.psc} ki taiyari ke liye previous year papers solve karein, current affairs daily padhein, aur ${stateInfo.popularExams.slice(0, 2).join(' aur ')} ka syllabus acche se cover karein. SarkariPulse par latest notification aur updates milte rahenge.`
     }
   ];
 
@@ -106,20 +132,52 @@ export default async function StatePage({ params, searchParams }: Props) {
       ]} />
 
       <SectionHeader
-        title={`Sarkari Naukri in ${decodedState}`}
-        subtitle={`${pagination.total} jobs in ${decodedState}`}
+        title={`${decodedState} Sarkari Naukri 2026`}
+        subtitle={`${stateInfo.psc} — ${pagination.total} Govt Jobs Available`}
         icon="📍"
       />
 
-      {/* State Description */}
+      {/* PSC Info Card */}
       <div className="card mb-6">
-        <h2 className="text-lg font-bold text-ink mb-3">{decodedState} Government Jobs 2026</h2>
+        <h2 className="text-lg font-bold text-ink mb-3">
+          🏛️ {decodedState} Sarkari Naukri 2026 — {stateInfo.psc} & {stateInfo.boards[0]} Vacancy
+        </h2>
         <p className="text-sm text-muted leading-relaxed mb-4">
-          {decodedState} mein latest sarkari naukri notifications yahan milti hain. State government 
-          aur central government dono ki jobs available hain. Police, Teacher, Clerk, Engineer, 
-          Medical Officer - har field ki vacancies regular basis par update hoti rehti hain.
+          {decodedState} mein latest sarkari naukri notifications yahan milte hain.
+          {stateInfo.psc}, {stateInfo.boards.join(', ')} ki sabhi vacancies,
+          eligibility, last date aur direct apply links available hain.
+          Police, Teacher, Clerk, Engineer — har field ki jobs regular basis par update hoti hain.
         </p>
-        
+
+        {/* Popular Exams Tags */}
+        <h3 className="text-sm font-semibold text-ink mb-2">🎯 Popular Exams</h3>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {stateInfo.popularExams.map(exam => (
+            <span
+              key={exam}
+              className="inline-flex items-center px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-full text-xs font-medium text-amber-800"
+            >
+              {exam}
+            </span>
+          ))}
+        </div>
+
+        {/* Recruitment Boards */}
+        <h3 className="text-sm font-semibold text-ink mb-2">📋 Recruitment Boards</h3>
+        <div className="flex flex-wrap gap-2 mb-4">
+          <span className="inline-flex items-center px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs font-medium text-blue-800">
+            {stateInfo.psc}
+          </span>
+          {stateInfo.boards.map(board => (
+            <span
+              key={board}
+              className="inline-flex items-center px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full text-xs font-medium text-blue-800"
+            >
+              {board}
+            </span>
+          ))}
+        </div>
+
         {/* Statistics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
           <div className="bg-stone-50 rounded-lg p-3">
@@ -130,17 +188,17 @@ export default async function StatePage({ params, searchParams }: Props) {
             <div className="text-lg font-bold text-accent">
               {latestJobDate ? latestJobDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : 'N/A'}
             </div>
-            <div className="text-xs text-muted">Latest Job</div>
+            <div className="text-xs text-muted">Latest Update</div>
           </div>
           <div className="bg-stone-50 rounded-lg p-3">
             <div className="text-lg font-bold text-accent">
               {popularCategories.length > 0 ? popularCategories[0] : 'All'}
             </div>
-            <div className="text-xs text-muted">Popular Category</div>
+            <div className="text-xs text-muted">Top Category</div>
           </div>
           <div className="bg-stone-50 rounded-lg p-3">
-            <div className="text-lg font-bold text-accent">Regular</div>
-            <div className="text-xs text-muted">Updates</div>
+            <div className="text-lg font-bold text-accent">{stateInfo.psc}</div>
+            <div className="text-xs text-muted">Main PSC</div>
           </div>
         </div>
       </div>
@@ -183,8 +241,56 @@ export default async function StatePage({ params, searchParams }: Props) {
 
       {/* FAQ Section */}
       <div className="mt-8">
-        <FAQ items={stateFAQ} title={`${decodedState} Government Jobs - FAQ`} />
+        <FAQ items={stateFAQ} title={`${decodedState} Sarkari Naukri — FAQ`} />
       </div>
+
+      {/* Browse by Qualification */}
+      <section className="mt-8">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-muted mb-3">
+          📚 Qualification Wise Jobs
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {[
+            { label: '10th Pass Jobs', slug: '10th' },
+            { label: '12th Pass Jobs', slug: '12th' },
+            { label: 'Graduate Jobs', slug: 'graduate' },
+            { label: 'Post Graduate Jobs', slug: 'post-graduate' },
+            { label: 'ITI Jobs', slug: 'iti' },
+            { label: 'Diploma Jobs', slug: 'diploma' },
+          ].map(({ label, slug }) => (
+            <Link
+              key={slug}
+              href={`/jobs/qualification/${slug}`}
+              className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-muted transition hover:border-accent hover:text-accent"
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Browse Other States */}
+      <section className="mt-6">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-muted mb-3">
+          📍 Other States
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {['Uttar Pradesh','Bihar','Rajasthan','Madhya Pradesh','Maharashtra',
+            'West Bengal','Andhra Pradesh','Chhattisgarh','Jharkhand','Himachal Pradesh',
+            'Tamil Nadu','Karnataka','Gujarat','Haryana','Delhi']
+            .filter(s => s !== decodedState)
+            .map(s => (
+              <Link
+                key={s}
+                href={`/jobs/state/${encodeURIComponent(s)}`}
+                className="rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-muted transition hover:border-accent hover:text-accent"
+              >
+                {s} Jobs
+              </Link>
+            ))
+          }
+        </div>
+      </section>
     </div>
   );
 }

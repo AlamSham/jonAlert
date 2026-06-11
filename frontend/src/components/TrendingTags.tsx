@@ -35,14 +35,14 @@ export function TrendingTags() {
 }
 
 const QUALIFICATION_LINKS = [
-  { label: '10th Pass Jobs', q: '10th pass' },
-  { label: '12th Pass Jobs', q: '12th pass' },
-  { label: 'Graduate Jobs', q: 'Graduate' },
-  { label: 'Post Graduate Jobs', q: 'Post Graduate' },
-  { label: 'ITI Jobs', q: 'ITI' },
-  { label: 'Diploma Jobs', q: 'Diploma' },
-  { label: 'Engineering Jobs', q: 'Engineering' },
-  { label: 'B.Ed Jobs', q: 'B.Ed' },
+  { label: '10th Pass Jobs', slug: '10th' },
+  { label: '12th Pass Jobs', slug: '12th' },
+  { label: 'Graduate Jobs', slug: 'graduate' },
+  { label: 'Post Graduate Jobs', slug: 'post-graduate' },
+  { label: 'ITI Jobs', slug: 'iti' },
+  { label: 'Diploma Jobs', slug: 'diploma' },
+  { label: 'Engineering Jobs', search: 'Engineering' },
+  { label: 'B.Ed Jobs', search: 'B.Ed' },
 ];
 
 export function QualificationLinks() {
@@ -52,8 +52,8 @@ export function QualificationLinks() {
       <div className="flex flex-wrap gap-2">
         {QUALIFICATION_LINKS.map((item) => (
           <Link
-            key={item.q}
-            href={`/search?q=${encodeURIComponent(item.q)}`}
+            key={item.label}
+            href={item.slug ? `/jobs/qualification/${item.slug}` : `/search?q=${encodeURIComponent(item.search!)}`}
             className="rounded-full border border-purple-200 bg-purple-50 px-4 py-2 text-sm font-medium text-purple-700 shadow-sm transition hover:border-purple-400 hover:bg-purple-100 hover:shadow-md active:scale-95"
           >
             {item.label}

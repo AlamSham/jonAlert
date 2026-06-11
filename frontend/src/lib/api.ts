@@ -187,3 +187,13 @@ export async function getRelatedSchemes(slug: string): Promise<SchemeListItem[]>
     return [];
   }
 }
+
+export async function getJobsByQualification(
+  qualification: string,
+  page = 1,
+  limit = 20
+): Promise<PaginatedResponse<JobListItem>> {
+  return safeFetch<PaginatedResponse<JobListItem>>(
+    `/api/jobs/qualification/${encodeURIComponent(qualification)}?page=${page}&limit=${limit}`
+  );
+}

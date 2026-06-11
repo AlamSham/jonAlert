@@ -110,6 +110,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Qualification-wise landing pages
+  const qualifications = ['10th', '12th', 'graduate', 'post-graduate', 'diploma', 'iti'];
+  const qualificationUrls = qualifications.map(q => ({
+    url: `${siteUrl}/jobs/qualification/${q}`,
+    lastModified: new Date(),
+    changeFrequency: 'daily' as const,
+    priority: 0.8,
+  }));
+
+
   // High-traffic special landing pages
   const specialTrafficUrls = [
     {
@@ -173,6 +183,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...specialTrafficUrls,
     ...legalUrls,
     ...categoryUrls,
+    ...qualificationUrls,
     ...stateUrls,
     ...schemeUrls, // Add scheme URLs
     ...searchUrls, // Add search page URLs for SEO

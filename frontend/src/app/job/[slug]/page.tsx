@@ -341,6 +341,14 @@ export default async function JobDetailPage({ params }: Props) {
           <section className="mb-8 rounded-2xl border border-stone-200 bg-stone-50 p-5">
             <h2 className="text-sm font-bold uppercase tracking-wider text-muted mb-3">🔗 Explore More</h2>
             <div className="flex flex-wrap gap-2">
+              {job.qualificationLevel && (
+                <Link
+                  href={`/jobs/qualification/${job.qualificationLevel}`}
+                  className="rounded-full border border-purple-300/50 bg-purple-50 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-100 hover:border-purple-400 transition"
+                >
+                  {job.qualificationLevel.toUpperCase()} Pass Jobs →
+                </Link>
+              )}
               {contextualLinks.map((link, index) => (
                 <Link
                   key={index}
