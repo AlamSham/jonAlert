@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-const ADSENSE_SCRIPT_ID = 'google-adsense-script';
 const ONESIGNAL_SCRIPT_ID = 'onesignal-sdk-script';
 
 function appendScript(id: string, src: string, attributes: Record<string, string> = {}) {
@@ -24,12 +23,6 @@ function appendScript(id: string, src: string, attributes: Record<string, string
 
 export function ThirdPartyScripts() {
   useEffect(() => {
-    appendScript(
-      ADSENSE_SCRIPT_ID,
-      'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4518508932731576',
-      { crossorigin: 'anonymous' }
-    );
-
     appendScript(
       ONESIGNAL_SCRIPT_ID,
       'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js'
