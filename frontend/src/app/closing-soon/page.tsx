@@ -8,7 +8,7 @@ import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Govt Jobs Closing Soon 2026 — Last Date to Apply Today/This Week',

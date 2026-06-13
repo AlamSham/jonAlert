@@ -7,7 +7,7 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd, generateCollectionPageSchema } from '@/lib/seo';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 const QUALIFICATION_META: Record<string, { label: string; emoji: string; description: string }> = {
   '10th': {

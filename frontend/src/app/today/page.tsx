@@ -8,7 +8,7 @@ import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const currentDateStr = new Date().toLocaleDateString('en-IN', {

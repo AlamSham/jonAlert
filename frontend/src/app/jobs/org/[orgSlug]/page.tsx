@@ -8,7 +8,7 @@ import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd, generateCollectionPageSchema } from '@/lib/seo';
 import { ORG_SEO_DATA } from '@/lib/org-seo-data';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ orgSlug: string }>;

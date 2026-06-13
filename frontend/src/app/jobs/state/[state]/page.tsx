@@ -15,7 +15,7 @@ import { FAQItem } from '@/lib/internal-links';
 import { getNeighboringStates } from '@/lib/neighboring-states';
 import { getStateSEOInfo } from '@/lib/state-seo-data';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const topStates = [

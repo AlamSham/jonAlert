@@ -12,7 +12,7 @@ import {
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'Exam Form — Latest Application Forms & Registration 2026',

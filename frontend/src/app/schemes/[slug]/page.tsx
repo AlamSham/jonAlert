@@ -9,7 +9,7 @@ import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd, formatDate } from '@/lib/seo';
 import { SCHEME_TYPE_EMOJI, SCHEME_TYPE_COLORS, SCHEME_TYPE_LABELS } from '@/lib/types';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 type Props = { params: Promise<{ slug: string }> };
 

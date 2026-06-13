@@ -15,7 +15,7 @@ import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescript
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 type Props = { params: Promise<{ slug: string }> };
 
