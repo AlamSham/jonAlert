@@ -116,8 +116,8 @@ export type SchemeFilters = {
 };
 
 export const SCHEME_TYPE_LABELS: Record<SchemeType, string> = {
-  central: 'Central Scheme',
-  state: 'State Scheme',
+  central: 'Kendra Sarkar Yojana',
+  state: 'Rajya Sarkar Yojana',
 };
 
 export const SCHEME_TYPE_EMOJI: Record<SchemeType, string> = {

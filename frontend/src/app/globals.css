@@ -318,3 +318,36 @@ body {
   animation: marquee2 35s linear infinite;
 }
 
+/* Premium HTML Table Styles for Structured Data */
+.prose-custom .sp-table-wrapper {
+  @apply w-full overflow-x-auto my-6 rounded-xl border border-stone-200 shadow-sm bg-white;
+}
+
+.prose-custom table.sp-table {
+  @apply w-full text-left border-collapse min-w-[600px];
+}
+
+.prose-custom table.sp-table thead {
+  @apply bg-stone-50 border-b border-stone-200;
+}
+
+.prose-custom table.sp-table th {
+  @apply py-3 px-4 text-sm font-bold text-ink whitespace-nowrap;
+}
+
+.prose-custom table.sp-table tbody tr {
+  @apply border-b border-stone-100 transition-colors hover:bg-stone-50/50;
+}
+
+.prose-custom table.sp-table tbody tr:last-child {
+  @apply border-0;
+}
+
+.prose-custom table.sp-table td {
+  @apply py-3 px-4 text-sm text-ink/90;
+}
+
+/* Alternating row colors for better readability */
+.prose-custom table.sp-table tbody tr:nth-child(even) {
+  @apply bg-stone-50/30;
+}

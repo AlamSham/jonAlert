@@ -162,16 +162,16 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Government Schemes */}
+        {/* Sarkari Yojana */}
         {latestSchemes.length > 0 && (
           <section id="schemes">
             <div className="flex items-center justify-between mb-6">
-              <SectionHeader title="Government Schemes" subtitle="Central aur state yojanas" icon="🏛️" />
+              <SectionHeader title="Sarkari Yojana (सरकारी योजना)" subtitle="PM Kisan, Ayushman Bharat aur sabhi yojanaon ki jankari" icon="🏛️" />
               <Link
                 href="/schemes"
                 className="text-sm font-bold text-accent hover:text-accent-dark transition hidden sm:block"
               >
-                View All →
+                Sabhi Yojana Dekhein →
               </Link>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -184,7 +184,7 @@ export default async function HomePage() {
                 href="/schemes"
                 className="inline-flex items-center gap-2 rounded-xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-md transition hover:bg-accent-dark active:scale-95"
               >
-                View All Schemes →
+                Sabhi Sarkari Yojana Dekhein →
               </Link>
             </div>
           </section>
@@ -244,9 +244,9 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <h3 className="font-bold text-ink mb-2">🏛️ Government Schemes & Yojanas (Sarkari Yojana)</h3>
+            <h3 className="font-bold text-ink mb-2">🏛️ Sarkari Yojana 2026 (सरकारी योजना) — PM Kisan, Ayushman Bharat, PM Awas</h3>
             <p className="mb-4">
-              Sarkari naukri ke sath-sath hum aapko central government aur various state governments dwara chalaye ja rahe beneficial schemes (Sarkari Yojana) jaise <strong>PM Kisan Samman Nidhi</strong>, <strong>Ayushman Bharat Yojana</strong>, PM Awas Yojana, Mudra Loans aur student welfare schemes ki full details aur application links pradan karte hain.
+              Sarkari naukri ke saath-saath hum aapko <strong>Kendra Sarkar</strong> aur <strong>Rajya Sarkar</strong> dwara chalai ja rahi sabhi <strong>sarkari yojanaon (Government Schemes)</strong> ki puri jankari dete hain. <strong>PM Kisan Samman Nidhi Yojana</strong> (kisanon ke liye ₹6000/saal), <strong>Ayushman Bharat Yojana</strong> (₹5 lakh tak free ilaaj), <strong>PM Awas Yojana</strong> (ghar banane ke liye subsidy), <strong>Mudra Loan Yojana</strong> (vyapaar ke liye), <strong>Sukanya Samriddhi Yojana</strong> (beti ke bhavishya ke liye), <strong>Atal Pension Yojana</strong>, <strong>Ujjwala Yojana</strong> — sabhi yojanaon ki paatrata (eligibility), labh (benefits), zaroori documents aur online aavedan link yahan available hai. Bilkul free!
             </p>
 
             <h3 className="font-bold text-ink mb-4">❓ FAQ: Frequently Asked Questions</h3>

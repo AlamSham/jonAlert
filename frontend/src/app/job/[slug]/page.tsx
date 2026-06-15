@@ -11,6 +11,7 @@ import { FAQ } from '@/components/FAQ';
 import { HowToApply } from '@/components/HowToApply';
 import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
+import { SafeHtml } from '@/components/SafeHtml';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateJobPageTitle, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
@@ -268,24 +269,24 @@ export default async function JobDetailPage({ params }: Props) {
           {/* Content */}
           <section className="mb-8 mobile-content-section" id="section-details">
             <h2 className="text-lg font-black text-ink mb-3">📄 Full Details</h2>
-            <div className="prose-custom rounded-2xl border border-stone-200 bg-white p-6 text-sm leading-relaxed text-ink/90 whitespace-pre-line mobile-text-content">
-              {job.content}
+            <div className="rounded-2xl border border-stone-200 bg-white p-6 mobile-text-content overflow-hidden">
+              <SafeHtml content={job.content} />
             </div>
           </section>
 
           {/* Eligibility */}
           <section className="mb-8 mobile-content-section" id="section-eligibility">
             <h2 className="text-lg font-black text-ink mb-3">✅ Eligibility</h2>
-            <div className="card !p-5 text-sm leading-relaxed text-ink/90 whitespace-pre-line mobile-text-content">
-              {job.eligibility}
+            <div className="card !p-5 mobile-text-content overflow-hidden">
+              <SafeHtml content={job.eligibility} />
             </div>
           </section>
 
           {/* Important Dates */}
           <section className="mb-8 mobile-content-section" id="section-dates">
             <h2 className="text-lg font-black text-ink mb-3">📅 Important Dates</h2>
-            <div className="card !p-5 text-sm leading-relaxed text-ink/90 whitespace-pre-line mobile-text-content">
-              {job.importantDates}
+            <div className="card !p-5 mobile-text-content overflow-hidden">
+              <SafeHtml content={job.importantDates} />
             </div>
           </section>
 

@@ -1,4 +1,4 @@
-import { JobDetail, CATEGORY_LABELS } from './types';
+import { JobDetail, CATEGORY_LABELS, SchemeDetail, SCHEME_TYPE_LABELS } from './types';
 
 const SITE_NAME = 'SarkariPulse';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
@@ -641,3 +641,207 @@ export function generateLocalBusinessSchema(state: string): object {
     return {};
   }
 }
+
+// =====================================================
+// Scheme-specific SEO functions (Hindi/Hinglish)
+// =====================================================
+
+export function generateSchemePageTitle(scheme: SchemeDetail): string {
+  const providedTitle = cleanText(scheme.metaTitle);
+  if (providedTitle && providedTitle.length <= 68) return providedTitle;
+
+  const title = cleanText(scheme.title);
+  const currentYear = new Date().getFullYear();
+  const typeLabel = scheme.schemeType === 'central' ? 'Kendra Sarkar' : 'Rajya Sarkar';
+
+  const optimizedTitle = `${title} - Paatrata, Labh, Online Aavedan ${currentYear} | ${typeLabel} Yojana`;
+  return truncateTitle(optimizedTitle);
+}
+
+export function generateSchemeMetaDescription(scheme: SchemeDetail): string {
+  try {
+    const typeText = scheme.schemeType === 'central' ? 'Kendra Sarkar' : 'Rajya Sarkar';
+    const stateText = scheme.state && scheme.state !== 'All India' ? ` ${scheme.state} mein` : '';
+    const deptText = scheme.department ? ` ${scheme.department} dwara` : '';
+
+    let description = `⚡ ${scheme.title}${stateText}${deptText} - ${typeText} Yojana. Eligibility, labh, zaroori documents aur online aavedan ki puri jankari. Abhi apply karein! 🚀`;
+
+    if (description.length > 160) {
+      description = description.slice(0, 157) + '...';
+    } else if (description.length < 140) {
+      description += ' SarkariPulse par sarkari yojana ki jankari sabse pehle.';
+      if (description.length > 160) {
+        description = description.slice(0, 160);
+      }
+    }
+
+    return description;
+  } catch (error) {
+    console.error('Scheme meta description generation failed:', error);
+    return scheme.metaDescription || scheme.summary.slice(0, 160);
+  }
+}
+
+export function generateSchemeArticleSchema(scheme: SchemeDetail): object {
+  try {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: scheme.title,
+      description: scheme.summary,
+      image: SITE_LOGO_URL,
+      author: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: {
+          '@type': 'ImageObject',
+          url: SITE_LOGO_URL
+        }
+      },
+      datePublished: scheme.createdAt,
+      dateModified: scheme.updatedAt || scheme.createdAt,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': `${SITE_URL}/schemes/${scheme.slug}`
+      },
+      articleSection: 'Sarkari Yojana',
+      keywords: scheme.tags?.join(', ') || 'sarkari yojana, government scheme',
+      inLanguage: 'hi-IN'
+    };
+  } catch (error) {
+    console.error('Scheme Article schema generation failed:', error);
+    return {};
+  }
+}
+
+export function generateGovernmentServiceSchema(scheme: SchemeDetail): object {
+  try {
+    const schema: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'GovernmentService',
+      name: scheme.title,
+      description: scheme.summary,
+      url: `${SITE_URL}/schemes/${scheme.slug}`,
+      serviceType: scheme.schemeType === 'central' ? 'Central Government Scheme' : 'State Government Scheme',
+      provider: {
+        '@type': 'GovernmentOrganization',
+        name: scheme.department || 'Government of India',
+        url: scheme.officialWebsite || SITE_URL
+      },
+      areaServed: {
+        '@type': scheme.state === 'All India' ? 'Country' : 'State',
+        name: scheme.state || 'India'
+      },
+      audience: {
+        '@type': 'Audience',
+        audienceType: 'Indian Citizens'
+      },
+      isRelatedTo: {
+        '@type': 'WebPage',
+        url: `${SITE_URL}/schemes`
+      },
+      availableChannel: {
+        '@type': 'ServiceChannel',
+        serviceUrl: scheme.applyLink || scheme.officialWebsite || `${SITE_URL}/schemes/${scheme.slug}`,
+        serviceType: 'Online Application'
+      }
+    };
+
+    if (scheme.helplineNumber) {
+      schema.servicePhone = scheme.helplineNumber;
+    }
+
+    return schema;
+  } catch (error) {
+    console.error('GovernmentService schema generation failed:', error);
+    return {};
+  }
+}
+
+export function generateSchemeFAQSchema(scheme: SchemeDetail): object | null {
+  try {
+    const questions: Array<{ '@type': string; name: string; acceptedAnswer: { '@type': string; text: string } }> = [];
+
+    if (scheme.eligibility) {
+      questions.push({
+        '@type': 'Question',
+        name: `${scheme.title} ke liye paatrata (eligibility) kya hai?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: scheme.eligibility
+        }
+      });
+    }
+
+    if (scheme.benefits) {
+      questions.push({
+        '@type': 'Question',
+        name: `${scheme.title} ke kya labh (benefits) hain?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: scheme.benefits
+        }
+      });
+    }
+
+    if (scheme.applicationProcess) {
+      questions.push({
+        '@type': 'Question',
+        name: `${scheme.title} ke liye kaise aavedan karein?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: scheme.applicationProcess
+        }
+      });
+    }
+
+    if (scheme.applyLink) {
+      questions.push({
+        '@type': 'Question',
+        name: `${scheme.title} ka online apply link kya hai?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Official website par jaayiye: ${scheme.applyLink}. Wahan application form bhariye, zaroori documents upload kariye aur submit kariye. Yeh bilkul free hai.`
+        }
+      });
+    }
+
+    if (scheme.helplineNumber) {
+      questions.push({
+        '@type': 'Question',
+        name: `${scheme.title} ka helpline number kya hai?`,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: `Helpline Number: ${scheme.helplineNumber}. Aap is number par call karke yojana ki puri jankari le sakte hain aur apni samasya ka samadhan pa sakte hain.`
+        }
+      });
+    }
+
+    questions.push({
+      '@type': 'Question',
+      name: `Kya ${scheme.title} ke liye apply karna free hai?`,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Haan, sarkari yojana mein apply karna bilkul free hai. Koi bhi application fee nahi lagti. Agar koi agent paisa maange to fraud hai. Direct official website se apply karein.'
+      }
+    });
+
+    if (questions.length < 2) return null;
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: questions
+    };
+  } catch (error) {
+    console.error('Scheme FAQ schema generation failed:', error);
+    return null;
+  }
+}
+

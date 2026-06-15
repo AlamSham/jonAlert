@@ -96,8 +96,23 @@ const fallbackTransform = (job) => {
     rewrittenTitle: `${title} — ${cat} 2026 Notification`,
     content: contentByCategory[job.category] || contentByCategory.job,
     summary: `${cat}: ${title}. ${descClean.slice(0, 100)}...`,
-    eligibility: `Is ${cat.toLowerCase()} ke liye age limit, educational qualification aur category reservation details official notification mein dekh sakte hain.`,
-    importantDates: `Application/exam ki important dates ke liye official notification check karein — last date miss na karein.`,
+    eligibility: `<table class="sp-table">
+  <thead>
+    <tr><th>Criteria</th><th>Details</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Age Limit</td><td>Official notification check karein</td></tr>
+    <tr><td>Educational Qualification</td><td>Detailed notification dekhein</td></tr>
+  </tbody>
+</table>`,
+    importantDates: `<table class="sp-table">
+  <thead>
+    <tr><th>Event</th><th>Date</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Application/Exam Date</td><td>Official notification check karein</td></tr>
+  </tbody>
+</table>`,
     state: inferStateFromText(combinedText),
     organization: '',
     vacancyCount: 0,
@@ -126,10 +141,10 @@ Category: ${job.category}
 OUTPUT: Return ONLY valid JSON with this exact structure:
 {
   "rewrittenTitle": "Catchy Hinglish title with primary keyword (max 70 chars, NO source name like Adda247/Jagran/Times)",
-  "content": "Unique SEO-friendly Hinglish article (120-180 words). Include: kya hai yeh bharti, kitni vacancies, kaun apply kar sakta hai, kaise apply karein, important dates. Use natural Hindi-English mix.",
+  "content": "Unique SEO-friendly Hinglish article (120-180 words). Explain kya hai yeh bharti, kitni vacancies, kaun apply kar sakta hai, kaise apply karein. IMPORTANT: If there is structured data like Application Fees, Vacancy Breakdown, or Salary/Pay Scale, format it as an HTML <table class='sp-table'> within the content. Use <thead>, <tbody>, <tr>, <th>, <td>. Do not use markdown tables.",
   "summary": "2-3 line crisp summary in Hinglish covering key points",
-  "eligibility": "Age limit, education aur category requirements in bullet format using commas",
-  "importantDates": "Specific dates mentioned or 'Official notification check karein for exact dates'",
+  "eligibility": "Age limit, education aur category requirements. If complex, use an HTML <table class='sp-table'>. Otherwise, write natural Hinglish text or bullet points.",
+  "importantDates": "Important dates. If multiple dates exist, use an HTML <table class='sp-table'> with columns for Event and Date. Otherwise, write natural Hinglish text.",
   "state": "Indian state name if mentioned (e.g. Bihar, Uttar Pradesh, Maharashtra). Use 'All India' if central/national/multi-state.",
   "organization": "Organization/department name (e.g. UPSC, SSC, Railway, Bihar Police). Extract from title/description.",
   "vacancyCount": 0,

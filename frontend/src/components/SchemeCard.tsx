@@ -49,10 +49,15 @@ export function SchemeCard({ scheme, index = 0 }: { scheme: SchemeListItem; inde
         
         <div className="flex-1">
           {/* Scheme Type Badge */}
-          <span className={`badge ${colorClass} mb-2`}>
-            <span>{emoji}</span>
-            {SCHEME_TYPE_LABELS[scheme.schemeType]}
-          </span>
+          <div className="flex flex-wrap items-center gap-1.5 mb-2">
+            <span className={`badge ${colorClass}`}>
+              <span>{emoji}</span>
+              {SCHEME_TYPE_LABELS[scheme.schemeType]}
+            </span>
+            <span className="badge bg-emerald-100 text-emerald-700">
+              🆓 Free Apply
+            </span>
+          </div>
           
           {/* Time */}
           <time
@@ -136,7 +141,7 @@ export function SchemeCard({ scheme, index = 0 }: { scheme: SchemeListItem; inde
           className="text-xs font-bold text-accent hover:text-accent-dark transition inline-flex items-center gap-1"
           onClick={handleReadMoreClick}
         >
-          View Details
+          Puri Jankari Dekhein
           <span className="transition-transform group-hover:translate-x-0.5">→</span>
         </Link>
       </div>
