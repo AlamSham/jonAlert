@@ -51,7 +51,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Active jobs = indexed by Google, Expired/Upcoming = not indexed
     const shouldIndex = job.status === 'active';
 
-  return {
     return {
       title: pageTitle,
       description: metaDescription,
