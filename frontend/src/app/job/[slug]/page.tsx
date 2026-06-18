@@ -142,9 +142,9 @@ export default async function JobDetailPage({ params }: Props) {
   // Build TOC items based on available data
   const tocItems = [
     { id: 'section-summary', label: 'Summary', emoji: '📝' },
-    { id: 'section-details', label: 'Full Details', emoji: '📄' },
-    { id: 'section-eligibility', label: 'Eligibility', emoji: '✅' },
-    { id: 'section-dates', label: 'Important Dates', emoji: '📅' },
+    job.content && { id: 'section-details', label: 'Full Details', emoji: '📄' },
+    job.eligibility && { id: 'section-eligibility', label: 'Eligibility', emoji: '✅' },
+    job.importantDates && { id: 'section-dates', label: 'Important Dates', emoji: '📅' },
     job.applyLink && { id: 'section-how-to-apply', label: 'How to Apply', emoji: '🚀' },
     { id: 'section-tips', label: 'Application Tips', emoji: '💡' },
     faqItems.length > 0 && { id: 'section-faq', label: 'FAQ', emoji: '❓' },
@@ -153,8 +153,10 @@ export default async function JobDetailPage({ params }: Props) {
     { id: 'section-related', label: 'Similar Updates', emoji: '📌' },
   ].filter(Boolean) as { id: string; label: string; emoji: string }[];
 
-  // Build full content string for reading time
-  const fullContent = [job.summary, job.content, job.eligibility, job.importantDates].filter(Boolean).join(' ');
+  // Build full content string for reading time (with null safety)
+  const fullContent = [job.summary, job.content, job.eligibility, job.importantDates]
+    .filter(item => item != null && item !== '')
+    .join(' ');
 
   return (
     <div className="container-wrap py-8 animate-fade-in">
@@ -267,28 +269,34 @@ export default async function JobDetailPage({ params }: Props) {
           </section>
 
           {/* Content */}
-          <section className="mb-8 mobile-content-section" id="section-details">
-            <h2 className="text-lg font-black text-ink mb-3">📄 Full Details</h2>
-            <div className="rounded-2xl border border-stone-200 bg-white p-6 mobile-text-content overflow-hidden">
-              <SafeHtml content={job.content} />
-            </div>
-          </section>
+          {job.content && (
+            <section className="mb-8 mobile-content-section" id="section-details">
+              <h2 className="text-lg font-black text-ink mb-3">📄 Full Details</h2>
+              <div className="rounded-2xl border border-stone-200 bg-white p-6 mobile-text-content overflow-hidden">
+                <SafeHtml content={job.content} />
+              </div>
+            </section>
+          )}
 
           {/* Eligibility */}
-          <section className="mb-8 mobile-content-section" id="section-eligibility">
-            <h2 className="text-lg font-black text-ink mb-3">✅ Eligibility</h2>
-            <div className="card !p-5 mobile-text-content overflow-hidden">
-              <SafeHtml content={job.eligibility} />
-            </div>
-          </section>
+          {job.eligibility && (
+            <section className="mb-8 mobile-content-section" id="section-eligibility">
+              <h2 className="text-lg font-black text-ink mb-3">✅ Eligibility</h2>
+              <div className="card !p-5 mobile-text-content overflow-hidden">
+                <SafeHtml content={job.eligibility} />
+              </div>
+            </section>
+          )}
 
           {/* Important Dates */}
-          <section className="mb-8 mobile-content-section" id="section-dates">
-            <h2 className="text-lg font-black text-ink mb-3">📅 Important Dates</h2>
-            <div className="card !p-5 mobile-text-content overflow-hidden">
-              <SafeHtml content={job.importantDates} />
-            </div>
-          </section>
+          {job.importantDates && (
+            <section className="mb-8 mobile-content-section" id="section-dates">
+              <h2 className="text-lg font-black text-ink mb-3">📅 Important Dates</h2>
+              <div className="card !p-5 mobile-text-content overflow-hidden">
+                <SafeHtml content={job.importantDates} />
+              </div>
+            </section>
+          )}
 
           {/* How to Apply Section */}
           {job.applyLink && (
