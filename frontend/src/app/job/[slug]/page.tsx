@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getJobBySlug, getRelatedJobs } from '@/lib/api';
 import { Breadcrumb } from '@/components/Breadcrumb';
@@ -37,7 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { slug } = await params;
     const job = await getJobBySlug(slug);
-    if (!job) return { title: 'Job Not Found' };
+    if (!job) return {
+      title: 'Job Not Found — SarkariPulse',
+      description: 'Ye job notification ab available nahi hai. Latest sarkari naukri updates dekhein.',
+      robots: { index: false, follow: true },
+    };
 
     // Use enhanced meta description generator
     const pageTitle = generateJobPageTitle(job);
@@ -47,9 +52,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `/api/og?title=${encodeURIComponent(job.title || 'Job')}&org=${encodeURIComponent(job.organization || 'Latest Sarkari Naukri Updates')}`
     );
 
-    // Set robots meta tag based on job status
-    // Active jobs = indexed by Google, Expired/Upcoming = not indexed
-    const shouldIndex = job.status === 'active';
+    // Keep ALL jobs indexed — expired jobs still get traffic for results, cutoffs, previous papers
+    // Only noindex if job content is completely empty/invalid
+    const shouldIndex = true;
 
     return {
       title: pageTitle,
@@ -102,7 +107,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function JobDetailPage({ params }: Props) {
   const { slug } = await params;
   const job = await getJobBySlug(slug);
-  if (!job) notFound();
+  
+  // If job not found (deleted from DB), redirect to jobs listing instead of 404
+  // This prevents 404 errors in Google Search Console for expired/deleted jobs
+  if (!job) redirect('/jobs');
 
   const emoji = CATEGORY_EMOJI[job.category] || '📢';
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';

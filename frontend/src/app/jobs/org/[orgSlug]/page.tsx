@@ -25,9 +25,15 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const { orgSlug } = await params;
   const { page: pageStr } = await searchParams;
   const page = Math.max(1, Number(pageStr) || 1);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
   const meta = ORG_SEO_DATA[orgSlug.toLowerCase()];
-  
+
   if (!meta) return { title: 'Jobs Not Found' };
+
+  // Page 1 canonical should NOT have ?page=1 to avoid duplicate canonical issues
+  const canonicalUrl = page > 1
+    ? `${siteUrl}/jobs/org/${orgSlug}?page=${page}`
+    : `${siteUrl}/jobs/org/${orgSlug}`;
 
   return {
     title: page > 1
@@ -35,10 +41,15 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       : `${meta.emoji} ${meta.shortName} Recruitment 2026 — Latest ${meta.label} Vacancy | SarkariPulse`,
     description: meta.description.slice(0, 160),
     alternates: {
-      canonical: page > 1
-        ? `https://sarkaripulse.net/jobs/org/${orgSlug}?page=${page}`
-        : `https://sarkaripulse.net/jobs/org/${orgSlug}`,
+      canonical: canonicalUrl,
     },
+    // Noindex pagination pages beyond page 5 to prevent thin content indexing
+    ...(page > 5 ? {
+      robots: {
+        index: false,
+        follow: true,
+      },
+    } : {}),
   };
 }
 

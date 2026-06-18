@@ -39,6 +39,27 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Clean up invalid search URLs that Google crawled (e.g., /search?q={search_term_string})
+      // These create "duplicate without user-selected canonical" issues in GSC
+      {
+        source: '/search',
+        has: [{ type: 'query', key: 'q', value: '\\{search_term_string\\}' }],
+        destination: '/search',
+        permanent: true,
+      },
+      // Redirect old/broken admission page with query to clean URL
+      {
+        source: '/admission',
+        has: [{ type: 'query', key: 'page', value: '1' }],
+        destination: '/admission',
+        permanent: true,
+      },
+      // Redirect /closing-soon if it was crawled but no longer active
+      // (keep it as a valid page, but ensure canonical is correct)
+    ];
+  },
   async rewrites() {
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
     return [

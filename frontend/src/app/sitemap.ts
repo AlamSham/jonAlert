@@ -25,9 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Job URLs with proper priority and changeFrequency
   const jobUrls = latestJobs.map((job) => ({
     url: `${siteUrl}/job/${job.slug}`,
-    lastModified: new Date(job.createdAt || new Date()),
+    lastModified: new Date(job.updatedAt || job.createdAt || new Date()),
     changeFrequency: 'daily' as const,
-    priority: 0.8, // Enhanced to upper range (0.7-0.8 for jobs)
+    priority: 0.8,
   }));
 
   const categories: JobCategory[] = ['job', 'admission', 'scholarship', 'result', 'admit-card', 'exam-form'];

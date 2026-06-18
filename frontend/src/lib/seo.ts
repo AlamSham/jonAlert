@@ -358,24 +358,50 @@ export function generateJobPageTitle(job: JobDetail): string {
     const providedTitle = cleanText(job.metaTitle);
     if (providedTitle && providedTitle.length <= 68) return providedTitle;
 
-    const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
     const title = cleanText(job.title || 'Job Notification');
-    const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? `${job.vacancyCount} Vacancies` : 'Vacancy';
     const currentYear = new Date().getFullYear();
 
-    const suffixByCategory: Record<string, string> = {
-      job: job.vacancyCount && job.vacancyCount > 0
-        ? `${job.vacancyCount.toLocaleString()} Posts, Apply Online ${currentYear}`
-        : `Online Form, Apply Now ${currentYear}`,
-      result: `Result OUT, Merit List, Cut Off ${currentYear}`,
-      'admit-card': `Admit Card OUT, Download Now ${currentYear}`,
-      admission: `Admission Open, Apply Before Last Date ${currentYear}`,
-      scholarship: `Apply Online, ₹ Scholarship Amount ${currentYear}`,
-      'exam-form': `Form OUT, Registration Open ${currentYear}`,
+    // Build dynamic suffix with vacancy count and last date for urgency
+    const vacancyPart = job.vacancyCount && job.vacancyCount > 0
+      ? `${job.vacancyCount.toLocaleString()} Posts`
+      : '';
+    
+    let lastDatePart = '';
+    if (job.lastDate) {
+      const ld = new Date(job.lastDate);
+      if (!isNaN(ld.getTime())) {
+        const now = new Date();
+        const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysLeft > 0 && daysLeft <= 15) {
+          lastDatePart = `⏰ ${daysLeft} Din Baaki`;
+        } else if (daysLeft > 0) {
+          lastDatePart = `Apply Before ${ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
+        }
+      }
+    }
+
+    // Category-specific power word prefix
+    const categoryPrefix: Record<string, string> = {
+      job: '🔥',
+      result: '📊 OUT:',
+      'admit-card': '🎫 Download:',
+      admission: '🎓',
+      scholarship: '💰',
+      'exam-form': '📝 Apply:',
     };
 
-    const suffix = suffixByCategory[job.category] || `${categoryLabel}, Details`;
-    const optimizedTitle = `${title}: ${suffix}`;
+    const suffixByCategory: Record<string, string> = {
+      job: [vacancyPart, `Apply Online ${currentYear}`, lastDatePart].filter(Boolean).join(', '),
+      result: `Result OUT, Merit List, Cut Off ${currentYear}`,
+      'admit-card': `Admit Card OUT, Download Now ${currentYear}`,
+      admission: [vacancyPart, `Admission Open ${currentYear}`, lastDatePart].filter(Boolean).join(', '),
+      scholarship: `Apply Online, Scholarship ${currentYear}`,
+      'exam-form': [`Form OUT ${currentYear}`, lastDatePart].filter(Boolean).join(', '),
+    };
+
+    const prefix = categoryPrefix[job.category] || '📢';
+    const suffix = suffixByCategory[job.category] || `Details ${currentYear}`;
+    const optimizedTitle = `${prefix} ${title} — ${suffix}`;
 
     return truncateTitle(optimizedTitle);
   } catch (error) {
@@ -391,43 +417,58 @@ export function generateJobMetaDescription(job: JobDetail): string {
       return 'Latest government job notification and sarkari naukri updates.';
     }
 
-    const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
-    const organization = job.organization || 'Government';
-    const state = job.state && job.state !== 'All India' ? ` in ${job.state}` : '';
+    const organization = job.organization || '';
     
-    // Hinglish action prompt based on category
-    const categoryPrompts: Record<string, string> = {
-      job: 'Online application form apply link, eligibility criteria, age limit',
-      result: 'Direct result download link, scorecard, cut-off marks, merit list',
-      'admit-card': 'Hall ticket download link, exam date and timing, reporting instructions',
-      admission: 'Registration form link, eligibility, fee structure, guidelines',
-      scholarship: 'Sarkari scholarship yojana registration, eligibility, benefit details',
-      'exam-form': 'Online form registration link, fees, payment guidelines',
-    };
-    const categoryPrompt = categoryPrompts[job.category] || 'Complete notification details, apply link';
-
-    const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? ` ${job.vacancyCount} vacancies.` : '';
-    let lastDateText = '';
+    // Build data-rich components
+    const parts: string[] = [];
+    
+    // Emoji prefix for attention
+    parts.push('⚡');
+    
+    // Organization + Title
+    const orgText = organization ? `${organization}: ` : '';
+    parts.push(`${orgText}${job.title}!`);
+    
+    // Vacancy count (if available)
+    if (job.vacancyCount && job.vacancyCount > 0) {
+      parts.push(`${job.vacancyCount.toLocaleString()} vacancies.`);
+    }
+    
+    // Salary (if available)
+    if (job.salary) {
+      parts.push(`Salary: ${job.salary}.`);
+    }
+    
+    // Last date with urgency
     if (job.lastDate) {
-      const lastDate = new Date(job.lastDate);
-      if (!isNaN(lastDate.getTime())) {
-        const formattedDate = lastDate.toLocaleDateString('en-IN', { 
-          day: 'numeric', 
-          month: 'short' 
-        });
-        lastDateText = ` Last date to apply: ${formattedDate}.`;
+      const ld = new Date(job.lastDate);
+      if (!isNaN(ld.getTime())) {
+        const now = new Date();
+        const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const formattedDate = ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+        if (daysLeft > 0 && daysLeft <= 10) {
+          parts.push(`⏰ Jaldi karo! Sirf ${daysLeft} din baaki (${formattedDate}).`);
+        } else if (daysLeft > 0) {
+          parts.push(`Last Date: ${formattedDate}.`);
+        }
       }
     }
+    
+    // Qualification (if available)
+    if (job.qualificationLevel && job.qualificationLevel !== 'any') {
+      parts.push(`${job.qualificationLevel.toUpperCase()} pass apply karein.`);
+    }
+    
+    // CTA
+    parts.push('Direct link yahan! 🚀');
+    
+    let description = parts.join(' ');
 
-    // Compelling meta description in Hinglish/English mix (highly popular for search intent)
-    const orgText = job.organization ? `${job.organization} ` : '';
-    let description = `⚡ ${orgText}${job.title}!${vacancyText}${lastDateText} ${categoryPrompt}. Apply karein! 🚀`;
-
-    // Ensure length is between 150-160 characters
+    // Ensure length is between 140-160 characters
     if (description.length > 160) {
       description = description.slice(0, 157) + '...';
-    } else if (description.length < 140) {
-      description += ' SarkariPulse par latest updates sabse pehle.';
+    } else if (description.length < 130) {
+      description += ' SarkariPulse par sabse pehle update paayein.';
       if (description.length > 160) {
         description = description.slice(0, 160);
       }
@@ -436,7 +477,6 @@ export function generateJobMetaDescription(job: JobDetail): string {
     return description;
   } catch (error) {
     console.error('Meta description generation failed:', error);
-    // Fallback to existing metaDescription or summary
     return job.metaDescription || (job.summary && job.summary.slice(0, 160)) || 'Latest sarkari job notification';
   }
 }

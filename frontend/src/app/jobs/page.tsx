@@ -20,9 +20,13 @@ type Props = { searchParams: Promise<{ page?: string }> };
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams;
   const page = Math.max(1, Number(params.page) || 1);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
   
   // Get pagination info to determine if we need rel links
   const { pagination } = await getJobs(page, 18);
+
+  // Page 1 canonical should NOT have ?page=1
+  const canonicalUrl = page > 1 ? `${siteUrl}/jobs?page=${page}` : `${siteUrl}/jobs`;
   
   const metadata: Metadata = {
     title: page > 1 ? `Sarkari Job 2026 - Page ${page} | Latest Govt Jobs` : 'Sarkari Job 2026: Latest Govt Jobs, Vacancy, Apply Online',
@@ -30,8 +34,15 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       ? `Page ${page} - latest Sarkari Job 2026, govt jobs, vacancy notifications, eligibility, last date aur apply online links.`
       : 'Latest Sarkari Job 2026, govt jobs, sarkari naukri vacancy, eligibility, last date aur apply online links. Daily UPSC, SSC, Railway updates.',
     alternates: { 
-      canonical: page > 1 ? `https://sarkaripulse.net/jobs?page=${page}` : 'https://sarkaripulse.net/jobs'
+      canonical: canonicalUrl
     },
+    // Noindex deep pagination pages to prevent thin content indexing
+    ...(page > 5 ? {
+      robots: {
+        index: false,
+        follow: true,
+      },
+    } : {}),
     openGraph: {
       title: page > 1 ? `Sarkari Job 2026 - Page ${page}` : 'Sarkari Job 2026 - Latest Govt Jobs',
       description: generateCategoryMetaDescription('job'),
@@ -40,7 +51,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       siteName: 'SarkariPulse',
       images: [
         {
-          url: 'https://sarkaripulse.net/logo.jpg',
+          url: `${siteUrl}/logo.jpg`,
           width: 1024,
           height: 1024,
           alt: 'Latest Sarkari Naukri - Government Jobs 2026',
@@ -51,7 +62,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       card: 'summary_large_image',
       title: page > 1 ? `Sarkari Job 2026 - Page ${page}` : 'Sarkari Job 2026 - Latest Govt Jobs',
       description: generateCategoryMetaDescription('job').slice(0, 100),
-      images: ['https://sarkaripulse.net/logo.jpg'],
+      images: [`${siteUrl}/logo.jpg`],
     },
   };
 
