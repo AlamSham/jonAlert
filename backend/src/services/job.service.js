@@ -31,12 +31,12 @@ const cleanText = (value = '') =>
     .replace(/\s+/g, ' ')
     .trim();
 
-const makeContentFingerprint = (rawJob, aiData) => {
-  const title = cleanText(aiData?.rewrittenTitle || rawJob?.title || '');
+const makeContentFingerprint = (rawJob) => {
+  const title = cleanText(rawJob?.title || '');
   const category = cleanText(rawJob?.category || '');
   const sourceUrl = normalizeUrl(rawJob?.sourceUrl || '');
-  const summary = cleanText(aiData?.summary || rawJob?.description || '').slice(0, 220);
-  const fingerprintBase = `${title}|${category}|${sourceUrl}|${summary}`;
+  const description = cleanText(rawJob?.description || '').slice(0, 220);
+  const fingerprintBase = `${title}|${category}|${sourceUrl}|${description}`;
   return crypto.createHash('sha1').update(fingerprintBase).digest('hex');
 };
 
@@ -97,14 +97,15 @@ export const processAndSaveJob = async (rawJob) => {
     return { status: 'duplicate', job: existsByUrl, facebook };
   }
 
-  const aiData = await rewriteJobWithAi(rawJob);
-  const contentFingerprint = makeContentFingerprint(rawJob, aiData);
+  const contentFingerprint = makeContentFingerprint(rawJob);
 
   const existsByFingerprint = await Job.findOne({ contentFingerprint }).lean();
   if (existsByFingerprint) {
     const facebook = enqueueRecentDuplicateFacebookPost(existsByFingerprint, 'contentFingerprint');
     return { status: 'duplicate', job: existsByFingerprint, facebook };
   }
+
+  const aiData = await rewriteJobWithAi(rawJob);
 
   const MAX_SLUG_RETRIES = 3;
   let saved;

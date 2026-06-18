@@ -105,8 +105,8 @@ export default async function JobDetailPage({ params }: Props) {
   const breadcrumbItems = generateBreadcrumbLinks(job.category, job.state, job.title);
   
   const breadcrumbs = [
-    { label: categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1), href: job.category === 'job' ? '/jobs' : `/${job.category}` },
-    { label: job.title.slice(0, 50) + (job.title.length > 50 ? '...' : '') },
+    { label: categoryLabel ? categoryLabel.charAt(0).toUpperCase() + categoryLabel.slice(1) : 'Jobs', href: job.category === 'job' ? '/jobs' : `/${job.category}` },
+    { label: job.title ? job.title.slice(0, 50) + (job.title.length > 50 ? '...' : '') : 'Job Details' },
   ];
 
   // Generate FAQ items for the job

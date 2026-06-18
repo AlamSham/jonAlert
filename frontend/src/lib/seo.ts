@@ -319,12 +319,19 @@ export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
 }
 
 export function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  });
+  try {
+    if (!dateStr) return 'N/A';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return 'N/A';
+    return date.toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    });
+  } catch (e) {
+    return 'N/A';
+  }
 }
 
 export function timeAgo(dateStr: string) {
@@ -394,11 +401,13 @@ export function generateJobMetaDescription(job: JobDetail): string {
     let lastDateText = '';
     if (job.lastDate) {
       const lastDate = new Date(job.lastDate);
-      const formattedDate = lastDate.toLocaleDateString('en-IN', { 
-        day: 'numeric', 
-        month: 'short' 
-      });
-      lastDateText = ` Last date to apply: ${formattedDate}.`;
+      if (!isNaN(lastDate.getTime())) {
+        const formattedDate = lastDate.toLocaleDateString('en-IN', { 
+          day: 'numeric', 
+          month: 'short' 
+        });
+        lastDateText = ` Last date to apply: ${formattedDate}.`;
+      }
     }
 
     // Compelling meta description in Hinglish/English mix (highly popular for search intent)
