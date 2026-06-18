@@ -473,7 +473,7 @@ export function generateFAQSchema(job: JobDetail): object | null {
     // Question 2: Last Date
     if (job.lastDate || job.importantDates) {
       const lastDateText = job.lastDate 
-        ? `Last date to apply: ${new Date(job.lastDate).toLocaleDateString('en-IN')}`
+        ? `Last date to apply: ${formatDate(job.lastDate)}`
         : job.importantDates;
       
       questions.push({
