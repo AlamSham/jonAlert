@@ -109,7 +109,7 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
         )}
         {(() => {
           const status = getLastDateStatus(job.lastDate);
-          return status ? <span className={`badge ${status.class}`}>{status.label}</span> : null;
+          return status ? <span className={`badge ${status.class}`} suppressHydrationWarning>{status.label}</span> : null;
         })()}
       </div>
 
