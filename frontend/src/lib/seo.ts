@@ -354,34 +354,43 @@ export function categoryMeta(category: string) {
 }
 
 export function generateJobPageTitle(job: JobDetail): string {
-  const providedTitle = cleanText(job.metaTitle);
-  if (providedTitle && providedTitle.length <= 68) return providedTitle;
+  try {
+    const providedTitle = cleanText(job.metaTitle);
+    if (providedTitle && providedTitle.length <= 68) return providedTitle;
 
-  const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
-  const title = cleanText(job.title);
-  const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? `${job.vacancyCount} Vacancies` : 'Vacancy';
-  const currentYear = new Date().getFullYear();
+    const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
+    const title = cleanText(job.title || 'Job Notification');
+    const vacancyText = job.vacancyCount && job.vacancyCount > 0 ? `${job.vacancyCount} Vacancies` : 'Vacancy';
+    const currentYear = new Date().getFullYear();
 
-  const suffixByCategory: Record<string, string> = {
-    job: job.vacancyCount && job.vacancyCount > 0
-      ? `${job.vacancyCount.toLocaleString()} Posts, Apply Online ${currentYear}`
-      : `Online Form, Apply Now ${currentYear}`,
-    result: `Result OUT, Merit List, Cut Off ${currentYear}`,
-    'admit-card': `Admit Card OUT, Download Now ${currentYear}`,
-    admission: `Admission Open, Apply Before Last Date ${currentYear}`,
-    scholarship: `Apply Online, ₹ Scholarship Amount ${currentYear}`,
-    'exam-form': `Form OUT, Registration Open ${currentYear}`,
-  };
+    const suffixByCategory: Record<string, string> = {
+      job: job.vacancyCount && job.vacancyCount > 0
+        ? `${job.vacancyCount.toLocaleString()} Posts, Apply Online ${currentYear}`
+        : `Online Form, Apply Now ${currentYear}`,
+      result: `Result OUT, Merit List, Cut Off ${currentYear}`,
+      'admit-card': `Admit Card OUT, Download Now ${currentYear}`,
+      admission: `Admission Open, Apply Before Last Date ${currentYear}`,
+      scholarship: `Apply Online, ₹ Scholarship Amount ${currentYear}`,
+      'exam-form': `Form OUT, Registration Open ${currentYear}`,
+    };
 
-  const suffix = suffixByCategory[job.category] || `${categoryLabel}, Details`;
-  const optimizedTitle = `${title}: ${suffix}`;
+    const suffix = suffixByCategory[job.category] || `${categoryLabel}, Details`;
+    const optimizedTitle = `${title}: ${suffix}`;
 
-  return truncateTitle(optimizedTitle);
+    return truncateTitle(optimizedTitle);
+  } catch (error) {
+    console.error('Title generation failed:', error);
+    return job.title || 'Job Notification';
+  }
 }
 
 // Meta Description Generators
 export function generateJobMetaDescription(job: JobDetail): string {
   try {
+    if (!job || !job.title) {
+      return 'Latest government job notification and sarkari naukri updates.';
+    }
+
     const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
     const organization = job.organization || 'Government';
     const state = job.state && job.state !== 'All India' ? ` in ${job.state}` : '';
@@ -428,7 +437,7 @@ export function generateJobMetaDescription(job: JobDetail): string {
   } catch (error) {
     console.error('Meta description generation failed:', error);
     // Fallback to existing metaDescription or summary
-    return job.metaDescription || job.summary.slice(0, 160);
+    return job.metaDescription || (job.summary && job.summary.slice(0, 160)) || 'Latest sarkari job notification';
   }
 }
 

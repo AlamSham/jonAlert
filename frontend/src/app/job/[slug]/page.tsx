@@ -34,61 +34,70 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const job = await getJobBySlug(slug);
-  if (!job) return { title: 'Job Not Found' };
+  try {
+    const { slug } = await params;
+    const job = await getJobBySlug(slug);
+    if (!job) return { title: 'Job Not Found' };
 
-  // Use enhanced meta description generator
-  const pageTitle = generateJobPageTitle(job);
-  const metaDescription = generateJobMetaDescription(job);
-  const jobUrl = getCanonicalUrl(`/job/${slug}`);
-  const ogImageUrl = getCanonicalUrl(
-    `/api/og?title=${encodeURIComponent(job.title)}&org=${encodeURIComponent(job.organization || 'Latest Sarkari Naukri Updates')}`
-  );
+    // Use enhanced meta description generator
+    const pageTitle = generateJobPageTitle(job);
+    const metaDescription = generateJobMetaDescription(job);
+    const jobUrl = getCanonicalUrl(`/job/${slug}`);
+    const ogImageUrl = getCanonicalUrl(
+      `/api/og?title=${encodeURIComponent(job.title || 'Job')}&org=${encodeURIComponent(job.organization || 'Latest Sarkari Naukri Updates')}`
+    );
 
-  // Set robots meta tag based on job status
-  // Active jobs = indexed by Google, Expired/Upcoming = not indexed
-  const shouldIndex = job.status === 'active';
+    // Set robots meta tag based on job status
+    // Active jobs = indexed by Google, Expired/Upcoming = not indexed
+    const shouldIndex = job.status === 'active';
 
   return {
-    title: pageTitle,
-    description: metaDescription,
-    alternates: { canonical: jobUrl },
-    robots: {
-      index: shouldIndex,
-      follow: true,
-      googleBot: {
-        index: shouldIndex,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large' as const,
-        'max-snippet': -1,
-      },
-    },
-    openGraph: {
+    return {
       title: pageTitle,
       description: metaDescription,
-      url: jobUrl,
-      type: 'article',
-      publishedTime: job.createdAt,
-      locale: 'hi_IN',
-      siteName: 'SarkariPulse',
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: job.title,
+      alternates: { canonical: jobUrl },
+      robots: {
+        index: shouldIndex,
+        follow: true,
+        googleBot: {
+          index: shouldIndex,
+          follow: true,
+          'max-video-preview': -1,
+          'max-image-preview': 'large' as const,
+          'max-snippet': -1,
         },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: pageTitle,
-      description: metaDescription.slice(0, 100),
-      images: [ogImageUrl],
-    },
-  };
+      },
+      openGraph: {
+        title: pageTitle,
+        description: metaDescription,
+        url: jobUrl,
+        type: 'article',
+        publishedTime: job.createdAt,
+        locale: 'hi_IN',
+        siteName: 'SarkariPulse',
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: job.title || 'Job Posting',
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: pageTitle,
+        description: metaDescription.slice(0, 100),
+        images: [ogImageUrl],
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata for job:', error);
+    return {
+      title: 'Job Details',
+      description: 'View job details and application information',
+    };
+  }
 }
 
 export default async function JobDetailPage({ params }: Props) {
