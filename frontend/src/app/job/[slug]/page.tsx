@@ -16,6 +16,7 @@ import { SafeHtml } from '@/components/SafeHtml';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateJobPageTitle, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
+import { guides } from '@/lib/guides';
 
 export const revalidate = 3600;
 
@@ -116,6 +117,24 @@ export default async function JobDetailPage({ params }: Props) {
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';
   const categoryLabel = CATEGORY_LABELS[job.category] || job.category;
 
+  // Helper: detect placeholder/generic content that should be hidden
+  const isPlaceholderContent = (content: string | undefined | null): boolean => {
+    if (!content || content.trim().length === 0) return true;
+    const stripped = content.replace(/<[^>]*>/g, '').trim().toLowerCase();
+    const placeholders = [
+      'official notification check karein',
+      'detailed notification dekhein',
+      'check official notification',
+      'notification dekhein',
+    ];
+    // If the entire text content (minus HTML) matches only placeholder phrases
+    return placeholders.some(p => stripped === p) || 
+           stripped.split(/\s+/).length < 5 && placeholders.some(p => stripped.includes(p));
+  };
+
+  const hasRealEligibility = !!job.eligibility && !isPlaceholderContent(job.eligibility);
+  const hasRealDates = !!job.importantDates && !isPlaceholderContent(job.importantDates);
+
   // Generate contextual links and breadcrumbs
   const contextualLinks = generateJobContextualLinks(job);
   const breadcrumbItems = generateBreadcrumbLinks(job.category, job.state, job.title);
@@ -127,11 +146,11 @@ export default async function JobDetailPage({ params }: Props) {
 
   // Generate FAQ items for the job
   const faqItems = [
-    job.eligibility && {
+    hasRealEligibility && {
       question: `${job.title} ke liye eligibility criteria kya hai?`,
       answer: job.eligibility
     },
-    (job.lastDate || job.importantDates) && {
+    (job.lastDate || hasRealDates) && {
       question: `${job.title} ki last date kya hai?`,
       answer: job.lastDate 
         ? `Last date to apply: ${formatDate(job.lastDate)}`
@@ -155,13 +174,56 @@ export default async function JobDetailPage({ params }: Props) {
     }
   ].filter(Boolean) as Array<{ question: string; answer: string }>;
 
+  // Find matching guides for this job
+  const getMatchedGuides = () => {
+    const titleLower = (job.title || '').toLowerCase();
+    const matches = [];
+
+    // Match 1: SSC CGL
+    if (titleLower.includes('ssc') || titleLower.includes('cgl')) {
+      const g = guides.find(x => x.slug === 'ssc-cgl-preparation-guide');
+      if (g) matches.push(g);
+    }
+    // Match 2: UPSC
+    if (titleLower.includes('upsc') || titleLower.includes('civil service') || titleLower.includes('ias') || titleLower.includes('ips')) {
+      const g = guides.find(x => x.slug === 'upsc-exam-pattern-guide');
+      if (g) matches.push(g);
+    }
+    // Match 3: Railway
+    if (titleLower.includes('railway') || titleLower.includes('rrb') || titleLower.includes('rrc') || titleLower.includes('group d') || titleLower.includes('ntpc')) {
+      const g = guides.find(x => x.slug === 'railway-group-d-syllabus-guide');
+      if (g) matches.push(g);
+    }
+    // Match 4: 10th pass
+    if (job.qualificationLevel?.toLowerCase().includes('10th') || titleLower.includes('mts') || titleLower.includes('gds') || titleLower.includes('post office') || titleLower.includes('dak sevak')) {
+      const g = guides.find(x => x.slug === '10th-pass-sarkari-jobs-guide');
+      if (g) matches.push(g);
+    }
+    // Match 5: Police
+    if (titleLower.includes('police') || titleLower.includes('constable') || titleLower.includes('sub inspector') || titleLower.includes('daroga') || titleLower.includes('physical')) {
+      const g = guides.find(x => x.slug === 'police-bharti-physical-tips-guide');
+      if (g) matches.push(g);
+    }
+
+    // Always append document verification checklist as a universal guide if we don't have enough matches
+    if (matches.length < 2) {
+      const dvGuide = guides.find(x => x.slug === 'sarkari-job-document-verification-guide');
+      if (dvGuide && !matches.includes(dvGuide)) matches.push(dvGuide);
+    }
+
+    return matches.slice(0, 3);
+  };
+
+  const matchedGuides = getMatchedGuides();
+
   // Build TOC items based on available data
   const tocItems = [
     { id: 'section-summary', label: 'Summary', emoji: '📝' },
     job.content && { id: 'section-details', label: 'Full Details', emoji: '📄' },
-    job.eligibility && { id: 'section-eligibility', label: 'Eligibility', emoji: '✅' },
-    job.importantDates && { id: 'section-dates', label: 'Important Dates', emoji: '📅' },
+    hasRealEligibility && { id: 'section-eligibility', label: 'Eligibility', emoji: '✅' },
+    hasRealDates && { id: 'section-dates', label: 'Important Dates', emoji: '📅' },
     job.applyLink && { id: 'section-how-to-apply', label: 'How to Apply', emoji: '🚀' },
+    { id: 'section-prep', label: 'Preparation Guides', emoji: '📚' },
     { id: 'section-tips', label: 'Application Tips', emoji: '💡' },
     faqItems.length > 0 && { id: 'section-faq', label: 'FAQ', emoji: '❓' },
     job.applyLink && { id: 'section-apply', label: 'Apply Now', emoji: '🔗' },
@@ -295,7 +357,7 @@ export default async function JobDetailPage({ params }: Props) {
           )}
 
           {/* Eligibility */}
-          {job.eligibility && (
+          {hasRealEligibility && (
             <section className="mb-8 mobile-content-section" id="section-eligibility">
               <h2 className="text-lg font-black text-ink mb-3">✅ Eligibility</h2>
               <div className="card !p-5 mobile-text-content overflow-hidden">
@@ -305,7 +367,7 @@ export default async function JobDetailPage({ params }: Props) {
           )}
 
           {/* Important Dates */}
-          {job.importantDates && (
+          {hasRealDates && (
             <section className="mb-8 mobile-content-section" id="section-dates">
               <h2 className="text-lg font-black text-ink mb-3">📅 Important Dates</h2>
               <div className="card !p-5 mobile-text-content overflow-hidden">
@@ -320,6 +382,49 @@ export default async function JobDetailPage({ params }: Props) {
               <HowToApply applyLink={job.applyLink} title={job.title} />
             </section>
           )}
+
+          {/* Preparation Guides Section */}
+          <section className="mb-8 card !p-5 mobile-content-section" id="section-prep">
+            <h2 className="text-lg font-black text-ink mb-2 flex items-center gap-2">
+              📚 Exam Preparation & Study Guides
+            </h2>
+            <p className="text-xs text-muted mb-4">
+              Is pariksha/bharti ki aur behtar taiyari ke liye niche diye gaye guidelines aur articles ko zaroor padhein:
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {matchedGuides.map((g) => (
+                <Link
+                  key={g.slug}
+                  href={`/guides/${g.slug}`}
+                  className="flex gap-3 items-start p-3 rounded-xl border border-stone-100 bg-stone-50 hover:bg-white hover:border-accent/30 hover:shadow-sm transition group"
+                >
+                  <span className="text-2xl mt-0.5 group-hover:scale-110 transition duration-200">{g.icon}</span>
+                  <div>
+                    <h3 className="text-xs font-bold text-ink leading-snug group-hover:text-accent transition">
+                      {g.title}
+                    </h3>
+                    <p className="text-[10px] text-muted mt-1 uppercase font-semibold">
+                      {g.category}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+              <Link
+                href="/how-to-apply"
+                className="flex gap-3 items-start p-3 rounded-xl border border-stone-100 bg-stone-50 hover:bg-white hover:border-accent/30 hover:shadow-sm transition group"
+              >
+                <span className="text-2xl mt-0.5 group-hover:scale-110 transition duration-200">🚀</span>
+                <div>
+                  <h3 className="text-xs font-bold text-ink leading-snug group-hover:text-accent transition">
+                    Sarkari Naukri Online Form Kaise Bharein: Step-by-Step
+                  </h3>
+                  <p className="text-[10px] text-muted mt-1 uppercase font-semibold">
+                    Apply Guide
+                  </p>
+                </div>
+              </Link>
+            </div>
+          </section>
 
           {/* Application Tips */}
           <section className="mb-8" id="section-tips">

@@ -60,13 +60,9 @@ body {
     @apply min-h-[44px]; /* Minimum 44px height for touch targets */
   }
 
-  /* Convert content tables to card-based layout */
+  /* Ensure content tables are visible on mobile */
   .prose-custom table {
-    @apply hidden; /* Hide tables on mobile */
-  }
-
-  .prose-custom table + * {
-    @apply block; /* Show alternative content */
+    display: table !important;
   }
 
   /* Mobile card-based layout for table content */
@@ -150,10 +146,17 @@ body {
     margin-bottom: 12px !important;
   }
 
-  /* Prevent horizontal overflow on all elements */
+  /* Prevent horizontal overflow on layout level, but allow specific scrollable elements */
+  html, body {
+    overflow-x: hidden !important;
+  }
+
   * {
     max-width: 100% !important;
-    overflow-x: hidden !important;
+  }
+
+  .overflow-x-auto, .sp-table-wrapper, pre, code {
+    overflow-x: auto !important;
   }
 
   /* Ensure cards are full width on mobile */
@@ -324,7 +327,14 @@ body {
 }
 
 .prose-custom table.sp-table {
-  @apply w-full text-left border-collapse min-w-[600px];
+  @apply w-full text-left border-collapse;
+  min-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .prose-custom table.sp-table {
+    min-width: 600px;
+  }
 }
 
 .prose-custom table.sp-table thead {

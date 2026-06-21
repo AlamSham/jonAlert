@@ -85,6 +85,41 @@ export default function AboutPage() {
           </ul>
         </section>
 
+        <section className="bg-stone-50 rounded-2xl p-6 border border-stone-200/60 my-6">
+          <h2 className="text-lg font-black text-ink mb-3">👥 Hamari Team</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-stone-100">
+              <span className="text-3xl">👨‍💻</span>
+              <div>
+                <p className="font-bold text-ink text-sm">Alam Shamshad</p>
+                <p className="text-xs text-muted">Founder & Lead Developer</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-stone-100">
+              <span className="text-3xl">📝</span>
+              <div>
+                <p className="font-bold text-ink text-sm">Neha Sharma</p>
+                <p className="text-xs text-muted">Senior Content Editor</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-bold text-ink mb-2">🏛️ Hamare Data Sources</h2>
+          <p className="mb-2">
+            SarkariPulse par di gayi jankari 100% verified aur official hoti hai. Hum information collect karne ke liye niche diye gaye sarkari portals ko use karte hain:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-2 text-muted">
+            <li>Staff Selection Commission (SSC) — ssc.gov.in</li>
+            <li>Union Public Service Commission (UPSC) — upsc.gov.in</li>
+            <li>Railway Recruitment Board (RRB) — Official regional boards</li>
+            <li>Institute of Banking Personnel Selection (IBPS) — ibps.in</li>
+            <li>State Public Service Commissions (BPSC, UPPSC, RPSC, etc.)</li>
+            <li>Government of India Employment News (Rojgar Samachar)</li>
+          </ul>
+        </section>
+
         <section>
           <h2 className="text-lg font-bold text-ink mb-2">📬 Contact Us</h2>
           <p>

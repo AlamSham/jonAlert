@@ -57,6 +57,8 @@ const footerLinks = [
     title: 'Quick Links',
     links: [
       { href: '/search', label: 'Search Jobs' },
+      { href: '/guides', label: 'Exam Guides' },
+      { href: '/how-to-apply', label: 'How to Apply' },
       { href: '/about', label: 'About Us' },
       { href: '/contact', label: 'Contact Us' },
     ],
@@ -90,6 +92,24 @@ export function Footer() {
             <p className="text-sm text-muted leading-relaxed">
               Sarkari Naukri, College Admission, Scholarship, Exam Results aur Admit Card updates — AI-powered, auto-updated har 10 minute.
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href="https://whatsapp.com/channel/0029VaDUx1m1yT2D0Q7g7Q1h"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg bg-green-50 px-2.5 py-1.5 text-xs font-bold text-green-700 border border-green-200/50 hover:bg-green-100 transition"
+              >
+                💬 WhatsApp
+              </a>
+              <a
+                href="https://t.me/sarkaripulse"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-lg bg-blue-50 px-2.5 py-1.5 text-xs font-bold text-blue-700 border border-blue-200/50 hover:bg-blue-100 transition"
+              >
+                ✈️ Telegram
+              </a>
+            </div>
           </div>
 
           {/* Link Columns */}

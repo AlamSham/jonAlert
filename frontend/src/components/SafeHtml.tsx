@@ -9,6 +9,18 @@ interface SafeHtmlProps {
 export const SafeHtml: React.FC<SafeHtmlProps> = ({ content, className = '' }) => {
   if (!content) return null;
 
+  // Filter out known placeholder text
+  const stripped = content.replace(/<[^>]*>/g, '').trim().toLowerCase();
+  const placeholders = [
+    'official notification check karein',
+    'detailed notification dekhein',
+    'check official notification',
+    'notification dekhein',
+  ];
+  const isPlaceholder = placeholders.some(p => stripped === p) || 
+                        (stripped.split(/\s+/).length < 5 && placeholders.some(p => stripped.includes(p)));
+  if (isPlaceholder) return null;
+
   // Check if content looks like HTML
   const hasHtmlTags = /<[a-z][\s\S]*>/i.test(content);
   const isHtml = hasHtmlTags;
