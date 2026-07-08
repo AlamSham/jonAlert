@@ -338,6 +338,20 @@ export default async function JobDetailPage({ params }: Props) {
             </div>
           </header>
 
+          {/* Prominent CTA - Reduce Bounce Rate */}
+          {job.applyLink && (
+            <div className="mb-6 flex justify-center">
+              <a
+                href={job.applyLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-10 py-4 text-base font-bold text-white shadow-lg transition hover:shadow-xl hover:scale-105 active:scale-95 animate-pulse"
+              >
+                🔥 Apply Now - Official Link
+              </a>
+            </div>
+          )}
+
           {/* Mobile TOC */}
           <TableOfContents items={tocItems} variant="mobile" />
 
