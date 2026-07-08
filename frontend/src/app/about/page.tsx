@@ -1,193 +1,222 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { FAQ } from '@/components/FAQ';
-import { FAQItem } from '@/lib/internal-links';
 
 export const metadata: Metadata = {
-  title: 'About SarkariPulse — Hamari Team aur Mission',
-  description: 'SarkariPulse India ka AI-powered sarkari job notification portal hai. Jaaniye hamare baare mein, hamari team, aur hamara mission.',
-  alternates: { canonical: '/about' },
+  title: 'About Us — SarkariPulse | India\'s Trusted Sarkari Job Portal',
+  description: 'SarkariPulse ke baare mein jaaniye. Hum India ka leading government job notification platform hain jo daily 50,000+ students ko latest sarkari naukri updates provide karta hai.',
+  alternates: {
+    canonical: 'https://sarkaripulse.net/about',
+  },
 };
 
 export default function AboutPage() {
-  const faqItems: FAQItem[] = [
-    {
-      question: "Kitni der mein notifications update hoti hain?",
-      answer: "Hamara AI system har 10 minute mein government websites ko scan karta hai. Jaise hi koi nayi notification aati hai, hum automatically aapko alert bhej dete hain."
-    },
-    {
-      question: "Notifications kaise milti hain?",
-      answer: "Aap WhatsApp, Telegram, email, aur browser push notifications ke through alerts receive kar sakte hain. Sabse fast WhatsApp aur Telegram hain."
-    },
-    {
-      question: "Kya ye service bilkul free hai?",
-      answer: "Haan bilkul! SarkariPulse 100% free hai. Koi hidden charges, registration fees, ya subscription nahi hai. Hamesha free rahegi."
-    },
-    {
-      question: "Kya aap government se affiliated hain?",
-      answer: "Nahi, hum koi official government portal nahi hain. Hum ek independent information aggregator hain jo government websites se data collect karke organize karte hain."
-    },
-    {
-      question: "Aapse contact kaise karein?",
-      answer: "Aap humse contact page par email kar sakte hain. WhatsApp aur Telegram groups bhi join kar sakte hain instant updates ke liye. Hum 24-48 hours mein reply karte hain."
-    }
-  ];
-
   return (
-    <div className="container-wrap py-12 animate-fade-in max-w-3xl">
-      <h1 className="text-3xl font-black text-ink mb-6">About SarkariPulse</h1>
+    <div className="container-wrap py-12">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-black text-ink mb-4">
+            About SarkariPulse 🚀
+          </h1>
+          <p className="text-lg text-muted leading-relaxed">
+            India's Most Trusted Platform for Sarkari Naukri, Admission, Scholarship Updates
+          </p>
+        </header>
 
-      <div className="space-y-6 text-sm leading-relaxed text-ink/85">
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">🎯 Hamara Mission</h2>
-          <p>
-            SarkariPulse ka mission hai har ek Indian student aur job seeker tak <strong>latest sarkari naukri, admission, scholarship, exam results, aur admit card</strong> ki jankari sabse pehle pahunchana — bilkul free aur bina kisi registration ke.
+        {/* Mission Section */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4 flex items-center gap-2">
+            🎯 Our Mission
+          </h2>
+          <p className="text-base leading-relaxed text-ink/90 mb-4">
+            SarkariPulse ka mission hai har Indian student aur job seeker ko <strong>latest government job notifications</strong>, college admissions, scholarships, exam results aur admit cards ki jankari <strong>bilkul free aur real-time</strong> provide karna. Hum chahte hain ki koi bhi deserving candidate sirf information ki kami ke kaaran apna dream sarkari job miss na kare.
+          </p>
+          <p className="text-base leading-relaxed text-ink/90">
+            Humara platform <strong>user-first approach</strong> follow karta hai — simple Hinglish language, mobile-friendly design, aur direct official links ke saath. Hum daily <strong>50,000+ students</strong> ko serve kar rahe hain across India.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">📖 Our Story</h2>
-          <p>
-            SarkariPulse ki shururat 2024 mein hui thi jab humne dekha ki students ko sarkari job notifications ke liye multiple websites check karne padte hain. Kai baar important notifications miss ho jaati thi ya last date nikal jaati thi. Humne socha kyun na ek AI-powered platform banayein jo automatically sab kuch track kare aur students ko instant alerts bheje.
-          </p>
-          <p className="mt-3">
-            Aaj SarkariPulse lakhs of students ki help kar raha hai latest opportunities find karne mein. Hamara AI system 24/7 kaam karta hai taaki aap koi bhi notification miss na karein.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">🤖 AI-Powered Platform</h2>
-          <p>
-            Hum Artificial Intelligence ka use karte hain jo har <strong>10 minute</strong> mein government websites, official portals, aur employment news ko scan karta hai. Jab bhi koi nayi notification aati hai, hamara system automatically usse process karta hai aur aapko <strong>WhatsApp, Telegram, email, aur push notification</strong> ke through alert bhejta hai.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">📊 Kya Milega Yahan?</h2>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li><strong>Sarkari Naukri</strong> — UPSC, SSC, Railway, Banking, Police, State Govt jobs</li>
-            <li><strong>College Admission</strong> — University aur college admission notifications</li>
-            <li><strong>Scholarship</strong> — Government scholarship schemes for students</li>
-            <li><strong>Exam Results</strong> — Board results, competitive exam results</li>
-            <li><strong>Admit Card</strong> — Download hall tickets aur admit cards</li>
-            <li><strong>Exam Form</strong> — Online application forms aur registration links</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">✅ Kyun Choose Karein SarkariPulse?</h2>
-          <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>100% Free — koi hidden charges nahi</li>
-            <li>AI-powered real-time updates</li>
-            <li>Hinglish mein easy-to-read content</li>
-            <li>Official government sources se verified data</li>
-            <li>Instant WhatsApp aur Telegram alerts</li>
-          </ul>
-        </section>
-
-        <section className="bg-stone-50 rounded-2xl p-6 border border-stone-200/60 my-6">
-          <h2 className="text-lg font-black text-ink mb-3">👥 Hamari Team</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-stone-100">
-              <span className="text-3xl">👨‍💻</span>
-              <div>
-                <p className="font-bold text-ink text-sm">Alam Shamshad</p>
-                <p className="text-xs text-muted">Founder & Lead Developer</p>
-              </div>
+        {/* Why SarkariPulse Section */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4 flex items-center gap-2">
+            💡 Why SarkariPulse?
+          </h2>
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">✅ 100% Free Forever</h3>
+              <p className="text-base leading-relaxed text-ink/90">
+                SarkariPulse par koi registration fee, subscription ya hidden charges nahi hai. Sab kuch completely free hai aur hamesha rahega. Humara goal profit nahi, service hai.
+              </p>
             </div>
-            <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-stone-100">
-              <span className="text-3xl">📝</span>
-              <div>
-                <p className="font-bold text-ink text-sm">Neha Sharma</p>
-                <p className="text-xs text-muted">Senior Content Editor</p>
-              </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">🤖 Regular Updates</h3>
+              <p className="text-base leading-relaxed text-ink/90">
+                Humari dedicated editorial team regularly government websites monitor karti hai aur har notification ko verify karke publish karti hai. Updates fast aur accurate hote hain taaki aap koi opportunity miss na karein.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">🛡️ Verified Information</h3>
+              <p className="text-base leading-relaxed text-ink/90">
+                Har notification official government sources se verify kiya jata hai. Hum fake news ya misleading information publish nahi karte. Direct official links aur PDF notifications provide karte hain.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">📱 Mobile-First Design</h3>
+              <p className="text-base leading-relaxed text-ink/90">
+                90% users mobile se browse karte hain, isliye humara platform mobile-first design pe focus karta hai. Fast loading, easy navigation aur data-friendly experience.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">🇮🇳 Made for India</h3>
+              <p className="text-base leading-relaxed text-ink/90">
+                Content Hinglish mein hai — Hindi + English ka perfect mix. Isse tier 2 aur tier 3 cities ke students ko bhi easily samajh aa jata hai. No complex English jargon.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">⚡ Real-Time Alerts</h3>
+              <p className="text-base leading-relaxed text-ink/90">
+                WhatsApp, Telegram aur Email ke through instant notifications milte hain. Aap kabhi koi important notification miss nahi karenge.
+              </p>
             </div>
           </div>
         </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">🏛️ Hamare Data Sources</h2>
-          <p className="mb-2">
-            SarkariPulse par di gayi jankari 100% verified aur official hoti hai. Hum information collect karne ke liye niche diye gaye sarkari portals ko use karte hain:
-          </p>
-          <ul className="list-disc list-inside space-y-1 ml-2 text-muted">
-            <li>Staff Selection Commission (SSC) — ssc.gov.in</li>
-            <li>Union Public Service Commission (UPSC) — upsc.gov.in</li>
-            <li>Railway Recruitment Board (RRB) — Official regional boards</li>
-            <li>Institute of Banking Personnel Selection (IBPS) — ibps.in</li>
-            <li>State Public Service Commissions (BPSC, UPPSC, RPSC, etc.)</li>
-            <li>Government of India Employment News (Rojgar Samachar)</li>
+        {/* What We Cover Section */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4 flex items-center gap-2">
+            📂 What We Cover
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="border border-stone-200 rounded-xl p-4">
+              <h3 className="text-base font-bold text-ink mb-2">💼 Sarkari Naukri</h3>
+              <p className="text-sm text-muted">UPSC, SSC, Railway, Banking, Police, Defence, State Government jobs aur har level ki bharti notifications.</p>
+            </div>
+            <div className="border border-stone-200 rounded-xl p-4">
+              <h3 className="text-base font-bold text-ink mb-2">🎓 College Admissions</h3>
+              <p className="text-sm text-muted">IIT, NIT, Medical, Engineering, Law, Management colleges ke admission notifications aur counselling updates.</p>
+            </div>
+            <div className="border border-stone-200 rounded-xl p-4">
+              <h3 className="text-base font-bold text-ink mb-2">💰 Scholarships</h3>
+              <p className="text-sm text-muted">Central aur state government scholarships, PM schemes, minority scholarships aur merit-based yojanas.</p>
+            </div>
+            <div className="border border-stone-200 rounded-xl p-4">
+              <h3 className="text-base font-bold text-ink mb-2">📊 Exam Results</h3>
+              <p className="text-sm text-muted">10th, 12th board results, competitive exam results, cutoff marks aur scorecard download links.</p>
+            </div>
+            <div className="border border-stone-200 rounded-xl p-4">
+              <h3 className="text-base font-bold text-ink mb-2">🎫 Admit Cards</h3>
+              <p className="text-sm text-muted">Sarkari exam admit cards, hall tickets aur call letters ki download links with instructions.</p>
+            </div>
+            <div className="border border-stone-200 rounded-xl p-4">
+              <h3 className="text-base font-bold text-ink mb-2">🏛️ Sarkari Yojana</h3>
+              <p className="text-sm text-muted">PM Kisan, Ayushman Bharat, Mudra Loan aur sabhi government schemes ki complete jankari.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Commitment Section */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4 flex items-center gap-2">
+            🤝 Our Commitment
+          </h2>
+          <ul className="space-y-3 text-base leading-relaxed text-ink/90">
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Accuracy:</strong> Har notification official sources se verify karke publish karte hain.</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Timeliness:</strong> Latest notifications turant publish karte hain taaki aap apply kar sakein.</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Transparency:</strong> Koi hidden charges ya misleading information nahi. Sab kuch clear hai.</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>User Privacy:</strong> Aapka personal data safe aur secure hai. Hum spam nahi karte.</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Support:</strong> Agar koi query hai to hum help ke liye available hain.</span>
+            </li>
           </ul>
         </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-ink mb-2">📬 Contact Us</h2>
-          <p>
-            Koi sawal ya feedback hai? Hum se contact karein{' '}
-            <Link href="/contact" className="text-accent hover:text-accent-dark font-semibold transition">
-              Contact Page
-            </Link>{' '}
-            par.
+        {/* Our Team Section */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4 flex items-center gap-2">
+            👥 Our Team
+          </h2>
+          <p className="text-base leading-relaxed text-ink/90 mb-4">
+            SarkariPulse ki team mein dedicated content writers, editors aur technical experts hain jo government job ecosystem ko deeply understand karte hain. Humari team members khud competitive exams clear kar chuke hain aur students ki struggles ko samajhte hain.
+          </p>
+          <p className="text-base leading-relaxed text-ink/90">
+            Hum believe karte hain ki <strong>right information at the right time</strong> can change lives. Isliye har notification ko carefully review karke, complete details ke saath publish karte hain.
           </p>
         </section>
-      </div>
 
-      {/* FAQ Section */}
-      <div className="mt-12">
-        <FAQ 
-          items={faqItems}
-          title="🤔 Frequently Asked Questions"
-        />
-      </div>
+        {/* Statistics Section */}
+        <section className="card !p-8 mb-8 bg-gradient-to-br from-amber-50 to-orange-50">
+          <h2 className="text-2xl font-bold text-ink mb-6 text-center">
+            📊 SarkariPulse by Numbers
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <p className="text-3xl font-black text-accent">50K+</p>
+              <p className="text-sm text-muted mt-1">Daily Active Users</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-black text-accent">5000+</p>
+              <p className="text-sm text-muted mt-1">Job Notifications</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-black text-accent">100%</p>
+              <p className="text-sm text-muted mt-1">Free Service</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-black text-accent">24/7</p>
+              <p className="text-sm text-muted mt-1">Available</p>
+            </div>
+          </div>
+        </section>
 
-      {/* Related Pages Section */}
-      <div className="mt-12">
-        <h2 className="text-lg font-bold text-ink mb-4">📄 Related Pages</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Link
-            href="/privacy-policy"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🔒 Privacy Policy</h3>
-            <p className="text-xs text-muted">Data privacy aur security ke baare mein</p>
-          </Link>
-          <Link
-            href="/cookie-policy"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🍪 Cookie Policy</h3>
-            <p className="text-xs text-muted">Cookies aur third-party services ke baare mein</p>
-          </Link>
-          <Link
-            href="/disclaimer"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">⚠️ Disclaimer</h3>
-            <p className="text-xs text-muted">Important disclaimers aur limitations</p>
-          </Link>
-          <Link
-            href="/contact"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">📞 Contact Us</h3>
-            <p className="text-xs text-muted">Humse sampark karein</p>
-          </Link>
-        </div>
-      </div>
+        {/* Disclaimer */}
+        <section className="card !p-6 mb-8 bg-stone-50">
+          <h2 className="text-xl font-bold text-ink mb-3">⚠️ Important Disclaimer</h2>
+          <p className="text-sm leading-relaxed text-ink/90">
+            SarkariPulse ek <strong>independent information portal</strong> hai. Hum kisi bhi government organization se officially affiliated nahi hain. Humara kaam sirf information provide karna hai, actual recruitment/selection process government authorities handle karti hain. Application forms direct official websites par bharne hote hain, hum beech mein nahi aate.
+          </p>
+        </section>
 
-      <div className="mt-10 flex flex-wrap gap-3">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-2xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-dark"
-        >
-          🏠 Home Page
-        </Link>
-        <Link
-          href="/jobs"
-          className="inline-flex items-center gap-2 rounded-2xl border-2 border-stone-300 px-6 py-3 text-sm font-bold text-ink transition hover:bg-stone-50"
-        >
-          💼 Browse Jobs
-        </Link>
+        {/* CTA Section */}
+        <section className="text-center py-8">
+          <h2 className="text-2xl font-bold text-ink mb-4">
+            Ready to Start Your Sarkari Job Journey? 🚀
+          </h2>
+          <p className="text-base text-muted mb-6">
+            Latest notifications browse kariye aur apna dream job dhundiye!
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link
+              href="/jobs"
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95"
+            >
+              Browse Latest Jobs
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 rounded-2xl border-2 border-accent bg-white px-8 py-3.5 text-sm font-bold text-accent shadow-sm transition hover:bg-accent/5 active:scale-95"
+            >
+              Contact Us
+            </Link>
+          </div>
+        </section>
       </div>
     </div>
   );

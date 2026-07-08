@@ -197,7 +197,7 @@ export function websiteJsonLd() {
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
-    description: 'Latest Sarkari Naukri, Exam Results, Admit Cards — AI-powered updates in Hinglish',
+    description: 'Latest Sarkari Naukri, Exam Results, Admit Cards — regularly updated by our editorial team',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
@@ -216,7 +216,7 @@ export function organizationJsonLd() {
     name: SITE_NAME,
     url: SITE_URL,
     logo: SITE_LOGO_URL,
-    description: 'AI-powered sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India.',
+    description: 'Trusted sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India, verified by our editorial team.',
     sameAs: [
       // Add social media links when available
       // 'https://twitter.com/sarkaripulse',

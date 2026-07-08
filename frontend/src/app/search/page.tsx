@@ -272,7 +272,7 @@ export default async function SearchPage({ searchParams }: Props) {
           <p className="text-sm text-muted leading-relaxed">
             SarkariPulse par &quot;{q}&quot; se related {jobs.length} sarkari naukri aur notifications available hain.
             Har job notification mein complete details, eligibility criteria, last date, salary details aur
-            direct apply links diye gaye hain. AI-powered system har 10 minute mein latest updates check karta hai.
+            direct apply links diye gaye hain. Our editorial team regularly verifies and updates notifications.
             Koi bhi notification miss nahi hoga!
           </p>
         </section>

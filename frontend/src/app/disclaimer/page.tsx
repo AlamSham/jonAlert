@@ -50,9 +50,9 @@ export default function DisclaimerPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-ink mb-2">6. AI-Generated Content</h2>
+          <h2 className="text-lg font-bold text-ink mb-2">6. Content Verification</h2>
           <p>
-            Hamari website AI technology ka use karti hai content ko summarize aur organize karne ke liye. AI-generated summaries mein minor variations ho sakte hain. Hamesha <strong>official notification</strong> ko refer karein final decision ke liye.
+            Hamari editorial team content ko summarize aur organize karti hai official sources se. Summaries mein minor variations ho sakte hain. Hamesha <strong>official notification</strong> ko refer karein final decision ke liye.
           </p>
         </section>
 

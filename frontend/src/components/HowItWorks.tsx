@@ -7,7 +7,7 @@ export function HowItWorks() {
       emoji: '🔍',
       title: 'Browse',
       subtitle: 'Latest Notifications',
-      description: 'SarkariPulse par latest job notifications, results, admit cards browse kariye. AI-powered updates har 10 minute.',
+      description: 'SarkariPulse par latest job notifications, results, admit cards browse kariye. Regularly updated with latest notifications.',
       action: 'Browse Jobs',
       href: '/jobs',
       color: 'from-blue-500 to-cyan-500'

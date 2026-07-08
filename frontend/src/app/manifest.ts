@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'SarkariPulse — Sarkari Naukri, Result, Admit Card',
     short_name: 'SarkariPulse',
-    description: 'Latest Sarkari Naukri 2026, Exam Results, Admit Cards, Scholarships — AI-powered updates har 10 minute.',
+    description: 'Latest Sarkari Naukri 2026, Exam Results, Admit Cards, Scholarships — regularly updated by our editorial team.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

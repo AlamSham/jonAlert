@@ -252,7 +252,7 @@ export const STRUCTURED_DATA_CONFIG = {
     name: 'SarkariPulse',
     url: 'https://sarkaripulse.net',
     logo: 'https://sarkaripulse.net/logo.jpg',
-    description: 'AI-powered sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India.',
+    description: 'Trusted sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India, verified by our editorial team.',
     foundingDate: '2024',
     areaServed: 'India',
     serviceType: 'Government Job Information Service',
@@ -266,7 +266,7 @@ export const STRUCTURED_DATA_CONFIG = {
   WEBSITE: {
     name: 'SarkariPulse',
     url: 'https://sarkaripulse.net',
-    description: 'Latest Sarkari Naukri, Exam Results, Admit Cards — AI-powered updates in Hinglish',
+    description: 'Latest Sarkari Naukri, Exam Results, Admit Cards — regularly updated by our editorial team',
     searchAction: {
       target: 'https://sarkaripulse.net/search?q={search_term_string}',
       queryInput: 'required name=search_term_string'

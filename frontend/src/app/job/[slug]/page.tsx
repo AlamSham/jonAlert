@@ -13,6 +13,7 @@ import { HowToApply } from '@/components/HowToApply';
 import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
 import { SafeHtml } from '@/components/SafeHtml';
+import { DetailedJobInfo } from '@/components/DetailedJobInfo';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateJobPageTitle, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
@@ -382,6 +383,9 @@ export default async function JobDetailPage({ params }: Props) {
               <HowToApply applyLink={job.applyLink} title={job.title} />
             </section>
           )}
+
+          {/* Detailed Job Information - Enhanced Content for AdSense */}
+          <DetailedJobInfo job={job} />
 
           {/* Preparation Guides Section */}
           <section className="mb-8 card !p-5 mobile-content-section" id="section-prep">

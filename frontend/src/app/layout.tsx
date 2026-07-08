@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     locale: 'hi_IN',
     siteName: 'SarkariPulse',
     title: 'SarkariPulse — Latest Sarkari Naukri, Result, Admit Card',
-    description: 'AI-powered sarkari job alerts in Hinglish. UPSC, SSC, Railway, State jobs sab ek jagah.',
+    description: 'Latest sarkari job alerts verified by our editorial team. UPSC, SSC, Railway, State jobs sab ek jagah.',
     images: [
       {
         url: '/logo.jpg',
@@ -84,7 +84,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'SarkariPulse — Sarkari Naukri Updates',
-    description: 'Latest govt jobs, results, admit cards — auto-updated har 10 minute.',
+    description: 'Latest govt jobs, results, admit cards — regularly updated by our team.',
     images: ['/logo.jpg'],
   },
   icons: {

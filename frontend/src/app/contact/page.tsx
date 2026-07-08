@@ -1,146 +1,235 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { FAQ } from '@/components/FAQ';
-import { FAQItem } from '@/lib/internal-links';
 
 export const metadata: Metadata = {
-  title: 'Contact Us — SarkariPulse',
-  description: 'SarkariPulse se contact karein. Koi sawal, feedback, ya suggestion hai? Humse yahan sampark karein.',
-  alternates: { canonical: '/contact' },
+  title: 'Contact Us — SarkariPulse | Get in Touch',
+  description: 'SarkariPulse se contact karne ke liye email, social media links aur response time ki jankari. Hum aapki queries ka 24-48 hours mein reply karte hain.',
+  alternates: {
+    canonical: 'https://sarkaripulse.net/contact',
+  },
 };
 
 export default function ContactPage() {
-  const faqItems: FAQItem[] = [
-    {
-      question: "Kya aap job applications accept karte hain?",
-      answer: "Nahi, hum sirf information provide karte hain. Job applications ke liye aapko official government website par jaana hoga jo hamari notification mein di gayi hoti hai."
-    },
-    {
-      question: "Notification miss ho gayi, kya kar sakte hain?",
-      answer: "Aap hamari website par search kar sakte hain ya WhatsApp/Telegram groups join kar sakte hain. Hum regular updates bhejte rehte hain."
-    },
-    {
-      question: "Koi technical problem hai website mein?",
-      answer: "Agar website load nahi ho rahi ya koi error aa rahi hai, toh humse email karein. Hum jaldi fix kar denge."
-    },
-    {
-      question: "Fake notification report kaise karein?",
-      answer: "Agar aapko lagta hai koi notification fake hai, toh humse turant contact karein. Hum verify karke action lenge."
-    },
-    {
-      question: "Suggestion ya feedback kaise dein?",
-      answer: "Aap email kar sakte hain ya WhatsApp group mein message kar sakte hain. Hamein user feedback bahut pasand hai!"
-    }
-  ];
-
   return (
-    <div className="container-wrap py-12 animate-fade-in max-w-3xl">
-      <h1 className="text-3xl font-black text-ink mb-6">Contact Us</h1>
+    <div className="container-wrap py-12">
+      <div className="max-w-3xl mx-auto">
+        {/* Header */}
+        <header className="mb-8 text-center">
+          <h1 className="text-3xl font-black text-ink mb-4">
+            Contact Us 📧
+          </h1>
+          <p className="text-lg text-muted leading-relaxed">
+            Koi query hai? Hum help ke liye available hain!
+          </p>
+        </header>
 
-      <div className="space-y-6 text-sm leading-relaxed text-ink/85">
-        <p>
-          SarkariPulse se contact karne ke liye neeche diye gaye tarike use karein. Hum aapki baat sunne ke liye hamesha tayyar hain! 😊
-        </p>
+        {/* Contact Info */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-6">
+            Get in Touch
+          </h2>
+          
+          <div className="space-y-6">
+            {/* Email */}
+            <div className="flex gap-4 items-start">
+              <span className="text-3xl">📧</span>
+              <div>
+                <h3 className="text-lg font-bold text-ink mb-2">Email</h3>
+                <p className="text-base text-muted mb-2">
+                  General queries, feedback ya suggestions ke liye:
+                </p>
+                <a 
+                  href="mailto:contact@sarkaripulse.net" 
+                  className="text-accent font-semibold hover:underline"
+                >
+                  contact@sarkaripulse.net
+                </a>
+                <p className="text-sm text-muted mt-2">
+                  Response time: 24-48 hours
+                </p>
+              </div>
+            </div>
 
-        {/* FAQ Section - Before Contact Form */}
-        <div className="mt-8">
-          <FAQ 
-            items={faqItems}
-            title="🤔 Frequently Asked Questions"
-          />
-        </div>
+            {/* Social Media */}
+            <div className="flex gap-4 items-start">
+              <span className="text-3xl">💬</span>
+              <div>
+                <h3 className="text-lg font-bold text-ink mb-2">Social Media</h3>
+                <p className="text-base text-muted mb-3">
+                  Daily updates aur instant notifications ke liye follow karein:
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://whatsapp.com/channel/0029VaDUx1m1yT2D0Q7g7Q1h"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600 transition"
+                  >
+                    💬 WhatsApp
+                  </a>
+                  <a
+                    href="https://t.me/sarkaripulse"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-600 transition"
+                  >
+                    ✈️ Telegram
+                  </a>
+                </div>
+              </div>
+            </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 mt-8">
-          <div className="card !p-6 text-center">
-            <span className="text-4xl block mb-3">📧</span>
-            <h3 className="font-bold text-ink mb-1">Email</h3>
-            <a href="mailto:contact@sarkaripulse.net" className="text-accent hover:text-accent-dark transition font-medium">
-              contact@sarkaripulse.net
+            {/* Office Address */}
+            <div className="flex gap-4 items-start">
+              <span className="text-3xl">📍</span>
+              <div>
+                <h3 className="text-lg font-bold text-ink mb-2">Office Address</h3>
+                <p className="text-base text-ink/90">
+                  SarkariPulse<br />
+                  Online Information Portal<br />
+                  India
+                </p>
+                <p className="text-sm text-muted mt-2">
+                  Note: Hum ek digital-first platform hain. Physical walk-ins ke liye prior appointment zaroor lein.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* What We Can Help With */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4">
+            🤝 What We Can Help With
+          </h2>
+          <ul className="space-y-3 text-base leading-relaxed text-ink/90">
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Job Notifications:</strong> Specific job ki jankari ya status update</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Website Issues:</strong> Technical problems, broken links, display issues</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Content Feedback:</strong> Wrong information report karna ya suggestions</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>Partnership Queries:</strong> Advertising, collaborations, business inquiries</span>
+            </li>
+            <li className="flex gap-3">
+              <span>✅</span>
+              <span><strong>General Support:</strong> Platform use karne mein help</span>
+            </li>
+          </ul>
+        </section>
+
+        {/* What We Cannot Help With */}
+        <section className="card !p-8 mb-8 bg-orange-50 border-orange-200">
+          <h2 className="text-2xl font-bold text-ink mb-4">
+            ⚠️ Important Note
+          </h2>
+          <p className="text-base leading-relaxed text-ink/90 mb-4">
+            <strong>Please note:</strong> SarkariPulse ek information portal hai. Hum help nahi kar sakte in matters mein:
+          </p>
+          <ul className="space-y-2 text-base leading-relaxed text-ink/90">
+            <li className="flex gap-3">
+              <span>❌</span>
+              <span>Application form bharne mein direct help (official websites par khud bharein)</span>
+            </li>
+            <li className="flex gap-3">
+              <span>❌</span>
+              <span>Exam dates change karna ya admit card issues (recruitment authority se contact karein)</span>
+            </li>
+            <li className="flex gap-3">
+              <span>❌</span>
+              <span>Result declaration ya selection process (government authorities handle karti hain)</span>
+            </li>
+            <li className="flex gap-3">
+              <span>❌</span>
+              <span>Job guarantee ya placement assurance (hum sirf information provide karte hain)</span>
+            </li>
+          </ul>
+          <p className="text-sm text-muted mt-4">
+            In matters ke liye please official recruitment authority se contact karein. Har notification mein official website link diya hota hai.
+          </p>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="card !p-8 mb-8">
+          <h2 className="text-2xl font-bold text-ink mb-4">
+            ❓ Frequently Asked Questions
+          </h2>
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">Q: Email ka response kitne time mein milta hai?</h3>
+              <p className="text-base text-ink/90">
+                A: Normally 24-48 hours mein reply karte hain. Weekend/holidays par thoda delay ho sakta hai.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">Q: Kya aap application form bharne mein help karte ho?</h3>
+              <p className="text-base text-ink/90">
+                A: Nahi, hum sirf information provide karte hain. Application direct official website par khud bharna hota hai. Humari website par step-by-step guides available hain.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">Q: Wrong information report kaise karein?</h3>
+              <p className="text-base text-ink/90">
+                A: Email karein contact@sarkaripulse.net par. Please mention karein kis notification mein kya wrong hai, taaki hum turant fix kar sakein.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-ink mb-2">Q: Partnership/advertising opportunities hain?</h3>
+              <p className="text-base text-ink/90">
+                A: Haan, legitimate businesses ke liye advertising options available hain. Email karein with your proposal.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Alternative Contact Methods */}
+        <section className="card !p-8 mb-8 bg-gradient-to-br from-amber-50 to-orange-50">
+          <h2 className="text-2xl font-bold text-ink mb-4">
+            📱 Stay Connected
+          </h2>
+          <p className="text-base text-muted mb-4">
+            Instant updates aur community support ke liye WhatsApp/Telegram groups join karein:
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <a
+              href="https://whatsapp.com/channel/0029VaDUx1m1yT2D0Q7g7Q1h"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 min-w-[200px] text-center rounded-xl bg-white border-2 border-green-500 px-6 py-4 font-bold text-green-700 hover:bg-green-50 transition"
+            >
+              💬 Join WhatsApp Channel
+            </a>
+            <a
+              href="https://t.me/sarkaripulse"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 min-w-[200px] text-center rounded-xl bg-white border-2 border-blue-500 px-6 py-4 font-bold text-blue-700 hover:bg-blue-50 transition"
+            >
+              ✈️ Join Telegram Channel
             </a>
           </div>
-
-          <div className="card !p-6 text-center">
-            <span className="text-4xl block mb-3">💬</span>
-            <h3 className="font-bold text-ink mb-1">WhatsApp</h3>
-            <p className="text-muted text-xs">Join our WhatsApp group for instant updates</p>
-          </div>
-
-          <div className="card !p-6 text-center">
-            <span className="text-4xl block mb-3">✈️</span>
-            <h3 className="font-bold text-ink mb-1">Telegram</h3>
-            <p className="text-muted text-xs">Follow our Telegram channel for daily alerts</p>
-          </div>
-
-          <div className="card !p-6 text-center">
-            <span className="text-4xl block mb-3">🕐</span>
-            <h3 className="font-bold text-ink mb-1">Response Time</h3>
-            <p className="text-muted text-xs">Hum usually 24-48 hours mein reply karte hain</p>
-          </div>
-        </div>
-
-        <section className="rounded-2xl bg-amber-50/60 border border-amber-200/40 p-5">
-          <h2 className="text-base font-bold text-ink mb-2">📝 Feedback &amp; Suggestions</h2>
-          <p>
-            Agar aapko hamari website mein koi improvement dikhta hai, koi bug milta hai, ya koi feature suggestion hai — toh zaroor batayein. Hum user feedback ko bahut seriously lete hain.
-          </p>
         </section>
 
-        <section>
-          <h2 className="text-base font-bold text-ink mb-2">⚠️ Important Note</h2>
-          <p>
-            SarkariPulse ek <strong>independent information portal</strong> hai. Hum kisi government department se affiliated nahi hain. Job applications ya official queries ke liye respective <strong>government department se directly contact</strong> karein.
+        {/* Browse Jobs CTA */}
+        <section className="text-center py-8">
+          <p className="text-base text-muted mb-6">
+            Abhi koi query nahi? Latest job notifications browse karein!
           </p>
+          <Link
+            href="/jobs"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95"
+          >
+            Browse Latest Jobs →
+          </Link>
         </section>
-      </div>
-
-      {/* Related Pages Section */}
-      <div className="mt-12">
-        <h2 className="text-lg font-bold text-ink mb-4">📄 Related Pages</h2>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Link
-            href="/privacy-policy"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🔒 Privacy Policy</h3>
-            <p className="text-xs text-muted">Data privacy aur security ke baare mein</p>
-          </Link>
-          <Link
-            href="/cookie-policy"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">🍪 Cookie Policy</h3>
-            <p className="text-xs text-muted">Cookies aur third-party services ke baare mein</p>
-          </Link>
-          <Link
-            href="/disclaimer"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">⚠️ Disclaimer</h3>
-            <p className="text-xs text-muted">Important disclaimers aur limitations</p>
-          </Link>
-          <Link
-            href="/about"
-            className="card !p-4 hover:bg-stone-50/60 transition group"
-          >
-            <h3 className="font-bold text-ink text-sm mb-1 group-hover:text-accent transition">ℹ️ About Us</h3>
-            <p className="text-xs text-muted">SarkariPulse ke baare mein jaaniye</p>
-          </Link>
-        </div>
-      </div>
-
-      <div className="mt-10 flex flex-wrap gap-3">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-2xl bg-accent px-6 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-dark"
-        >
-          🏠 Home Page
-        </Link>
-        <Link
-          href="/jobs"
-          className="inline-flex items-center gap-2 rounded-2xl border-2 border-stone-300 px-6 py-3 text-sm font-bold text-ink transition hover:bg-stone-50"
-        >
-          💼 Browse Jobs
-        </Link>
       </div>
     </div>
   );

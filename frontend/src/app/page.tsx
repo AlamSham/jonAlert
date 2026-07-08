@@ -48,7 +48,7 @@ export default async function HomePage() {
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted sm:text-base leading-relaxed">
             UPSC, SSC, Railway, Police, Banking, State Govt Jobs — latest sarkari naukri, admission, scholarship, results aur admit cards ek jagah.
             <br className="hidden sm:block" />
-            AI-powered updates har 10 minute. Government schemes, PM Kisan, Ayushman Bharat bhi available. Koi update miss nahi hoga! 🚀
+            Regularly updated by our editorial team. Government schemes, PM Kisan, Ayushman Bharat bhi available. Koi update miss nahi hoga! 🚀
           </p>
           <div className="mt-6 sm:mt-8">
             <SearchForm large />
@@ -226,7 +226,7 @@ export default async function HomePage() {
               Sarkari Result 2026 & Sarkari Naukri Latest Updates - SarkariPulse
             </h2>
             <p className="mb-4">
-              Welcome to <strong>SarkariPulse</strong>, India's leading AI-powered portal for all <strong>Sarkari Result 2026</strong>, <strong>Sarkari Naukri</strong>, government jobs notifications, college admissions, scholarship yojanas, exam forms, and exam answers keys. Humara primary target hai aapko har state aur central government notifications ko real-time update ke saath sabse pehle deliver karna. Hamara advanced platform direct official links, notification PDFs, eligibility criteria, age limits, aur step-by-step apply karne ka tarika pradan karta hai.
+              Welcome to <strong>SarkariPulse</strong>, India's leading trusted information portal for all <strong>Sarkari Result 2026</strong>, <strong>Sarkari Naukri</strong>, government jobs notifications, college admissions, scholarship yojanas, exam forms, and exam answers keys. Humara primary target hai aapko har state aur central government notifications ko real-time update ke saath sabse pehle deliver karna. Hamara advanced platform direct official links, notification PDFs, eligibility criteria, age limits, aur step-by-step apply karne ka tarika pradan karta hai.
             </p>
             
             <div className="grid gap-6 md:grid-cols-2 mt-6 mb-6">
@@ -253,7 +253,7 @@ export default async function HomePage() {
             <div className="space-y-4">
               <div className="border-b border-stone-200 pb-3">
                 <p className="font-bold text-ink">Q1. SarkariPulse par sarkari naukri updates kitni der mein update hoti hain?</p>
-                <p className="text-muted mt-1">Ans: SarkariPulse par notifications har 10 minute mein AI-powered automated bots ke zariye update kiye jaate hain, taaki aap koi bhi notification miss na karein.</p>
+                <p className="text-muted mt-1">Ans: SarkariPulse par notifications har 10 minute mein our dedicated editorial team ke zariye update kiye jaate hain, taaki aap koi bhi notification miss na karein.</p>
               </div>
               <div className="border-b border-stone-200 pb-3">
                 <p className="font-bold text-ink">Q2. Kya hum qualification-wise ya state-wise jobs search kar sakte hain?</p>

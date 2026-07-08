@@ -90,7 +90,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-sm text-muted leading-relaxed">
-              Sarkari Naukri, College Admission, Scholarship, Exam Results aur Admit Card updates — AI-powered, auto-updated har 10 minute.
+              Sarkari Naukri, College Admission, Scholarship, Exam Results aur Admit Card updates — regularly updated by our editorial team.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <a

@@ -1,10 +1,10 @@
 export function TrustSignals() {
   const signals = [
     {
-      emoji: '🤖',
-      title: 'AI-Powered Updates',
-      description: 'Har 10 minute automatic update — koi notification miss nahi hoga',
-      highlight: 'Auto-Updated'
+      emoji: '🔄',
+      title: 'Regular Updates',
+      description: 'Frequently updated by our editorial team — koi notification miss nahi hoga',
+      highlight: 'Regularly Updated'
     },
     {
       emoji: '⚡',
