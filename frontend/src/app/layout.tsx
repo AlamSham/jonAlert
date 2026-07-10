@@ -1,15 +1,23 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import dynamic from 'next/dynamic';
 import './globals.css';
 import { Header } from '@/components/Header';
 import { NewsTicker } from '@/components/NewsTicker';
-import { Footer } from '@/components/Footer';
 import { websiteJsonLd, organizationJsonLd } from '@/lib/seo';
 import { BackToTop } from '@/components/BackToTop';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { WebVitals } from '@/components/WebVitals';
-import { ThirdPartyScripts } from '@/components/ThirdPartyScripts';
+
+// Lazy load heavy components (improves FCP & LCP)
+const Footer = dynamic(() => import('@/components/Footer').then(mod => ({ default: mod.Footer })), {
+  ssr: true, // Still render on server for SEO
+});
+
+const ThirdPartyScripts = dynamic(() => import('@/components/ThirdPartyScripts').then(mod => ({ default: mod.ThirdPartyScripts })), {
+  ssr: false, // Client-side only, no need for SSR
+});
 
 const inter = Inter({
   subsets: ['latin'],
