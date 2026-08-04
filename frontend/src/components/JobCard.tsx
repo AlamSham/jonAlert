@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { JobListItem, CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 import { formatDate } from '@/lib/seo';
 import { trackApplyClick, trackInternalLinkClick } from '@/lib/analytics';
+import { getInternalLinkForQuery } from '@/lib/internal-links';
 
 function getLastDateStatus(lastDate?: string) {
   if (!lastDate) return null;
@@ -119,7 +120,7 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
           {job.tags.slice(0, 3).map((tag) => (
             <Link 
               key={tag} 
-              href={`/search?q=${encodeURIComponent(tag)}`} 
+              href={getInternalLinkForQuery(tag)} 
               className="tag-chip hover:bg-accent/15 hover:text-accent transition"
               onClick={() => handleTagClick(tag)}
             >

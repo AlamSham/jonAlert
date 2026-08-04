@@ -12,6 +12,7 @@ export type JobListItem = {
   lastDate?: string;
   tags: string[];
   createdAt: string;
+  updatedAt?: string;
   viewCount?: number;
 };
 

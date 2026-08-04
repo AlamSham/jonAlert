@@ -19,7 +19,7 @@ export class IndexingManager {
   /**
    * Generate comprehensive sitemap for different content types
    */
-  async generateSitemap(contentType: 'jobs' | 'schemes' | 'results' | 'categories' | 'states' | 'all' = 'all'): Promise<SitemapEntry[]> {
+  async generateSitemap(contentType: 'jobs' | 'schemes' | 'results' | 'categories' | 'states' | 'static' | 'all' = 'all'): Promise<SitemapEntry[]> {
     try {
       const cacheKey = CacheKeys.sitemap(contentType);
       const cached = seoCache.get<SitemapEntry[]>(cacheKey);
@@ -44,6 +44,9 @@ export class IndexingManager {
           break;
         case 'states':
           sitemapEntries = await this.generateStatesSitemap();
+          break;
+        case 'static':
+          sitemapEntries = await this.generateStaticPagesSitemap();
           break;
         case 'all':
           const [jobs, schemes, results, categories, states, static_pages] = await Promise.all([

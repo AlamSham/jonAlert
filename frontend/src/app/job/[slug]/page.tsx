@@ -26,7 +26,7 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateStaticParams() {
   try {
     const { getLatestJobs } = await import('@/lib/api');
-    const latestJobs = await getLatestJobs(50);
+    const latestJobs = await getLatestJobs(1000);
     return latestJobs.map((job) => ({
       slug: job.slug,
     }));
@@ -110,9 +110,9 @@ export default async function JobDetailPage({ params }: Props) {
   const { slug } = await params;
   const job = await getJobBySlug(slug);
   
-  // If job not found (deleted from DB), redirect to jobs listing instead of 404
-  // This prevents 404 errors in Google Search Console for expired/deleted jobs
-  if (!job) redirect('/jobs');
+  // If job not found (deleted from DB), return proper 404 Not Found
+  // This allows search engines to naturally remove stale pages from index, rather than causing Soft 404 redirect issues
+  if (!job) notFound();
 
   const emoji = CATEGORY_EMOJI[job.category] || '📢';
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';

@@ -361,47 +361,38 @@ export function generateJobPageTitle(job: JobDetail): string {
     const title = cleanText(job.title || 'Job Notification');
     const currentYear = new Date().getFullYear();
 
-    // Build dynamic suffix with vacancy count and last date for urgency
-    const vacancyPart = job.vacancyCount && job.vacancyCount > 0
-      ? `${job.vacancyCount.toLocaleString()} Posts`
-      : '';
-    
-    let lastDatePart = '';
+    // Build data-rich suffix parts (vacancy + last date = highest CTR drivers)
+    const dataParts: string[] = [];
+
+    if (job.vacancyCount && job.vacancyCount > 0) {
+      dataParts.push(`${job.vacancyCount.toLocaleString()} Posts`);
+    }
+
     if (job.lastDate) {
       const ld = new Date(job.lastDate);
       if (!isNaN(ld.getTime())) {
         const now = new Date();
         const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysLeft > 0 && daysLeft <= 15) {
-          lastDatePart = `⏰ ${daysLeft} Din Baaki`;
-        } else if (daysLeft > 0) {
-          lastDatePart = `Apply Before ${ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
+        if (daysLeft > 0 && daysLeft <= 7) {
+          dataParts.push(`Jaldi Karo! ${daysLeft} Din Baaki`);
+        } else if (daysLeft > 0 && daysLeft <= 30) {
+          dataParts.push(`Last Date ${ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`);
         }
       }
     }
 
-    // Category-specific power word prefix
-    const categoryPrefix: Record<string, string> = {
-      job: '🔥',
-      result: '📊 OUT:',
-      'admit-card': '🎫 Download:',
-      admission: '🎓',
-      scholarship: '💰',
-      'exam-form': '📝 Apply:',
-    };
-
+    // Category-specific suffix (NO emojis — Google SERPs don't render them)
     const suffixByCategory: Record<string, string> = {
-      job: [vacancyPart, `Apply Online ${currentYear}`, lastDatePart].filter(Boolean).join(', '),
-      result: `Result OUT, Merit List, Cut Off ${currentYear}`,
-      'admit-card': `Admit Card OUT, Download Now ${currentYear}`,
-      admission: [vacancyPart, `Admission Open ${currentYear}`, lastDatePart].filter(Boolean).join(', '),
-      scholarship: `Apply Online, Scholarship ${currentYear}`,
-      'exam-form': [`Form OUT ${currentYear}`, lastDatePart].filter(Boolean).join(', '),
+      job: [dataParts.join(', '), `Apply Online ${currentYear}`].filter(Boolean).join(' | '),
+      result: `Result OUT ${currentYear} - Merit List, Cut Off`,
+      'admit-card': `Admit Card Download ${currentYear}`,
+      admission: [dataParts.join(', '), `Admission ${currentYear}`].filter(Boolean).join(' | '),
+      scholarship: `Scholarship ${currentYear} - Apply Online`,
+      'exam-form': [`Application Form ${currentYear}`, dataParts.join(', ')].filter(Boolean).join(' | '),
     };
 
-    const prefix = categoryPrefix[job.category] || '📢';
-    const suffix = suffixByCategory[job.category] || `Details ${currentYear}`;
-    const optimizedTitle = `${prefix} ${title} — ${suffix}`;
+    const suffix = suffixByCategory[job.category] || `Notification ${currentYear}`;
+    const optimizedTitle = `${title} — ${suffix}`;
 
     return truncateTitle(optimizedTitle);
   } catch (error) {
@@ -422,24 +413,21 @@ export function generateJobMetaDescription(job: JobDetail): string {
     // Build data-rich components
     const parts: string[] = [];
     
-    // Emoji prefix for attention
-    parts.push('⚡');
-    
-    // Organization + Title
+    // Organization + Title (NO emojis — Google strips them, wasting chars)
     const orgText = organization ? `${organization}: ` : '';
-    parts.push(`${orgText}${job.title}!`);
+    parts.push(`${orgText}${job.title}.`);
     
-    // Vacancy count (if available)
+    // Vacancy count (if available) — users search for this
     if (job.vacancyCount && job.vacancyCount > 0) {
       parts.push(`${job.vacancyCount.toLocaleString()} vacancies.`);
     }
     
-    // Salary (if available)
+    // Salary (if available) — high CTR driver
     if (job.salary) {
       parts.push(`Salary: ${job.salary}.`);
     }
     
-    // Last date with urgency
+    // Last date with urgency (text-only, no emoji)
     if (job.lastDate) {
       const ld = new Date(job.lastDate);
       if (!isNaN(ld.getTime())) {
@@ -447,7 +435,7 @@ export function generateJobMetaDescription(job: JobDetail): string {
         const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         const formattedDate = ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
         if (daysLeft > 0 && daysLeft <= 10) {
-          parts.push(`⏰ Jaldi karo! Sirf ${daysLeft} din baaki (${formattedDate}).`);
+          parts.push(`Jaldi karo! Sirf ${daysLeft} din baaki (${formattedDate}).`);
         } else if (daysLeft > 0) {
           parts.push(`Last Date: ${formattedDate}.`);
         }
@@ -459,8 +447,8 @@ export function generateJobMetaDescription(job: JobDetail): string {
       parts.push(`${job.qualificationLevel.toUpperCase()} pass apply karein.`);
     }
     
-    // CTA
-    parts.push('Direct link yahan! 🚀');
+    // CTA — actionable, no emojis
+    parts.push('Eligibility, dates aur apply link yahan dekho.');
     
     let description = parts.join(' ');
 
@@ -622,7 +610,7 @@ export function generateArticleSchema(job: JobDetail): object {
         }
       },
       datePublished: job.createdAt,
-      dateModified: job.createdAt, // Can be enhanced with actual modification date
+      dateModified: job.updatedAt || job.createdAt,
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': `${SITE_URL}/job/${job.slug}`

@@ -32,8 +32,10 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const q = params.q || '';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
-  // Never index search results pages to prevent thin content penalties
-  const shouldIndex = false;
+  // Index search pages with meaningful queries — these are valuable long-tail landing pages
+  // e.g., /search?q=Indian Navy, /search?q=UPPSC — rank for these keywords!
+  // Empty search page (/search without q) stays noindexed to avoid thin content
+  const shouldIndex = Boolean(q && q.trim().length >= 3);
 
   const title = q
     ? `${q} Jobs 2026 - Latest Sarkari Naukri, Result, Admit Card | SarkariPulse`

@@ -37,28 +37,27 @@ export function generateJobContextualLinks(job: JobDetail): InternalLink[] {
     
     // Qualification page link (if qualificationLevel exists)
     if (job.qualificationLevel && job.qualificationLevel !== '') {
-      const qualificationMap: Record<string, string> = {
-        '10th': '10th+pass',
-        '12th': '12th+pass',
-        'graduate': 'Graduate',
-        'post-graduate': 'Post+Graduate',
-        'diploma': 'Diploma',
-        'iti': 'ITI',
-        'any': 'Any+Qualification'
-      };
-      
-      const searchTerm = qualificationMap[job.qualificationLevel.toLowerCase()] || job.qualificationLevel;
-      links.push({
-        href: `/search?q=${searchTerm}`,
-        label: `${job.qualificationLevel} Jobs`,
-        type: 'qualification'
-      });
+      const cleanQual = job.qualificationLevel.toLowerCase().trim();
+      const validQuals = ['10th', '12th', 'graduate', 'post-graduate', 'diploma', 'iti'];
+      if (validQuals.includes(cleanQual)) {
+        links.push({
+          href: `/jobs/qualification/${cleanQual}`,
+          label: `${job.qualificationLevel} Jobs`,
+          type: 'qualification'
+        });
+      } else {
+        links.push({
+          href: getInternalLinkForQuery(job.qualificationLevel),
+          label: `${job.qualificationLevel} Jobs`,
+          type: 'qualification'
+        });
+      }
     }
     
     // Organization-based link (if organization exists)
     if (job.organization && job.organization !== '') {
       links.push({
-        href: `/search?q=${encodeURIComponent(job.organization)}`,
+        href: getInternalLinkForQuery(job.organization),
         label: `${job.organization} Jobs`,
         type: 'related'
       });
@@ -69,7 +68,7 @@ export function generateJobContextualLinks(job: JobDetail): InternalLink[] {
       job.tags.slice(0, 3).forEach(tag => {
         if (tag && tag.trim() !== '') {
           links.push({
-            href: `/search?q=${encodeURIComponent(tag)}`,
+            href: getInternalLinkForQuery(tag),
             label: `${tag} Jobs`,
             type: 'tag'
           });
@@ -128,7 +127,7 @@ export function generateRelatedContentLinks(
       tags.slice(0, 2).forEach(tag => {
         if (tag && tag.trim() !== '') {
           links.push({
-            href: `/search?q=${encodeURIComponent(tag)}`,
+            href: getInternalLinkForQuery(tag),
             label: `${tag} Updates`,
             type: 'tag'
           });
@@ -250,4 +249,54 @@ export function getCategoryNavigationLinks(): InternalLink[] {
     label: cat.label,
     type: 'category' as const
   }));
+}
+
+// Route tag queries to exact static/optimized landing pages for better PageRank distribution
+// instead of putting everything into noindexed search result pages.
+export function getInternalLinkForQuery(query: string): string {
+  if (!query) return '/search';
+  const cleanQuery = query.trim().toLowerCase();
+  
+  // 1. Check if Category
+  if (cleanQuery === 'job' || cleanQuery === 'jobs') return '/jobs';
+  if (cleanQuery === 'admission') return '/admission';
+  if (cleanQuery === 'scholarship') return '/scholarship';
+  if (cleanQuery === 'result' || cleanQuery === 'results') return '/result';
+  if (cleanQuery === 'admit-card' || cleanQuery === 'admit card') return '/admit-card';
+  if (cleanQuery === 'exam-form' || cleanQuery === 'exam form') return '/exam-form';
+  if (cleanQuery === 'schemes' || cleanQuery === 'yojana') return '/schemes';
+
+  // 2. Check if Qualification
+  const foundQual = ['10th', '12th', 'graduate', 'post-graduate', 'diploma', 'iti'].find(
+    q => cleanQuery.includes(q) || q.includes(cleanQuery)
+  );
+  if (foundQual) {
+    return `/jobs/qualification/${foundQual}`;
+  }
+
+  // 3. Check if Org
+  const foundOrg = ['ssc', 'upsc', 'railway', 'banking', 'defense', 'police'].find(
+    o => cleanQuery === o || cleanQuery.includes(o)
+  );
+  if (foundOrg) {
+    return `/jobs/org/${foundOrg}`;
+  }
+
+  // 4. Check if State
+  const states = [
+    'Uttar Pradesh', 'Bihar', 'Rajasthan', 'Madhya Pradesh',
+    'Maharashtra', 'West Bengal', 'Andhra Pradesh', 'Chhattisgarh',
+    'Jharkhand', 'Himachal Pradesh', 'Tamil Nadu', 'Karnataka',
+    'Kerala', 'Gujarat', 'Haryana', 'Punjab', 'Odisha',
+    'Telangana', 'Uttarakhand', 'Delhi', 'Assam'
+  ];
+  const foundState = states.find(
+    s => s.toLowerCase() === cleanQuery || cleanQuery.includes(s.toLowerCase())
+  );
+  if (foundState) {
+    return `/jobs/state/${encodeURIComponent(foundState)}`;
+  }
+
+  // Fallback to search
+  return `/search?q=${encodeURIComponent(query)}`;
 }
