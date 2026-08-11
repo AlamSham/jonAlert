@@ -17,6 +17,8 @@ export const env = {
   grokModel: process.env.GROK_MODEL || 'grok-2-latest',
   grokBaseUrl: process.env.GROK_BASE_URL || 'https://api.x.ai/v1',
   grokQuotaCooldownMinutes: Number(process.env.GROK_QUOTA_COOLDOWN_MINUTES || 60),
+  groqCloudApiKey: process.env.GROQ_CLOUD_API_KEY || '',
+  groqCloudModel: process.env.GROQ_CLOUD_MODEL || 'llama-3.3-70b-versatile',
   telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '',
   telegramChatId: process.env.TELEGRAM_CHAT_ID || '',
   metaGraphVersion: process.env.META_GRAPH_VERSION || 'v24.0',

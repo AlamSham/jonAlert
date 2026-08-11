@@ -15,11 +15,18 @@ const deepseekClient = env.deepseekApiKey
       baseURL: env.deepseekBaseUrl || 'https://api.deepseek.com'
     })
   : null;
+const groqCloudClient = env.groqCloudApiKey
+  ? new OpenAI({
+      apiKey: env.groqCloudApiKey,
+      baseURL: 'https://api.groq.com/openai/v1'
+    })
+  : null;
 
 let openAiDisabledUntil = 0;
 let geminiDisabledUntil = 0;
 let grokDisabledUntil = 0;
 let deepseekDisabledUntil = 0;
+let groqCloudDisabledUntil = 0;
 const CONFIG_ERROR_COOLDOWN_MS = 12 * 60 * 60 * 1000;
 
 const categoryLabels = {
@@ -655,6 +662,27 @@ const rewriteWithDeepseek = async (prompt, rawJob) => {
   return normalizeAiJson(content, rawJob);
 };
 
+const rewriteWithGroqCloud = async (prompt, rawJob) => {
+  if (!groqCloudClient) {
+    throw new Error('GROQ_CLOUD_API_KEY missing');
+  }
+
+  const response = await groqCloudClient.chat.completions.create({
+    model: env.groqCloudModel || 'llama-3.3-70b-versatile',
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: 3800,
+    temperature: 0.7,
+    response_format: { type: 'json_object' }
+  });
+
+  const content = response.choices?.[0]?.message?.content;
+  if (!content) {
+    throw new Error('No Groq Cloud content returned');
+  }
+
+  return normalizeAiJson(content, rawJob);
+};
+
 const formatCooldownRemaining = (disabledUntil) => {
   const remainingMs = disabledUntil - Date.now();
   if (remainingMs <= 0) return 'expired';
@@ -680,7 +708,7 @@ export const rewriteJobWithAi = async (job) => {
       if (isQuotaError(error)) {
         const cooldownMs = Math.max(1, env.aiQuotaCooldownMinutes) * 60 * 1000;
         openAiDisabledUntil = Date.now() + cooldownMs;
-        logger.warn('OpenAI quota/rate limit reached, switching to Gemini/Grok/Deepseek fallback', {
+        logger.warn('OpenAI quota/rate limit reached, switching to Gemini/GroqCloud fallback', {
           cooldownMinutes: env.aiQuotaCooldownMinutes
         });
       } else if (isAuthError(error)) {
@@ -712,7 +740,18 @@ export const rewriteJobWithAi = async (job) => {
     }
   }
 
-  // 3. Try Grok
+  // 3. Try Groq Cloud (Free Llama 3.3 70B AI)
+  if (Date.now() >= groqCloudDisabledUntil && groqCloudClient) {
+    try {
+      const result = await rewriteWithGroqCloud(prompt, job);
+      logger.info('AI rewrite successful via Groq Cloud (Free Llama 3.3 70B)', { title: job.title.slice(0, 50) });
+      return result;
+    } catch (error) {
+      logger.error('Groq Cloud generation failed, trying fallbacks', { error: error.message });
+    }
+  }
+
+  // 4. Try Grok
   if (Date.now() >= grokDisabledUntil) {
     try {
       const result = await rewriteWithGrok(prompt, job);
@@ -728,7 +767,7 @@ export const rewriteJobWithAi = async (job) => {
     }
   }
 
-  // 4. Try DeepSeek
+  // 5. Try DeepSeek
   if (Date.now() >= deepseekDisabledUntil && deepseekClient) {
     try {
       const result = await rewriteWithDeepseek(prompt, job);
