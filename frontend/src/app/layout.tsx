@@ -11,6 +11,7 @@ import { Analytics } from '@vercel/analytics/react';
 import { WebVitals } from '@/components/WebVitals';
 import { ThirdPartyScripts } from '@/components/ThirdPartyScripts';
 import { MobileStickySocial } from '@/components/MobileStickySocial';
+import { PwaInstallPrompt } from '@/components/PwaInstallPrompt';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -134,6 +135,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <BackToTop />
         <MobileStickySocial />
+        <PwaInstallPrompt />
         <WebVitals />
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}

@@ -56,6 +56,8 @@ const footerLinks = [
   {
     title: 'Quick Links',
     links: [
+      { href: '/tools', label: 'Candidate Tools' },
+      { href: '/app', label: 'Download Mobile App' },
       { href: '/search', label: 'Search Jobs' },
       { href: '/guides', label: 'Exam Guides' },
       { href: '/how-to-apply', label: 'How to Apply' },

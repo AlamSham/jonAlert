@@ -17,6 +17,8 @@ const dropdownLinks = [
   { href: '/admission', label: 'Admission', icon: '🎓' },
   { href: '/scholarship', label: 'Scholarship', icon: '💰' },
   { href: '/exam-form', label: 'Exam Form', icon: '📝' },
+  { href: '/tools', label: 'Candidate Tools', icon: '🛠️' },
+  { href: '/app', label: 'Mobile App', icon: '📲' },
 ];
 
 const allLinks = [...primaryLinks, ...dropdownLinks];

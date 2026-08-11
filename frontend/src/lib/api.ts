@@ -75,60 +75,70 @@ async function safeFetch<T>(path: string, revalidate = 3600, fallback: any = { d
 }
 
 export async function getLatestJobs(limit = 12): Promise<JobListItem[]> {
-  const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/latest?limit=${limit}`);
-  return data.data;
+  const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/latest?limit=${limit}`, 3600, { data: [] });
+  return data?.data || [];
 }
 
 export async function getJobs(page = 1, limit = 20, category?: string): Promise<PaginatedResponse<JobListItem>> {
   let url = `/api/jobs?page=${page}&limit=${limit}`;
   if (category) url += `&category=${category}`;
-  return safeFetch<PaginatedResponse<JobListItem>>(url);
+  return safeFetch<PaginatedResponse<JobListItem>>(url, 3600, { data: [], pagination: { total: 0, page: 1, limit, totalPages: 0 } });
 }
 
 export async function getJobsByCategory(category: string, page = 1, limit = 20): Promise<PaginatedResponse<JobListItem>> {
-  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/category/${category}?page=${page}&limit=${limit}`);
+  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/category/${category}?page=${page}&limit=${limit}`, 3600, { data: [], pagination: { total: 0, page: 1, limit, totalPages: 0 } });
 }
 
 export async function getTodayJobs(page = 1, limit = 20): Promise<PaginatedResponse<JobListItem>> {
-  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/today?page=${page}&limit=${limit}`);
+  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/today?page=${page}&limit=${limit}`, 3600, { data: [], pagination: { total: 0, page: 1, limit, totalPages: 0 } });
 }
 
 export async function getClosingSoonJobs(page = 1, limit = 20): Promise<PaginatedResponse<JobListItem>> {
-  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/closing-soon?page=${page}&limit=${limit}`);
+  return safeFetch<PaginatedResponse<JobListItem>>(`/api/jobs/closing-soon?page=${page}&limit=${limit}`, 3600, { data: [], pagination: { total: 0, page: 1, limit, totalPages: 0 } });
 }
 
 export async function getJobsByState(state: string, page = 1, limit = 20, category?: string): Promise<PaginatedResponse<JobListItem>> {
   let url = `/api/jobs/state/${encodeURIComponent(state)}?page=${page}&limit=${limit}`;
   if (category) url += `&category=${category}`;
-  return safeFetch<PaginatedResponse<JobListItem>>(url);
+  return safeFetch<PaginatedResponse<JobListItem>>(url, 3600, { data: [], pagination: { total: 0, page: 1, limit, totalPages: 0 } });
 }
 
 export async function getJobBySlug(slug: string): Promise<JobDetail | null> {
-  const response = await fetchWithRetry(`${API_BASE}/api/jobs/${slug}`, {
-    next: { revalidate: 3600 },
-  });
+  try {
+    const response = await fetchWithRetry(`${API_BASE}/api/jobs/${slug}`, {
+      next: { revalidate: 3600 },
+    });
 
-  if (response.status === 404) return null;
-  if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+    if (response.status === 404) return null;
+    if (!response.ok) return null;
 
-  const data = (await response.json()) as { data: JobDetail };
-  return data.data;
+    const data = (await response.json()) as { data: JobDetail };
+    return data.data;
+  } catch {
+    return null;
+  }
 }
 
 export async function getTrendingJobs(limit = 6): Promise<JobListItem[]> {
-  const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/trending?limit=${limit}`);
-  return data.data;
+  const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/trending?limit=${limit}`, 3600, { data: [] });
+  return data?.data || [];
 }
 
 export async function searchJobs(q: string): Promise<JobListItem[]> {
   if (!q.trim()) return [];
-  const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/search?q=${encodeURIComponent(q)}`);
-  return data.data;
+  const data = await safeFetch<{ data: JobListItem[] }>(`/api/jobs/search?q=${encodeURIComponent(q)}`, 3600, { data: [] });
+  return data?.data || [];
 }
 
 export async function getStats(): Promise<StatsData> {
-  const data = await safeFetch<{ data: StatsData }>('/api/stats', 120);
-  return data.data;
+  const defaultStats: StatsData = {
+    totalJobs: 0,
+    last24Hours: 0,
+    categories: { job: 0, admission: 0, scholarship: 0, result: 0, 'admit-card': 0, 'exam-form': 0 },
+    topStates: [],
+  };
+  const data = await safeFetch<{ data: StatsData }>('/api/stats', 120, { data: defaultStats });
+  return data?.data || defaultStats;
 }
 
 export async function getRelatedJobs(slug: string): Promise<JobListItem[]> {
