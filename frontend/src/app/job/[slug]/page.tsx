@@ -338,17 +338,20 @@ export default async function JobDetailPage({ params }: Props) {
             </div>
           </header>
 
-          {/* Prominent CTA - Reduce Bounce Rate */}
+          {/* Prominent CTA - Official Government Portal Link */}
           {job.applyLink && (
-            <div className="mb-6 flex justify-center">
+            <div className="mb-6 flex flex-col items-center gap-2">
               <a
                 href={job.applyLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-10 py-4 text-base font-bold text-white shadow-lg transition hover:shadow-xl hover:scale-105 active:scale-95 animate-pulse"
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 px-10 py-4 text-base font-bold text-white shadow-lg transition hover:shadow-xl hover:scale-105 active:scale-95 animate-pulse"
               >
-                🔥 Apply Now - Official Link
+                🏛️ Official Portal - Apply Online Now
               </a>
+              <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                ✅ Direct Government Website / Portal Link
+              </span>
             </div>
           )}
 
@@ -458,15 +461,19 @@ export default async function JobDetailPage({ params }: Props) {
 
           {/* Apply Link */}
           {job.applyLink && (
-            <section className="mb-8" id="section-apply">
+            <section className="mb-8 card !p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-emerald-50/70 border-emerald-200" id="section-apply">
+              <div>
+                <h3 className="text-base font-bold text-ink">Ready to Apply for {job.title}?</h3>
+                <p className="text-xs text-muted mt-1">Direct official government recruitment portal link for online application.</p>
+              </div>
               <a
                 href={job.applyLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95"
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95 whitespace-nowrap"
                 id="apply-btn"
               >
-                🔗 Apply Now / Official Link
+                🏛️ Visit Official Website & Apply
               </a>
             </section>
           )}

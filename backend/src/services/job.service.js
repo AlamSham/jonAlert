@@ -1,5 +1,5 @@
 import { Job } from '../models/Job.js';
-import { rewriteJobWithAi } from './ai.service.js';
+import { rewriteJobWithAi, getOfficialPortalForOrg } from './ai.service.js';
 import { makeSlug } from '../utils/slugify.js';
 import { sendTelegramMessage, buildJobNotificationMessage } from './telegram.service.js';
 import { enqueueFacebookJobPost } from './facebook.service.js';
@@ -106,6 +106,7 @@ export const processAndSaveJob = async (rawJob) => {
   }
 
   const aiData = await rewriteJobWithAi(rawJob);
+  const officialPortal = aiData.officialLink || getOfficialPortalForOrg(aiData.organization, rawJob.title) || rawJob.sourceUrl || '';
 
   const MAX_SLUG_RETRIES = 3;
   let saved;
@@ -130,7 +131,7 @@ export const processAndSaveJob = async (rawJob) => {
         vacancyCount: aiData.vacancyCount || 0,
         lastDate: aiData.lastDate ? new Date(aiData.lastDate) : undefined,
         qualificationLevel: aiData.qualificationLevel || '',
-        applyLink: rawJob.sourceUrl || '',
+        applyLink: officialPortal,
         metaTitle: aiData.metaTitle || '',
         metaDescription: aiData.metaDescription || '',
         tags: aiData.tags || [],
