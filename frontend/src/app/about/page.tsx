@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-
+//about us
 export const metadata: Metadata = {
   title: 'About Us — SarkariPulse | India\'s Trusted Sarkari Job Portal',
   description: 'SarkariPulse ke baare mein jaaniye. Hum India ka leading government job notification platform hain jo daily 50,000+ students ko latest sarkari naukri updates provide karta hai.',
