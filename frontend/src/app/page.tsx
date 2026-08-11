@@ -23,10 +23,10 @@ export default async function HomePage() {
     getClosingSoonJobs(1, 6).catch(() => ({ data: [], pagination: { total: 0 } })),
   ]);
 
-  const closingSoonJobs = closingSoonRes.data;
+  const closingSoonJobs = closingSoonRes?.data || [];
 
   // Generate state links for internal linking
-  const stateLinks = getTopStateLinks(stats.topStates || []);
+  const stateLinks = getTopStateLinks(stats?.topStates || []);
 
   const categories = [
     { key: 'job', label: 'Sarkari Naukri', emoji: '💼', href: '/jobs', desc: 'Latest govt job notifications' },
@@ -127,7 +127,7 @@ export default async function HomePage() {
         )}
 
         {/* Closing Soon Jobs */}
-        {closingSoonJobs.length > 0 && (
+        {closingSoonJobs && closingSoonJobs.length > 0 && (
           <section id="closing-soon-section">
             <div className="flex items-center justify-between mb-6">
               <SectionHeader
@@ -143,27 +143,27 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {closingSoonJobs.slice(0, 6).map((job, i) => (
-                <JobCard key={job.slug} job={job} index={i} />
+              {closingSoonJobs.filter(Boolean).slice(0, 6).map((job, i) => (
+                <JobCard key={job.slug || i} job={job} index={i} />
               ))}
             </div>
           </section>
         )}
 
         {/* Trending Jobs */}
-        {trendingJobs.length > 0 && (
+        {trendingJobs && trendingJobs.length > 0 && (
           <section id="trending">
             <SectionHeader title="Trending Jobs" subtitle="Most viewed notifications" icon="🔥" />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {trendingJobs.map((job, i) => (
-                <JobCard key={job.slug} job={job} index={i} />
+              {trendingJobs.filter(Boolean).map((job, i) => (
+                <JobCard key={job.slug || i} job={job} index={i} />
               ))}
             </div>
           </section>
         )}
 
         {/* Sarkari Yojana */}
-        {latestSchemes.length > 0 && (
+        {latestSchemes && latestSchemes.length > 0 && (
           <section id="schemes">
             <div className="flex items-center justify-between mb-6">
               <SectionHeader title="Sarkari Yojana (सरकारी योजना)" subtitle="PM Kisan, Ayushman Bharat aur sabhi yojanaon ki jankari" icon="🏛️" />
@@ -175,8 +175,8 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {latestSchemes.map((scheme, i) => (
-                <SchemeCard key={scheme.slug} scheme={scheme} index={i} />
+              {latestSchemes.filter(Boolean).map((scheme, i) => (
+                <SchemeCard key={scheme.slug || i} scheme={scheme} index={i} />
               ))}
             </div>
             <div className="mt-6 text-center sm:hidden">
@@ -194,30 +194,32 @@ export default async function HomePage() {
         <SubscribeCTA />
 
         {/* Latest Jobs */}
-        <section id="latest">
-          <div className="flex items-center justify-between mb-6">
-            <SectionHeader title="Latest Notifications" subtitle="Real-time updates" icon="⚡" />
-            <Link
-              href="/jobs"
-              className="text-sm font-bold text-accent hover:text-accent-dark transition hidden sm:block"
-            >
-              View All →
-            </Link>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {latestJobs.map((job, i) => (
-              <JobCard key={job.slug} job={job} index={i} />
-            ))}
-          </div>
-          <div className="mt-8 text-center sm:hidden">
-            <Link
-              href="/jobs"
-              className="inline-block rounded-2xl bg-accent px-8 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-dark hover:shadow-md"
-            >
-              View All Jobs →
-            </Link>
-          </div>
-        </section>
+        {latestJobs && latestJobs.length > 0 && (
+          <section id="latest">
+            <div className="flex items-center justify-between mb-6">
+              <SectionHeader title="Latest Notifications" subtitle="Real-time updates" icon="⚡" />
+              <Link
+                href="/jobs"
+                className="text-sm font-bold text-accent hover:text-accent-dark transition hidden sm:block"
+              >
+                View All →
+              </Link>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {latestJobs.filter(Boolean).map((job, i) => (
+                <JobCard key={job.slug || i} job={job} index={i} />
+              ))}
+            </div>
+            <div className="mt-8 text-center sm:hidden">
+              <Link
+                href="/jobs"
+                className="inline-block rounded-2xl bg-accent px-8 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-accent-dark hover:shadow-md"
+              >
+                View All Jobs →
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* SEO Content Section for Homepage Ranking */}
         <section id="homepage-seo-content" className="border-t border-stone-200 pt-10 mt-12">

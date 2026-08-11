@@ -6,6 +6,8 @@ import { formatDate } from '@/lib/seo';
 import { trackInternalLinkClick } from '@/lib/analytics';
 
 export function SchemeCard({ scheme, index = 0 }: { scheme: SchemeListItem; index?: number }) {
+  if (!scheme) return null;
+
   const emoji = SCHEME_TYPE_EMOJI[scheme.schemeType] || '🏛️';
   const colorClass = SCHEME_TYPE_COLORS[scheme.schemeType] || 'bg-stone-100 text-stone-600';
 

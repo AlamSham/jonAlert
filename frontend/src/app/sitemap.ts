@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Job URLs with proper priority and changeFrequency
-  const jobUrls = latestJobs.map((job) => ({
+  const jobUrls = (latestJobs || []).filter((job: any) => job && job.slug).map((job) => ({
     url: `${siteUrl}/job/${job.slug}`,
     lastModified: new Date(job.updatedAt || job.createdAt || new Date()),
     changeFrequency: 'daily' as const,
@@ -44,7 +44,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const stateUrls: MetadataRoute.Sitemap = [];
   const categoriesWithStates = ['jobs', 'admission', 'scholarship', 'exam-form'];
   
-  (stats.topStates || []).forEach((s: { state: string }) => {
+  (stats?.topStates || []).forEach((s: { state: string }) => {
+    if (!s || !s.state) return;
     categoriesWithStates.forEach((category) => {
       stateUrls.push({
         url: `${siteUrl}/${category}/state/${encodeURIComponent(s.state)}`,
@@ -63,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily' as const,
       priority: 0.9, // High priority for main schemes page
     },
-    ...latestSchemes.map((scheme: any) => ({
+    ...(latestSchemes || []).filter((scheme: any) => scheme && scheme.slug).map((scheme: any) => ({
       url: `${siteUrl}/schemes/${scheme.slug}`,
       lastModified: new Date(scheme.updatedAt || scheme.createdAt || new Date()),
       changeFrequency: 'weekly' as const,

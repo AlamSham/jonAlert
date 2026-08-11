@@ -38,7 +38,10 @@ async function fetchWithRetry(
       }
 
       return response;
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.cause?.code === 'ECONNREFUSED' || error?.code === 'ECONNREFUSED') {
+        throw error;
+      }
       attempt++;
       if (attempt >= retries) {
         throw error;
@@ -53,16 +56,22 @@ async function fetchWithRetry(
   }
 }
 
-async function safeFetch<T>(path: string, revalidate = 3600): Promise<T> {
-  const response = await fetchWithRetry(`${API_BASE}${path}`, {
-    next: { revalidate },
-  });
+async function safeFetch<T>(path: string, revalidate = 3600, fallback: any = { data: [] }): Promise<T> {
+  try {
+    const response = await fetchWithRetry(`${API_BASE}${path}`, {
+      next: { revalidate },
+    });
 
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.status}`);
+    if (!response.ok) {
+      console.warn(`[API Warning] ${path} returned status ${response.status}`);
+      return fallback as T;
+    }
+
+    return response.json() as Promise<T>;
+  } catch (error: any) {
+    console.warn(`[API Fallback] ${path} failed (${error.message}), using safe build fallback`);
+    return fallback as T;
   }
-
-  return response.json() as Promise<T>;
 }
 
 export async function getLatestJobs(limit = 12): Promise<JobListItem[]> {

@@ -12,27 +12,30 @@ const categoryEmoji = {
 
 export const buildJobNotificationMessage = (job) => {
   const emoji = categoryEmoji[job.category] || '📢';
+  const siteUrl = env.frontendUrl || 'https://sarkaripulse.net';
+  const jobUrl = `${siteUrl}/job/${job.slug}`;
+
   const lines = [
-    `${emoji} <b>New ${job.category.toUpperCase()} Update</b>`,
+    `${emoji} <b>New ${job.category.toUpperCase()} Notification</b>`,
     `━━━━━━━━━━━━━━━`,
-    `📌 ${job.title}`
+    `📌 <b>${job.title}</b>`
   ];
 
-  if (job.organization) lines.push(`🏛️ Org: ${job.organization}`);
-  if (job.state) lines.push(`📍 State: ${job.state}`);
-  if (job.vacancyCount > 0) lines.push(`👥 Vacancies: ${job.vacancyCount}`);
+  if (job.organization) lines.push(`🏛️ <b>Board/Org:</b> ${job.organization}`);
+  if (job.state) lines.push(`📍 <b>State:</b> ${job.state}`);
+  if (job.vacancyCount > 0) lines.push(`👥 <b>Total Posts:</b> ${job.vacancyCount}`);
   if (job.lastDate) {
     const dateStr = new Date(job.lastDate).toLocaleDateString('en-IN', {
       day: 'numeric', month: 'short', year: 'numeric'
     });
-    lines.push(`📅 Last Date: ${dateStr}`);
+    lines.push(`📅 <b>Last Date:</b> ${dateStr}`);
   }
 
-  lines.push(`📂 Category: ${job.category}`);
-  lines.push(`🔗 Slug: ${job.slug}`);
-  if (job.sourceName) lines.push(`📰 Source: ${job.sourceName}`);
   lines.push('');
-  lines.push(`#SarkariPulse #${job.category.replace('-', '')} #GovtJobs`);
+  lines.push(`🔗 <b>Click Here To Read Full Details & Apply:</b>`);
+  lines.push(`👉 <a href="${jobUrl}">${jobUrl}</a>`);
+  lines.push('');
+  lines.push(`#SarkariPulse #${job.category.replace('-', '')} #GovtJobs #SarkariNaukri`);
 
   return lines.join('\n');
 };

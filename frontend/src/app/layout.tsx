@@ -10,6 +10,7 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { WebVitals } from '@/components/WebVitals';
 import { ThirdPartyScripts } from '@/components/ThirdPartyScripts';
+import { MobileStickySocial } from '@/components/MobileStickySocial';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -132,6 +133,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer />
         <BackToTop />
+        <MobileStickySocial />
         <WebVitals />
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}

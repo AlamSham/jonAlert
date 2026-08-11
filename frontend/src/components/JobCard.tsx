@@ -18,6 +18,8 @@ function getLastDateStatus(lastDate?: string) {
 }
 
 export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }) {
+  if (!job) return null;
+
   const emoji = CATEGORY_EMOJI[job.category] || '📢';
   const colorClass = CATEGORY_COLORS[job.category] || 'bg-stone-100 text-stone-600';
 

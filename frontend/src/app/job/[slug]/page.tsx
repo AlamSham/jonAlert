@@ -13,6 +13,7 @@ import { HowToApply } from '@/components/HowToApply';
 import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
 import { SafeHtml } from '@/components/SafeHtml';
+import { SocialJoinBanner } from '@/components/SocialJoinBanner';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateJobPageTitle, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
@@ -353,6 +354,9 @@ export default async function JobDetailPage({ params }: Props) {
               </span>
             </div>
           )}
+
+          {/* High-Converting Social Join Banner (Telegram & Facebook) */}
+          <SocialJoinBanner />
 
           {/* Mobile TOC */}
           <TableOfContents items={tocItems} variant="mobile" />
