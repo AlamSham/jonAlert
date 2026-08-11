@@ -11,7 +11,7 @@ export const env = {
   aiEnabled: (process.env.AI_ENABLED || 'true').toLowerCase() === 'true',
   aiQuotaCooldownMinutes: Number(process.env.AI_QUOTA_COOLDOWN_MINUTES || 60),
   geminiApiKey: process.env.GEMINI_API_KEY || '',
-  geminiModel: process.env.GEMINI_MODEL || 'gemini-1.5-flash',
+  geminiModel: process.env.GEMINI_MODEL || 'gemini-flash-latest',
   geminiQuotaCooldownMinutes: Number(process.env.GEMINI_QUOTA_COOLDOWN_MINUTES || 60),
   grokApiKey: process.env.GROK_API_KEY || '',
   grokModel: process.env.GROK_MODEL || 'grok-2-latest',

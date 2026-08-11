@@ -5,21 +5,21 @@ import { logger } from '../utils/logger.js';
 const client = env.openAiApiKey ? new OpenAI({ apiKey: env.openAiApiKey }) : null;
 const grokClient = env.grokApiKey
   ? new OpenAI({
-      apiKey: env.grokApiKey,
-      baseURL: env.grokBaseUrl
-    })
+    apiKey: env.grokApiKey,
+    baseURL: env.grokBaseUrl
+  })
   : null;
 const deepseekClient = env.deepseekApiKey
   ? new OpenAI({
-      apiKey: env.deepseekApiKey,
-      baseURL: env.deepseekBaseUrl || 'https://api.deepseek.com'
-    })
+    apiKey: env.deepseekApiKey,
+    baseURL: env.deepseekBaseUrl || 'https://api.deepseek.com'
+  })
   : null;
 const groqCloudClient = env.groqCloudApiKey
   ? new OpenAI({
-      apiKey: env.groqCloudApiKey,
-      baseURL: 'https://api.groq.com/openai/v1'
-    })
+    apiKey: env.groqCloudApiKey,
+    baseURL: 'https://api.groq.com/openai/v1'
+  })
   : null;
 
 let openAiDisabledUntil = 0;
@@ -698,30 +698,22 @@ export const rewriteJobWithAi = async (job) => {
 
   const prompt = buildPrompt(job);
 
-  // 1. Try OpenAI
-  if (Date.now() >= openAiDisabledUntil) {
+  // 1. Try Groq Cloud (Fastest & 100% Free Llama 3.3 70B AI)
+  if (Date.now() >= groqCloudDisabledUntil && groqCloudClient) {
     try {
-      const result = await rewriteWithOpenAi(prompt, job);
-      logger.info('AI rewrite successful via OpenAI', { title: job.title.slice(0, 50) });
+      const result = await rewriteWithGroqCloud(prompt, job);
+      logger.info('AI rewrite successful via Groq Cloud (Free Llama 3.3 70B)', { title: job.title.slice(0, 50) });
       return result;
     } catch (error) {
       if (isQuotaError(error)) {
-        const cooldownMs = Math.max(1, env.aiQuotaCooldownMinutes) * 60 * 1000;
-        openAiDisabledUntil = Date.now() + cooldownMs;
-        logger.warn('OpenAI quota/rate limit reached, switching to Gemini/GroqCloud fallback', {
-          cooldownMinutes: env.aiQuotaCooldownMinutes
-        });
-      } else if (isAuthError(error)) {
-        openAiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
-        logger.error('OpenAI auth failed, disabling for 12h');
-      } else {
-        logger.error('OpenAI generation failed, trying fallbacks', { error: error.message });
+        groqCloudDisabledUntil = Date.now() + 15 * 60 * 1000;
       }
+      logger.error('Groq Cloud generation failed, trying Gemini fallback', { error: error.message });
     }
   }
 
-  // 2. Try Gemini
-  if (Date.now() >= geminiDisabledUntil) {
+  // 2. Try Gemini (Free Tier 1,500 Requests/Day)
+  if (Date.now() >= geminiDisabledUntil && env.geminiApiKey) {
     try {
       const result = await rewriteWithGemini(prompt, job);
       logger.info('AI rewrite successful via Gemini', { title: job.title.slice(0, 50) });
@@ -735,24 +727,44 @@ export const rewriteJobWithAi = async (job) => {
         geminiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
         logger.error('Gemini auth failed, disabling for 12h');
       } else {
-        logger.error('Gemini generation failed, trying fallbacks', { error: error.message });
+        logger.error('Gemini generation failed, trying OpenAI/DeepSeek fallbacks', { error: error.message });
       }
     }
   }
 
-  // 3. Try Groq Cloud (Free Llama 3.3 70B AI)
-  if (Date.now() >= groqCloudDisabledUntil && groqCloudClient) {
+  // 3. Try OpenAI (if key and credits available)
+  if (Date.now() >= openAiDisabledUntil && client) {
     try {
-      const result = await rewriteWithGroqCloud(prompt, job);
-      logger.info('AI rewrite successful via Groq Cloud (Free Llama 3.3 70B)', { title: job.title.slice(0, 50) });
+      const result = await rewriteWithOpenAi(prompt, job);
+      logger.info('AI rewrite successful via OpenAI', { title: job.title.slice(0, 50) });
       return result;
     } catch (error) {
-      logger.error('Groq Cloud generation failed, trying fallbacks', { error: error.message });
+      if (isQuotaError(error)) {
+        const cooldownMs = Math.max(1, env.aiQuotaCooldownMinutes) * 60 * 1000;
+        openAiDisabledUntil = Date.now() + cooldownMs;
+        logger.warn('OpenAI quota/rate limit reached, switching fallback');
+      } else if (isAuthError(error)) {
+        openAiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
+        logger.error('OpenAI auth failed, disabling for 12h');
+      } else {
+        logger.error('OpenAI generation failed, trying fallbacks', { error: error.message });
+      }
     }
   }
 
-  // 4. Try Grok
-  if (Date.now() >= grokDisabledUntil) {
+  // 4. Try DeepSeek
+  if (Date.now() >= deepseekDisabledUntil && deepseekClient) {
+    try {
+      const result = await rewriteWithDeepseek(prompt, job);
+      logger.info('AI rewrite successful via DeepSeek', { title: job.title.slice(0, 50) });
+      return result;
+    } catch (error) {
+      logger.error('DeepSeek generation failed, falling back to local engine', { error: error.message });
+    }
+  }
+
+  // 5. Try Grok
+  if (Date.now() >= grokDisabledUntil && grokClient) {
     try {
       const result = await rewriteWithGrok(prompt, job);
       logger.info('AI rewrite successful via Grok', { title: job.title.slice(0, 50) });
@@ -764,17 +776,6 @@ export const rewriteJobWithAi = async (job) => {
       } else {
         logger.error('Grok generation failed, trying fallbacks', { error: error.message });
       }
-    }
-  }
-
-  // 5. Try DeepSeek
-  if (Date.now() >= deepseekDisabledUntil && deepseekClient) {
-    try {
-      const result = await rewriteWithDeepseek(prompt, job);
-      logger.info('AI rewrite successful via DeepSeek', { title: job.title.slice(0, 50) });
-      return result;
-    } catch (error) {
-      logger.error('DeepSeek generation failed, falling back to local engine', { error: error.message });
     }
   }
 
