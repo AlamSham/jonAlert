@@ -7,7 +7,7 @@ interface SocialJoinBannerProps {
 }
 
 export const SocialJoinBanner: React.FC<SocialJoinBannerProps> = ({ variant = 'banner' }) => {
-  const telegramLink = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL || 'https://t.me/sarkaripulse';
+  const telegramLink = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL || 'https://t.me/govtjob_alert_job_alert_bot';
   const facebookLink = process.env.NEXT_PUBLIC_FACEBOOK_PAGE || 'https://www.facebook.com/share/1Ea8Q3zg84/';
   const whatsappLink = process.env.NEXT_PUBLIC_WHATSAPP_GROUP || 'https://whatsapp.com';
 

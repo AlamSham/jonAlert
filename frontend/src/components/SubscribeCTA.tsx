@@ -8,7 +8,7 @@ export function SubscribeCTA() {
   const [message, setMessage] = useState('');
 
   const whatsappLink = process.env.NEXT_PUBLIC_WHATSAPP_GROUP || '#';
-  const telegramLink = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL || '#';
+  const telegramLink = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL || 'https://t.me/govtjob_alert_job_alert_bot';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
