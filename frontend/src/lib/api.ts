@@ -56,7 +56,7 @@ async function fetchWithRetry(
   }
 }
 
-async function safeFetch<T>(path: string, revalidate = 3600, fallback: any = { data: [] }): Promise<T> {
+async function safeFetch<T>(path: string, revalidate = 86400, fallback: any = { data: [] }): Promise<T> {
   try {
     const response = await fetchWithRetry(`${API_BASE}${path}`, {
       next: { revalidate },
@@ -106,7 +106,7 @@ export async function getJobsByState(state: string, page = 1, limit = 20, catego
 export async function getJobBySlug(slug: string): Promise<JobDetail | null> {
   try {
     const response = await fetchWithRetry(`${API_BASE}/api/jobs/${slug}`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 86400 },
     });
 
     if (response.status === 404) return null;
@@ -170,7 +170,7 @@ export async function getLatestSchemes(limit = 6): Promise<SchemeListItem[]> {
 
 export async function getSchemeBySlug(slug: string): Promise<SchemeDetail | null> {
   const response = await fetchWithRetry(`${API_BASE}/api/schemes/${slug}`, {
-    next: { revalidate: 3600 },
+    next: { revalidate: 86400 },
   });
 
   if (response.status === 404) return null;

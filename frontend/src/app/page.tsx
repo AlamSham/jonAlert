@@ -12,7 +12,7 @@ import { TrustSignals } from '@/components/TrustSignals';
 import { getTopStateLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
-export const revalidate = 3600;
+export const revalidate = 14400; // 4 hours cache
 
 export default async function HomePage() {
   const [latestJobs, trendingJobs, stats, latestSchemes, closingSoonRes] = await Promise.all([

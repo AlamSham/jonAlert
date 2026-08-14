@@ -21,7 +21,7 @@ import {
 } from '@/lib/seo';
 import { SCHEME_TYPE_EMOJI, SCHEME_TYPE_COLORS, SCHEME_TYPE_LABELS } from '@/lib/types';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 type Props = { params: Promise<{ slug: string }> };
 

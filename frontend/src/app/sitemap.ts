@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getLatestJobs, getStats } from '@/lib/api';
 import { JobCategory } from '@/lib/types';
 
-export const revalidate = 3600; // Background revalidation every 1 hour
+export const revalidate = 86400; // Background revalidation every 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';

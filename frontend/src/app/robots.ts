@@ -41,24 +41,16 @@ export default function robots(): MetadataRoute.Robots {
           '/private/',
         ],
       },
-      // Aggressive crawlers - rate limited
+      // AI Search Bots - Allowed for AI Traffic & Citing
       {
-        userAgent: 'AhrefsBot',
+        userAgent: ['GPTBot', 'ClaudeBot', 'ChatGPT-User', 'OAI-SearchBot', 'PerplexityBot'],
         allow: '/',
         disallow: ['/api/', '/_next/', '/admin/', '/private/'],
-        crawlDelay: 10,
       },
+      // Block aggressive SEO crawlers & scrapers to save Vercel ISR Writes & Bandwidth
       {
-        userAgent: 'SemrushBot',
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
-        crawlDelay: 10,
-      },
-      {
-        userAgent: 'MJ12bot',
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
-        crawlDelay: 5,
+        userAgent: ['AhrefsBot', 'SemrushBot', 'MJ12bot', 'Bytespider', 'PetalBot', 'DotBot', 'CCBot'],
+        disallow: '/',
       },
     ],
     sitemap: `${siteUrl}/sitemap-index.xml`,

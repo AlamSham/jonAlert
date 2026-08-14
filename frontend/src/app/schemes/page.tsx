@@ -12,7 +12,7 @@ import {
 import { FAQItem } from '@/lib/internal-links';
 import { SchemeListItem } from '@/lib/types';
 
-export const revalidate = 3600;
+export const revalidate = 14400;
 
 type Props = { searchParams: Promise<{ page?: string }> };
 

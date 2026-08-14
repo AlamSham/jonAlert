@@ -14,7 +14,7 @@ import {
 import { FAQItem } from '@/lib/internal-links';
 import { getNeighboringStates } from '@/lib/neighboring-states';
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 type Props = {
   params: Promise<{ state: string }>;

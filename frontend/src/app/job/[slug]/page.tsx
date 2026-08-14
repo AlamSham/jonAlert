@@ -19,14 +19,14 @@ import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/inter
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 import { guides } from '@/lib/guides';
 
-export const revalidate = 3600;
+export const revalidate = 86400; // 24 hours cache to save Vercel ISR writes
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   try {
     const { getLatestJobs } = await import('@/lib/api');
-    const latestJobs = await getLatestJobs(1000);
+    const latestJobs = await getLatestJobs(100);
     return latestJobs.map((job) => ({
       slug: job.slug,
     }));
