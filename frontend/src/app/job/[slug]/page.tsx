@@ -41,9 +41,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     const job = await getJobBySlug(slug);
     if (!job) return {
-      title: 'Job Not Found — SarkariPulse',
-      description: 'Ye job notification ab available nahi hai. Latest sarkari naukri updates dekhein.',
-      robots: { index: false, follow: true },
+      title: 'Job Notification — SarkariPulse',
+      description: 'Latest sarkari naukri notifications, admit cards, exam dates and result updates.',
+      robots: { index: true, follow: true },
     };
 
     // Use enhanced meta description generator

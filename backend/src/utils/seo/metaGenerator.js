@@ -270,7 +270,7 @@ export function generateJobMetaTags(job) {
     canonicalUrl,
     imageUrl: DEFAULT_OG_IMAGE,
     keywords,
-    robots: job.status === 'active' ? 'index,follow' : 'noindex,follow',
+    robots: (job.status === 'draft' || job.status === 'deleted' || job.isDeleted) ? 'noindex,follow' : 'index,follow',
     data: job
   });
 }

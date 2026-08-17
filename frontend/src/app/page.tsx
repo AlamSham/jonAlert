@@ -75,27 +75,29 @@ export default async function HomePage() {
         {/* Category Cards */}
         <section id="categories">
           <SectionHeader title="Browse by Category" icon="📂" />
-          <div className="grid gap-3 grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-2.5 sm:gap-3.5 grid-cols-2 lg:grid-cols-3">
             {categories.map((cat) => (
               <Link
                 key={cat.key}
                 href={cat.href}
-                className="card flex items-center gap-4 !p-5 group"
+                className="card flex items-start sm:items-center gap-2.5 sm:gap-4 !p-3.5 sm:!p-5 group transition hover:shadow-card-hover hover:border-accent/40"
                 id={`cat-${cat.key}`}
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-stone-50 text-2xl transition group-hover:scale-110">
+                <span className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-stone-100/80 text-xl sm:text-2xl transition group-hover:scale-110">
                   {cat.emoji}
                 </span>
-                <div>
-                  <h3 className="font-bold text-ink group-hover:text-accent transition">
-                    {cat.label}
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-x-1.5 leading-snug">
+                    <h3 className="font-bold text-xs sm:text-sm md:text-base text-ink group-hover:text-accent transition truncate">
+                      {cat.label}
+                    </h3>
                     {stats.categories[cat.key] != null && (
-                      <span className="ml-2 text-xs font-normal text-muted">
+                      <span className="text-[10px] sm:text-xs font-medium text-muted bg-stone-100 px-1.5 py-0.2 rounded-full shrink-0">
                         ({stats.categories[cat.key]})
                       </span>
                     )}
-                  </h3>
-                  <p className="text-xs text-muted mt-0.5">{cat.desc}</p>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-muted mt-0.5 leading-tight line-clamp-1 sm:line-clamp-2">{cat.desc}</p>
                 </div>
               </Link>
             ))}

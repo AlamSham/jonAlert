@@ -3,17 +3,17 @@ import Link from 'next/link';
 
 export function StatsBanner({ stats }: { stats: StatsData }) {
   const items = [
-    { label: 'Total Jobs', value: stats.totalJobs, icon: '💼', color: 'from-blue-500 to-indigo-600' },
+    { label: 'Total Jobs', value: stats.totalJobs, icon: '💼', color: 'from-blue-500 to-indigo-600', href: '/jobs', badge: false },
     { label: 'Added Today', value: stats.last24Hours, icon: '🔥', color: 'from-red-500 to-orange-500', href: '/today', badge: true },
-    { label: 'Categories', value: Object.keys(stats.categories).length, icon: '📂', color: 'from-indigo-400 to-purple-500' },
-    { label: 'States', value: stats.topStates.length, icon: '📍', color: 'from-cyan-500 to-blue-500' },
+    { label: 'Categories', value: Object.keys(stats.categories).length, icon: '📂', color: 'from-indigo-400 to-purple-500', href: '#categories', badge: false },
+    { label: 'States', value: stats.topStates.length, icon: '📍', color: 'from-cyan-500 to-blue-500', href: '#top-states', badge: false },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-2 px-4 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4" id="stats-banner">
+    <div className="grid grid-cols-2 gap-2 px-2 sm:px-4 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4" id="stats-banner">
       {items.map((item) => {
-        const cardClass = `stat-glow card text-center !p-4 group min-h-[44px] mb-2 sm:mb-0 h-full flex flex-col items-center justify-center relative ${
-          item.href ? 'hover:border-red-400/50 hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer bg-red-50/10' : ''
+        const cardClass = `stat-glow card text-center !p-4 group min-h-[50px] mb-2 sm:mb-0 h-full flex flex-col items-center justify-center relative hover:border-accent/40 hover:shadow-card-hover hover:-translate-y-0.5 transition cursor-pointer ${
+          item.badge ? 'bg-red-50/20 border-red-200/50' : 'bg-white'
         }`;
 
         const content = (

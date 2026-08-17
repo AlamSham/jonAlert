@@ -166,13 +166,13 @@ describe('Meta Tag Generator', () => {
       expect(result.description).toContain('Custom description');
     });
     
-    it('should set noindex for inactive jobs', () => {
-      const inactiveJob = {
+    it('should set noindex for draft or deleted jobs', () => {
+      const draftJob = {
         ...mockJob,
-        status: 'expired'
+        status: 'draft'
       };
       
-      const result = generateJobMetaTags(inactiveJob);
+      const result = generateJobMetaTags(draftJob);
       
       expect(result.robots).toBe('noindex,follow');
     });
