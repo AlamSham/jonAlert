@@ -4,6 +4,7 @@ import { makeSlug } from '../utils/slugify.js';
 import { sendTelegramMessage, buildJobNotificationMessage } from './telegram.service.js';
 import { enqueueFacebookJobPost } from './facebook.service.js';
 import { notifyNewJob } from './googleIndexing.service.js';
+import { triggerFrontendRevalidate } from '../utils/revalidateFrontend.js';
 import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 import crypto from 'node:crypto';
@@ -158,6 +159,14 @@ export const processAndSaveJob = async (rawJob) => {
   // Notify Google Indexing API for fast indexing
   notifyNewJob(saved).catch(error => {
     logger.error('Google Indexing API notification failed (non-blocking)', {
+      slug: saved.slug,
+      error: error.message
+    });
+  });
+
+  // Trigger Frontend On-Demand ISR Revalidation
+  triggerFrontendRevalidate({ slug: saved.slug, category: saved.category }).catch(error => {
+    logger.error('Frontend revalidation trigger failed (non-blocking)', {
       slug: saved.slug,
       error: error.message
     });

@@ -295,7 +295,7 @@ Crawl-delay: 1
 
 # Block unnecessary paths
 Disallow: /api/
-Disallow: /_next/
+Allow: /_next/static/
 Disallow: /admin/
 Disallow: /private/
 

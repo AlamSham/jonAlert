@@ -12,7 +12,7 @@ import { TrustSignals } from '@/components/TrustSignals';
 import { getTopStateLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
-export const revalidate = 14400; // 4 hours cache
+export const revalidate = false; // Pure On-Demand revalidation ONLY via /api/revalidate (No timer-based revalidation)
 
 export default async function HomePage() {
   const [latestJobs, trendingJobs, stats, latestSchemes, closingSoonRes] = await Promise.all([

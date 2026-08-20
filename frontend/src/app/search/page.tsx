@@ -6,7 +6,7 @@ import { Breadcrumb } from '@/components/Breadcrumb';
 import { SearchForm } from '@/components/SearchForm';
 import { breadcrumbJsonLd } from '@/lib/seo';
 
-export const revalidate = 300; // Cache for 5 minutes — search results change but not every second
+export const revalidate = false; // Pure On-Demand revalidation ONLY (No timer-based revalidation)
 
 type Props = { searchParams: Promise<{ q?: string }> };
 
@@ -32,10 +32,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const q = params.q || '';
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
 
-  // Index search pages with meaningful queries — these are valuable long-tail landing pages
-  // e.g., /search?q=Indian Navy, /search?q=UPPSC — rank for these keywords!
+  // Index search pages with meaningful queries (including 2-letter state codes like UP, MP, UK)
   // Empty search page (/search without q) stays noindexed to avoid thin content
-  const shouldIndex = Boolean(q && q.trim().length >= 3);
+  const shouldIndex = Boolean(q && q.trim().length >= 2);
 
   const title = q
     ? `${q} Jobs 2026 - Latest Sarkari Naukri, Result, Admit Card | SarkariPulse`

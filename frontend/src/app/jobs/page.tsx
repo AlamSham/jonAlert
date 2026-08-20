@@ -13,7 +13,7 @@ import {
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = 14400;
+export const revalidate = false; // Pure On-Demand revalidation ONLY (No timer-based revalidation)
 
 type Props = { searchParams: Promise<{ page?: string }> };
 
@@ -36,13 +36,17 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     alternates: { 
       canonical: canonicalUrl
     },
-    // Noindex deep pagination pages to prevent thin content indexing
-    ...(page > 5 ? {
-      robots: {
-        index: false,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
         follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    } : {}),
+    },
     openGraph: {
       title: page > 1 ? `Sarkari Job 2026 - Page ${page}` : 'Sarkari Job 2026 - Latest Govt Jobs',
       description: generateCategoryMetaDescription('job'),

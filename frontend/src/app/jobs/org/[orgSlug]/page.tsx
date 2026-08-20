@@ -8,7 +8,7 @@ import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd, generateCollectionPageSchema } from '@/lib/seo';
 import { ORG_SEO_DATA } from '@/lib/org-seo-data';
 
-export const revalidate = 86400;
+export const revalidate = false; // Pure On-Demand revalidation ONLY
 
 type Props = {
   params: Promise<{ orgSlug: string }>;
@@ -43,13 +43,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
     alternates: {
       canonical: canonicalUrl,
     },
-    // Noindex pagination pages beyond page 5 to prevent thin content indexing
-    ...(page > 5 ? {
-      robots: {
-        index: false,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
         follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
       },
-    } : {}),
+    },
   };
 }
 

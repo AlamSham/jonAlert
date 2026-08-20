@@ -6,22 +6,23 @@ export default function robots(): MetadataRoute.Robots {
   
   return {
     rules: [
-      // Main crawlers - full access
+      // Main crawlers - full access to site & static assets
       {
         userAgent: 'Googlebot',
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
+        allow: ['/', '/_next/static/'],
+        disallow: ['/api/', '/admin/', '/private/'],
       },
       {
         userAgent: 'Bingbot',
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
+        allow: ['/', '/_next/static/'],
+        disallow: ['/api/', '/admin/', '/private/'],
       },
       // All other crawlers
       {
         userAgent: '*',
         allow: [
           '/',
+          '/_next/static/',
           '/jobs',
           '/result',
           '/admit-card',
@@ -36,7 +37,6 @@ export default function robots(): MetadataRoute.Robots {
         ],
         disallow: [
           '/api/',
-          '/_next/',
           '/admin/',
           '/private/',
         ],
@@ -44,8 +44,8 @@ export default function robots(): MetadataRoute.Robots {
       // AI Search Bots - Allowed for AI Traffic & Citing
       {
         userAgent: ['GPTBot', 'ClaudeBot', 'ChatGPT-User', 'OAI-SearchBot', 'PerplexityBot'],
-        allow: '/',
-        disallow: ['/api/', '/_next/', '/admin/', '/private/'],
+        allow: ['/', '/_next/static/'],
+        disallow: ['/api/', '/admin/', '/private/'],
       },
       // Block aggressive SEO crawlers & scrapers to save Vercel ISR Writes & Bandwidth
       {

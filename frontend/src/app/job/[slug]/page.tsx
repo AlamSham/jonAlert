@@ -19,7 +19,7 @@ import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/inter
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 import { guides } from '@/lib/guides';
 
-export const revalidate = 86400; // 24 hours cache to save Vercel ISR writes
+export const revalidate = false; // Pure On-Demand revalidation ONLY via /api/revalidate
 
 type Props = { params: Promise<{ slug: string }> };
 
