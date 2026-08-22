@@ -218,10 +218,9 @@ export function organizationJsonLd() {
     logo: SITE_LOGO_URL,
     description: 'Trusted sarkari job notification portal — latest govt jobs, results, admit cards, admissions, scholarships in India, verified by our editorial team.',
     sameAs: [
-      // Add social media links when available
-      // 'https://twitter.com/sarkaripulse',
-      // 'https://facebook.com/sarkaripulse',
-      // 'https://instagram.com/sarkaripulse'
+      'https://t.me/sarkaripulse',
+      'https://whatsapp.com/channel/0029VaDUx1m1yT2D0Q7g7Q1h',
+      'https://www.facebook.com/share/1Ea8Q3zg84/'
     ],
     contactPoint: [
       {

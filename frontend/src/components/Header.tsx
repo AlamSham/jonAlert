@@ -43,6 +43,8 @@ export function Header() {
           <img
             src="/logo.jpg"
             alt="SarkariPulse logo"
+            width={36}
+            height={36}
             className="h-9 w-9 rounded-xl object-cover shadow-sm"
           />
           <span className="text-xl font-black tracking-tight whitespace-nowrap">

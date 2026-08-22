@@ -46,12 +46,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   (stats?.topStates || []).forEach((s: { state: string }) => {
     if (!s || !s.state) return;
+    const stateSlug = encodeURIComponent(s.state);
     categoriesWithStates.forEach((category) => {
       stateUrls.push({
-        url: `${siteUrl}/${category}/state/${encodeURIComponent(s.state)}`,
+        url: `${siteUrl}/${category}/state/${stateSlug}`,
         lastModified: new Date(),
         changeFrequency: 'daily' as const,
-        priority: 0.7, // Enhanced to upper range (0.6-0.7 for state pages)
+        priority: 0.7,
       });
     });
   });

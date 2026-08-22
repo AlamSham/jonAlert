@@ -41,8 +41,23 @@ const makeContentFingerprint = (rawJob) => {
   return crypto.createHash('sha1').update(fingerprintBase).digest('hex');
 };
 
-const ensureUniqueSlug = async (baseTitle) => {
+const ensureUniqueSlug = async (baseTitle, organization = '') => {
   const baseSlug = makeSlug(baseTitle);
+  
+  // Check if base slug exists
+  const existingBaseJob = await Job.findOne({ slug: baseSlug }).lean();
+  if (existingBaseJob) {
+    // If base job exists and belongs to same organization or created in last 7 days, treat as duplicate
+    const createdTime = existingBaseJob.createdAt ? new Date(existingBaseJob.createdAt).getTime() : 0;
+    const isRecent = Date.now() - createdTime < 7 * 24 * 60 * 60 * 1000;
+    const isSameOrg = organization && existingBaseJob.organization && 
+      cleanText(organization) === cleanText(existingBaseJob.organization);
+
+    if (isRecent || isSameOrg) {
+      return { isDuplicate: true, existingJob: existingBaseJob };
+    }
+  }
+
   let slug = baseSlug;
   let count = 1;
 
@@ -51,7 +66,7 @@ const ensureUniqueSlug = async (baseTitle) => {
     count += 1;
   }
 
-  return slug;
+  return { isDuplicate: false, slug };
 };
 
 const shouldRetryDuplicateFacebookPost = (job) => {
@@ -115,9 +130,17 @@ export const processAndSaveJob = async (rawJob) => {
   for (let attempt = 0; attempt < MAX_SLUG_RETRIES; attempt++) {
     try {
       const baseTitle = aiData.rewrittenTitle || rawJob.title;
-      const slug = attempt === 0
-        ? await ensureUniqueSlug(baseTitle)
-        : `${makeSlug(baseTitle)}-${crypto.randomBytes(3).toString('hex')}`;
+      let slug = '';
+      if (attempt === 0) {
+        const slugResult = await ensureUniqueSlug(baseTitle, aiData.organization);
+        if (slugResult.isDuplicate && slugResult.existingJob) {
+          const facebook = enqueueRecentDuplicateFacebookPost(slugResult.existingJob, 'titleSlug');
+          return { status: 'duplicate', job: slugResult.existingJob, facebook };
+        }
+        slug = slugResult.slug;
+      } else {
+        slug = `${makeSlug(baseTitle)}-${crypto.randomBytes(3).toString('hex')}`;
+      }
 
       saved = await Job.create({
         title: aiData.rewrittenTitle || rawJob.title,
