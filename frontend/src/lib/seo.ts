@@ -247,6 +247,58 @@ export function organizationJsonLd() {
   };
 }
 
+export function siteNavigationJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Main Site Navigation',
+    itemListElement: [
+      {
+        '@type': 'SiteNavigationElement',
+        position: 1,
+        name: 'Sarkari Jobs',
+        url: `${SITE_URL}/jobs`,
+        description: 'Latest Sarkari Naukri notifications and government job updates'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 2,
+        name: 'Admit Card',
+        url: `${SITE_URL}/admit-card`,
+        description: 'Download sarkari exam admit cards and hall tickets'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 3,
+        name: 'Sarkari Result',
+        url: `${SITE_URL}/result`,
+        description: 'Check latest sarkari exam results, cut-offs and merit lists'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 4,
+        name: 'Sarkari Yojana',
+        url: `${SITE_URL}/schemes`,
+        description: 'Central and state government schemes details and online application'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 5,
+        name: 'About Us',
+        url: `${SITE_URL}/about`,
+        description: 'About SarkariPulse - India\'s trusted sarkari job portal'
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 6,
+        name: 'Contact Us',
+        url: `${SITE_URL}/contact`,
+        description: 'Contact SarkariPulse team for support and queries'
+      }
+    ]
+  };
+}
+
 export function jobPostingJsonLd(job: JobDetail) {
   const address = buildJobAddress(job);
   const baseSalary = buildJobBaseSalary(job);

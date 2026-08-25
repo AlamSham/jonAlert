@@ -4,7 +4,7 @@ import './globals.css';
 import { Header } from '@/components/Header';
 import { NewsTicker } from '@/components/NewsTicker';
 import { Footer } from '@/components/Footer';
-import { websiteJsonLd, organizationJsonLd } from '@/lib/seo';
+import { websiteJsonLd, organizationJsonLd, siteNavigationJsonLd } from '@/lib/seo';
 import { BackToTop } from '@/components/BackToTop';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
@@ -101,6 +101,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavigationJsonLd()) }}
         />
       </head>
       <body className={`${inter.className} flex min-h-screen flex-col`}>

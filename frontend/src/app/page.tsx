@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getLatestJobs, getTrendingJobs, getStats, getLatestSchemes, getClosingSoonJobs } from '@/lib/api';
+import { getLatestJobs, getTrendingJobs, getStats, getLatestSchemes, getClosingSoonJobs, getJobsByCategory } from '@/lib/api';
 import { JobCard } from '@/components/JobCard';
 import { SchemeCard } from '@/components/SchemeCard';
 import { StatsBanner } from '@/components/StatsBanner';
@@ -9,21 +9,41 @@ import { SubscribeCTA } from '@/components/SubscribeCTA';
 import { TrendingTags, QualificationLinks } from '@/components/TrendingTags';
 import { HowItWorks } from '@/components/HowItWorks';
 import { TrustSignals } from '@/components/TrustSignals';
+import { SarkariMatrixGrid } from '@/components/SarkariMatrixGrid';
+import { AspirantAlertSubscription } from '@/components/AspirantAlertSubscription';
 import { getTopStateLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
 export const revalidate = false; // Pure On-Demand revalidation ONLY via /api/revalidate (No timer-based revalidation)
 
 export default async function HomePage() {
-  const [latestJobs, trendingJobs, stats, latestSchemes, closingSoonRes] = await Promise.all([
+  const [
+    latestJobs,
+    trendingJobs,
+    stats,
+    latestSchemes,
+    closingSoonRes,
+    resultsRes,
+    admitCardsRes,
+    latestJobsCatRes,
+    admissionsRes,
+  ] = await Promise.all([
     getLatestJobs(12),
-    getTrendingJobs(6),
+    getTrendingJobs(8),
     getStats(),
     getLatestSchemes(6).catch(() => []), // Gracefully handle schemes API failure
     getClosingSoonJobs(1, 6).catch(() => ({ data: [], pagination: { total: 0 } })),
+    getJobsByCategory('result', 1, 10).catch(() => ({ data: [], pagination: { total: 0 } })),
+    getJobsByCategory('admit-card', 1, 10).catch(() => ({ data: [], pagination: { total: 0 } })),
+    getJobsByCategory('job', 1, 10).catch(() => ({ data: [], pagination: { total: 0 } })),
+    getJobsByCategory('admission', 1, 10).catch(() => ({ data: [], pagination: { total: 0 } })),
   ]);
 
   const closingSoonJobs = closingSoonRes?.data || [];
+  const results = resultsRes?.data || [];
+  const admitCards = admitCardsRes?.data || [];
+  const categoryJobs = latestJobsCatRes?.data || latestJobs || [];
+  const admissions = admissionsRes?.data || [];
 
   // Generate state links for internal linking
   const stateLinks = getTopStateLinks(stats?.topStates || []);
@@ -40,7 +60,7 @@ export default async function HomePage() {
   return (
     <div className="animate-fade-in">
       {/* Hero Section */}
-      <section className="hero-gradient py-12 sm:py-16" id="hero">
+      <section className="hero-gradient py-10 sm:py-14" id="hero">
         <div className="container-wrap text-center">
           <h1 className="text-3xl font-black tracking-tight text-ink sm:text-4xl lg:text-5xl">
             Latest Sarkari Naukri 2026 & <span className="gradient-text">Sarkari Result</span>
@@ -56,7 +76,19 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="container-wrap py-8 space-y-12">
+      <div className="container-wrap py-6 space-y-10">
+        {/* ========================================================================= */}
+        {/* HIGH-CTR SARKARI MATRIX GRID (Top Colored Highlights + 3-Column Matrix) */}
+        {/* ========================================================================= */}
+        <SarkariMatrixGrid
+          topHighlights={trendingJobs.length > 0 ? trendingJobs : latestJobs}
+          results={results}
+          admitCards={admitCards}
+          latestJobs={categoryJobs}
+          admissions={admissions}
+          schemes={latestSchemes}
+        />
+
         {/* Stats */}
         <section id="stats">
           <StatsBanner stats={stats} />
@@ -191,6 +223,9 @@ export default async function HomePage() {
             </div>
           </section>
         )}
+
+        {/* Targeted Aspirant Alert Center */}
+        <AspirantAlertSubscription />
 
         {/* Subscribe CTA */}
         <SubscribeCTA />

@@ -9,6 +9,15 @@ const SubscriberSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address.']
   },
+  whatsapp: {
+    type: String,
+    trim: true,
+    default: ''
+  },
+  examCategories: {
+    type: [String],
+    default: []
+  },
   status: {
     type: String,
     enum: ['active', 'unsubscribed'],
