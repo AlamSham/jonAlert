@@ -44,7 +44,6 @@ export default async function HomePage() {
   const admitCards = admitCardsRes?.data || [];
   const categoryJobs = latestJobsCatRes?.data || latestJobs || [];
   const admissions = admissionsRes?.data || [];
-
   // Generate state links for internal linking
   const stateLinks = getTopStateLinks(stats?.topStates || []);
 
@@ -56,6 +55,19 @@ export default async function HomePage() {
     { key: 'admit-card', label: 'Admit Card', emoji: '🎫', href: '/admit-card', desc: 'Download admit cards' },
     { key: 'exam-form', label: 'Exam Form', emoji: '📝', href: '/exam-form', desc: 'Application forms & registration' },
   ];
+
+  // Major orgs and high-value keyword signals for top banner
+  const isMajorNotification = (job: any) => {
+    if (!job || !job.title) return false;
+    const titleLower = job.title.toLowerCase();
+    const majorKeywords = ['upsc', 'ssc', 'rrb', 'railway', 'army', 'navy', 'air force', 'police', 'constable', 'ibps', 'sbi', 'bpsc', 'uppsc', 'mppsc', 'rpsc', 'nta', 'neet', 'jee', 'ctet', 'aiims', 'drdo', 'isro', 'bsf', 'crpf', 'cisf', 'admit card', 'result', 'merit list', 'bharti', 'recruitment', 'vacancy', 'admission'];
+    return (job.vacancyCount && job.vacancyCount > 0) || majorKeywords.some(kw => titleLower.includes(kw));
+  };
+
+  // Filter trending & latest jobs to feature top-tier major notifications in the colored banner
+  const majorTrending = trendingJobs.filter(isMajorNotification);
+  const majorLatest = latestJobs.filter(isMajorNotification);
+  const topHighlights = Array.from(new Set([...majorTrending, ...majorLatest, ...trendingJobs, ...latestJobs])).slice(0, 8);
 
   return (
     <div className="animate-fade-in">
@@ -81,7 +93,7 @@ export default async function HomePage() {
         {/* HIGH-CTR SARKARI MATRIX GRID (Top Colored Highlights + 3-Column Matrix) */}
         {/* ========================================================================= */}
         <SarkariMatrixGrid
-          topHighlights={trendingJobs.length > 0 ? trendingJobs : latestJobs}
+          topHighlights={topHighlights}
           results={results}
           admitCards={admitCards}
           latestJobs={categoryJobs}

@@ -127,10 +127,16 @@ export default async function JobDetailPage({ params }: Props) {
       'detailed notification dekhein',
       'check official notification',
       'notification dekhein',
+      'exact dates',
+      'refer to official notification',
+      'check official portal',
+      'check official pdf',
+      'official notification check',
+      'as per notification',
     ];
-    // If the entire text content (minus HTML) matches only placeholder phrases
-    return placeholders.some(p => stripped === p) || 
-           stripped.split(/\s+/).length < 5 && placeholders.some(p => stripped.includes(p));
+    const wordCount = stripped.split(/\s+/).filter(Boolean).length;
+    // Hide if total words < 15 and contains any placeholder phrase
+    return wordCount < 15 && placeholders.some(p => stripped.includes(p));
   };
 
   const hasRealEligibility = !!job.eligibility && !isPlaceholderContent(job.eligibility);
