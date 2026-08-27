@@ -20,18 +20,82 @@ const allowedCategories = new Set(['job', 'result', 'admit-card', 'admission', '
 
 // Spam / irrelevant content keywords — items matching these are news articles, not job notifications
 const IRRELEVANT_KEYWORDS = [
+  // Crime & Legal
   'corruption', 'scam', 'arrest', 'protest', 'strike', 'controversy',
-  'passenger ship', 'tourism', 'murder', 'accident', 'politics',
-  'election', 'vote', 'cricket', 'bollywood', 'entertainment',
-  'weather', 'earthquake', 'flood', 'cyclone'
+  'murder', 'accident', 'kidnap', 'rape', 'theft', 'fraud', 'FIR',
+  // Politics & Elections
+  'election', 'vote', 'rally', 'manifesto', 'opposition', 'politics',
+  'parliament', 'lok sabha debate', 'rajya sabha debate', 'BJP', 'Congress',
+  'AAP', 'TMC', 'political crisis',
+  // Entertainment & Sports
+  'cricket', 'bollywood', 'entertainment', 'movie', 'IPL', 'T20',
+  'world cup', 'oscar', 'celebrity', 'actor', 'actress', 'film',
+  // Natural Disasters & Weather
+  'weather', 'earthquake', 'flood', 'cyclone', 'tsunami', 'heatwave',
+  'landslide', 'drought',
+  // Misc non-job
+  'passenger ship', 'tourism', 'stock market', 'share price', 'sensex',
+  'nifty', 'cryptocurrency', 'bitcoin', 'real estate', 'property',
+  // News article indicators
+  'opinion:', 'editorial:', 'analysis:', 'exclusive:', 'breaking:',
+  'fact-finding probe', 'public hearing', 'press conference',
+  'agrees to', 'agree on', 'demands', 'opposes', 'criticizes',
+];
+
+// Common news outlet domain patterns found in scraped titles
+const NEWS_SOURCE_PATTERNS = [
+  /\s*[-–|]\s*(times of india|hindustan times|ndtv|india today|the hindu|economic times)/i,
+  /\s*[-–|]\s*(ommcom news|shillongtoday|borderlens|sakshi education|indianmast)/i,
+  /\s*[-–|]\s*(telugupeople|careers360|jagran josh|amar ujala|dainik bhaskar)/i,
+  /\s*[-–|]\s*(firstpost|republic|wion|mint|moneycontrol|livemint)/i,
+  /\s*[-–|]\s*[\w]+\.(com|in|co\.in|org|net)\s*$/i, // Any "- website.com" pattern
+];
+
+// Job-relevant signal keywords — if title has NONE of these, likely not a job notification
+const JOB_SIGNAL_KEYWORDS = [
+  'recruitment', 'bharti', 'vacancy', 'vacancies', 'notification',
+  'admit card', 'hall ticket', 'result', 'cut off', 'merit list',
+  'application', 'apply', 'registration', 'form', 'eligibility',
+  'syllabus', 'exam date', 'answer key', 'scorecard', 'counselling',
+  'admission', 'scholarship', 'fellowship', 'stipend', 'internship',
+  'walk-in', 'interview', 'selection', 'appointment', 'joining',
+  'post', 'grade', 'level', 'pay scale', 'salary',
+  'sarkari', 'govt', 'government', 'naukri',
+  'upsc', 'ssc', 'rrb', 'railway', 'ibps', 'nta', 'police',
+  'constable', 'sub inspector', 'clerk', 'peon', 'teacher',
+  'engineer', 'nurse', 'doctor', 'professor', 'lecturer',
+  'army', 'navy', 'air force', 'bsf', 'crpf', 'cisf', 'itbp',
+  'agniveer', 'apprentice', 'trainee',
+  'board exam', 'supplementary', 'compartment', 'revaluation',
+  'iti', 'polytechnic', 'b.ed', 'neet', 'jee', 'gate', 'cat',
 ];
 
 const isRelevantJobContent = (title = '', description = '') => {
   if (title.length < 20) return false; // Too short to be a real notification
+
   const combined = `${title} ${description}`.toLowerCase();
+
+  // Check irrelevant keywords
   for (const kw of IRRELEVANT_KEYWORDS) {
     if (combined.includes(kw)) return false;
   }
+
+  // Check if title contains news source name (scraped article indicator)
+  for (const pattern of NEWS_SOURCE_PATTERNS) {
+    if (pattern.test(title)) {
+      // If title ends with a news source, it's a scraped news article
+      return false;
+    }
+  }
+
+  // Check if title has at least ONE job-relevant signal keyword
+  const titleLower = title.toLowerCase();
+  const hasJobSignal = JOB_SIGNAL_KEYWORDS.some(kw => titleLower.includes(kw));
+  if (!hasJobSignal) {
+    // Title has zero job-related keywords — likely a news article
+    return false;
+  }
+
   return true;
 };
 

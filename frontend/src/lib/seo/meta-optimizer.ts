@@ -81,9 +81,10 @@ export class MetaOptimizer {
         maxImagePreview: 'standard'
       },
       'search': {
-        index: false, // Don't index search result pages
+        index: true, // Allow indexing for search pages with queries
         follow: true,
-        noarchive: true
+        maxSnippet: 300,
+        maxImagePreview: 'large'
       },
       'homepage': {
         index: true,

@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getLatestJobs, getStats } from '@/lib/api';
 import { JobCategory } from '@/lib/types';
 
-export const revalidate = 86400; // Background revalidation every 24 hours
+export const revalidate = 43200; // Background revalidation every 12 hours for fresher sitemap
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net';
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { getLatestSchemes } = await import('@/lib/api');
     [latestJobs, stats, latestSchemes] = await Promise.all([
-      getLatestJobs(3000),
+      getLatestJobs(1000), // Keep sitemap small for faster crawling & under 50MB limit
       getStats(),
       getLatestSchemes(100).catch(() => []), // Fetch up to 100 schemes
     ]);

@@ -28,7 +28,7 @@ export default async function HomePage() {
     latestJobsCatRes,
     admissionsRes,
   ] = await Promise.all([
-    getLatestJobs(12),
+    getLatestJobs(20), // More internal links for better crawl discovery
     getTrendingJobs(8),
     getStats(),
     getLatestSchemes(6).catch(() => []), // Gracefully handle schemes API failure

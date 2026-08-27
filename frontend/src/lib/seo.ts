@@ -412,11 +412,19 @@ export function generateJobPageTitle(job: JobDetail): string {
     const title = cleanText(job.title || 'Job Notification');
     const currentYear = new Date().getFullYear();
 
-    // Build data-rich suffix parts (vacancy + last date = highest CTR drivers)
+    // Build data-rich suffix parts (vacancy + salary + urgency = highest CTR)
     const dataParts: string[] = [];
 
     if (job.vacancyCount && job.vacancyCount > 0) {
       dataParts.push(`${job.vacancyCount.toLocaleString()} Posts`);
+    }
+
+    // Salary in title = major CTR driver (users search "SSC CGL salary")
+    if (job.salary && job.salary.length < 25) {
+      const salaryShort = job.salary.replace(/per\s*month/i, 'PM').replace(/as per government rules.*/i, '').trim();
+      if (salaryShort && salaryShort.length < 20 && !/as per/i.test(salaryShort)) {
+        dataParts.push(salaryShort);
+      }
     }
 
     if (job.lastDate) {
@@ -424,22 +432,25 @@ export function generateJobPageTitle(job: JobDetail): string {
       if (!isNaN(ld.getTime())) {
         const now = new Date();
         const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysLeft > 0 && daysLeft <= 7) {
+        if (daysLeft > 0 && daysLeft <= 3) {
+          dataParts.push(`Aaj Hi Apply Karo!`);
+        } else if (daysLeft > 3 && daysLeft <= 7) {
           dataParts.push(`Jaldi Karo! ${daysLeft} Din Baaki`);
-        } else if (daysLeft > 0 && daysLeft <= 30) {
+        } else if (daysLeft > 7 && daysLeft <= 30) {
           dataParts.push(`Last Date ${ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`);
         }
       }
     }
 
     // Category-specific suffix (NO emojis — Google SERPs don't render them)
+    const dataStr = dataParts.length > 0 ? dataParts.join(' | ') : '';
     const suffixByCategory: Record<string, string> = {
-      job: [dataParts.join(', '), `Apply Online ${currentYear}`].filter(Boolean).join(' | '),
+      job: [dataStr, `Apply Online ${currentYear}`].filter(Boolean).join(' | '),
       result: `Result OUT ${currentYear} - Merit List, Cut Off`,
-      'admit-card': `Admit Card Download ${currentYear}`,
-      admission: [dataParts.join(', '), `Admission ${currentYear}`].filter(Boolean).join(' | '),
-      scholarship: `Scholarship ${currentYear} - Apply Online`,
-      'exam-form': [`Application Form ${currentYear}`, dataParts.join(', ')].filter(Boolean).join(' | '),
+      'admit-card': `Admit Card Download ${currentYear} - Hall Ticket`,
+      admission: [dataStr, `Admission ${currentYear} - Registration Open`].filter(Boolean).join(' | '),
+      scholarship: [dataStr, `Scholarship ${currentYear} - Apply Now`].filter(Boolean).join(' | '),
+      'exam-form': [`Application Form ${currentYear}`, dataStr].filter(Boolean).join(' | '),
     };
 
     const suffix = suffixByCategory[job.category] || `Notification ${currentYear}`;
@@ -470,11 +481,11 @@ export function generateJobMetaDescription(job: JobDetail): string {
     
     // Vacancy count (if available) — users search for this
     if (job.vacancyCount && job.vacancyCount > 0) {
-      parts.push(`${job.vacancyCount.toLocaleString()} vacancies.`);
+      parts.push(`${job.vacancyCount.toLocaleString()} vacancies available.`);
     }
     
     // Salary (if available) — high CTR driver
-    if (job.salary) {
+    if (job.salary && !/as per/i.test(job.salary)) {
       parts.push(`Salary: ${job.salary}.`);
     }
     
@@ -485,9 +496,9 @@ export function generateJobMetaDescription(job: JobDetail): string {
         const now = new Date();
         const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         const formattedDate = ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-        if (daysLeft > 0 && daysLeft <= 10) {
-          parts.push(`Jaldi karo! Sirf ${daysLeft} din baaki (${formattedDate}).`);
-        } else if (daysLeft > 0) {
+        if (daysLeft > 0 && daysLeft <= 5) {
+          parts.push(`Jaldi karo — sirf ${daysLeft} din baaki!`);
+        } else if (daysLeft > 5 && daysLeft <= 15) {
           parts.push(`Last Date: ${formattedDate}.`);
         }
       }
@@ -495,11 +506,11 @@ export function generateJobMetaDescription(job: JobDetail): string {
     
     // Qualification (if available)
     if (job.qualificationLevel && job.qualificationLevel !== 'any') {
-      parts.push(`${job.qualificationLevel.toUpperCase()} pass apply karein.`);
+      parts.push(`${job.qualificationLevel.toUpperCase()} pass eligible.`);
     }
     
     // CTA — actionable, no emojis
-    parts.push('Eligibility, dates aur apply link yahan dekho.');
+    parts.push('Complete details, eligibility aur apply link yahan.');
     
     let description = parts.join(' ');
 
