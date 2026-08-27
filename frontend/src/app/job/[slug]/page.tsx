@@ -388,8 +388,8 @@ export default async function JobDetailPage({ params }: Props) {
             </section>
           )}
 
-          {/* Clean Ad Banner Slot 1 */}
-          <AdSlot zoneId="273631" />
+          {/* Clean Ad Banner Slot */}
+          <AdSlot />
 
           {/* Eligibility */}
           {hasRealEligibility && (
@@ -418,8 +418,8 @@ export default async function JobDetailPage({ params }: Props) {
             </section>
           )}
 
-          {/* Clean Ad Banner Slot 2 */}
-          <AdSlot zoneId="273631" />
+          {/* Clean Ad Banner Slot */}
+          <AdSlot />
 
           {/* Preparation Guides Section */}
           <section className="mb-8 card !p-5 mobile-content-section" id="section-prep">

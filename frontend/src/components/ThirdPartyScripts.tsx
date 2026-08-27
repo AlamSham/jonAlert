@@ -33,16 +33,6 @@ export function ThirdPartyScripts() {
         { 'data-zone': '11552173' }
       );
 
-      // Monetag Multitag (Zone: 273631)
-      appendScript(
-        'monetag-multitag',
-        'https://quge5.com/88/tag.min.js',
-        {
-          'data-zone': '273631',
-          'data-cfasync': 'false',
-        }
-      );
-
       appendScript(
         ONESIGNAL_SCRIPT_ID,
         'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js'
