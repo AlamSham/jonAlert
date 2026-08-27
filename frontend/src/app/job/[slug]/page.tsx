@@ -122,25 +122,29 @@ export default async function JobDetailPage({ params }: Props) {
   const isPlaceholderContent = (content: string | undefined | null): boolean => {
     if (!content || content.trim().length === 0) return true;
     const stripped = content.replace(/<[^>]*>/g, '').trim().toLowerCase();
-    const placeholders = [
-      'official notification check karein',
-      'detailed notification dekhein',
-      'check official notification',
+    const placeholderKeywords = [
+      'official notification',
+      'notification check',
       'notification dekhein',
       'exact dates',
-      'refer to official notification',
-      'check official portal',
-      'check official pdf',
-      'official notification check',
+      'check official',
+      'refer to official',
       'as per notification',
+      'official portal',
+      'official pdf',
     ];
+
     const wordCount = stripped.split(/\s+/).filter(Boolean).length;
-    // Hide if total words < 15 and contains any placeholder phrase
-    return wordCount < 15 && placeholders.some(p => stripped.includes(p));
+    if (placeholderKeywords.some(kw => stripped.includes(kw)) && wordCount < 30) {
+      return true;
+    }
+    return false;
   };
 
   const hasRealEligibility = !!job.eligibility && !isPlaceholderContent(job.eligibility);
-  const hasRealDates = !!job.importantDates && !isPlaceholderContent(job.importantDates);
+  const hasRealDates = !!job.importantDates && 
+    !isPlaceholderContent(job.importantDates) && 
+    (/<table|\d{1,2}[\s\/\-\.][a-z0-9]|\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec|2024|2025|2026|2027)\b/i.test(job.importantDates));
 
   // Generate contextual links and breadcrumbs
   const contextualLinks = generateJobContextualLinks(job);
