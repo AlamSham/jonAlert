@@ -378,6 +378,9 @@ export default async function JobDetailPage({ params }: Props) {
             <p className="text-sm leading-relaxed text-ink mobile-text-content">{job.summary}</p>
           </section>
 
+          {/* Clean Ad Banner Slot 1 (Immediately after summary) */}
+          <AdSlot />
+
           {/* Content */}
           {job.content && (
             <section className="mb-8 mobile-content-section" id="section-details">

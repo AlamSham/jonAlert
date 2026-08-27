@@ -11,6 +11,7 @@ import { HowItWorks } from '@/components/HowItWorks';
 import { TrustSignals } from '@/components/TrustSignals';
 import { SarkariMatrixGrid } from '@/components/SarkariMatrixGrid';
 import { AspirantAlertSubscription } from '@/components/AspirantAlertSubscription';
+import { AdSlot } from '@/components/AdSlot';
 import { getTopStateLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
@@ -100,6 +101,9 @@ export default async function HomePage() {
           admissions={admissions}
           schemes={latestSchemes}
         />
+
+        {/* High-Converting Monetag Native Sponsored Banner */}
+        <AdSlot />
 
         {/* Stats */}
         <section id="stats">
