@@ -14,6 +14,7 @@ import { ApplicationTips } from '@/components/ApplicationTips';
 import { JobDetailAnalytics } from '@/components/JobDetailAnalytics';
 import { SafeHtml } from '@/components/SafeHtml';
 import { SocialJoinBanner } from '@/components/SocialJoinBanner';
+import { AdSlot } from '@/components/AdSlot';
 import { jobPostingJsonLd, breadcrumbJsonLd, formatDate, generateJobMetaDescription, generateJobPageTitle, generateFAQSchema, generateArticleSchema, getCanonicalUrl } from '@/lib/seo';
 import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
@@ -387,6 +388,9 @@ export default async function JobDetailPage({ params }: Props) {
             </section>
           )}
 
+          {/* Clean Ad Banner Slot 1 */}
+          <AdSlot zoneId="11552173" />
+
           {/* Eligibility */}
           {hasRealEligibility && (
             <section className="mb-8 mobile-content-section" id="section-eligibility">
@@ -413,6 +417,9 @@ export default async function JobDetailPage({ params }: Props) {
               <HowToApply applyLink={job.applyLink} title={job.title} />
             </section>
           )}
+
+          {/* Clean Ad Banner Slot 2 */}
+          <AdSlot zoneId="11552173" />
 
           {/* Preparation Guides Section */}
           <section className="mb-8 card !p-5 mobile-content-section" id="section-prep">
