@@ -196,17 +196,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        {/* Trending Jobs */}
-        {trendingJobs && trendingJobs.length > 0 && (
-          <section id="trending">
-            <SectionHeader title="Trending Jobs" subtitle="Most viewed notifications" icon="🔥" />
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {trendingJobs.filter(Boolean).map((job, i) => (
-                <JobCard key={job.slug || i} job={job} index={i} />
-              ))}
-            </div>
-          </section>
-        )}
+
 
         {/* Sarkari Yojana */}
         {latestSchemes && latestSchemes.length > 0 && (

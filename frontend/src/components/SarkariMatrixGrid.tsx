@@ -23,78 +23,15 @@ const HIGHLIGHT_BG_STYLES = [
 ];
 
 export function SarkariMatrixGrid({
-  topHighlights,
+  topHighlights: _topHighlights,
   results,
   admitCards,
   latestJobs,
   admissions = [],
   schemes = [],
 }: SarkariMatrixGridProps) {
-  // Use first 8 items for high-CTR top colored banner
-  const highlightItems = topHighlights.slice(0, 8);
-
   return (
     <section id="sarkari-matrix" className="space-y-8 my-6">
-      {/* ========================================================================= */}
-      {/* 1. TOP QUICK HIGHLIGHTS GRID (High-CTR Colored Box Banner) */}
-      {/* ========================================================================= */}
-      {highlightItems.length > 0 && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg sm:text-xl font-black text-ink flex items-center gap-2">
-              <span className="flex h-3 w-3 rounded-full bg-red-500 animate-ping"></span>
-              ⚡ Top Trending Notifications & Fast Links
-            </h2>
-            <span className="text-xs font-semibold text-muted hidden sm:inline-block">
-              Click & Apply Fast 🚀
-            </span>
-          </div>
-
-          {/* Grid of Colored Boxes */}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
-            {highlightItems.map((job, idx) => {
-              const bgStyle = HIGHLIGHT_BG_STYLES[idx % HIGHLIGHT_BG_STYLES.length];
-              const title = job.title;
-              const vacancyText = job.vacancyCount ? ` (${job.vacancyCount.toLocaleString()} Posts)` : '';
-
-              return (
-                <Link
-                  key={job.slug || idx}
-                  href={`/job/${job.slug}`}
-                  className={`group relative rounded-xl sm:rounded-2xl p-3 sm:p-4 border shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:scale-95 flex flex-col justify-between ${bgStyle}`}
-                >
-                  <div className="flex items-center justify-between gap-1 mb-1.5">
-                    <span className="inline-block text-[10px] sm:text-xs font-extrabold uppercase tracking-wider bg-black/25 backdrop-blur-sm px-2 py-0.5 rounded-md">
-                      {job.category === 'admit-card'
-                        ? 'ADMIT CARD'
-                        : job.category === 'result'
-                        ? 'RESULT OUT'
-                        : 'LATEST JOB'}
-                    </span>
-                    {job.vacancyCount ? (
-                      <span className="text-[10px] font-bold bg-white/20 px-1.5 py-0.5 rounded">
-                        {job.vacancyCount} Posts
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <h3 className="font-bold text-xs sm:text-sm leading-snug line-clamp-2 drop-shadow-sm group-hover:underline">
-                    {title}
-                    {vacancyText && <span className="font-extrabold text-amber-200">{vacancyText}</span>}
-                  </h3>
-
-                  <div className="mt-2 flex items-center justify-between text-[10px] font-medium opacity-90 pt-1 border-t border-white/20">
-                    <span>{job.organization || 'Sarkari Update'}</span>
-                    <span className="font-bold group-hover:translate-x-1 transition-transform">
-                      View →
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* ========================================================================= */}
       {/* 2. 3-COLUMN CLASSIC SARKARI MATRIX (Results | Admit Cards | Latest Jobs) */}

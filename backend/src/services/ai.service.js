@@ -668,7 +668,7 @@ const rewriteWithGroqCloud = async (prompt, rawJob) => {
   }
 
   const response = await groqCloudClient.chat.completions.create({
-    model: env.groqCloudModel || 'llama-3.3-70b-versatile',
+    model: env.groqCloudModel || 'llama3-70b-8192',
     messages: [{ role: 'user', content: prompt }],
     max_tokens: 3800,
     temperature: 0.7,
