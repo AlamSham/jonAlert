@@ -26,11 +26,21 @@ export function ThirdPartyScripts() {
     // Defer script loading until after page is interactive
     // This improves FCP and LCP scores significantly
     const loadScripts = () => {
-      // Monetag In-Page Push Banner (Zone: 11552173)
+      // Monetag In-Page Push (Zone: 11552173)
       appendScript(
         'monetag-inpage-push',
         'https://nap5k.com/tag.min.js',
         { 'data-zone': '11552173' }
+      );
+
+      // Monetag Multitag (Zone: 273631)
+      appendScript(
+        'monetag-multitag',
+        'https://quge5.com/88/tag.min.js',
+        {
+          'data-zone': '273631',
+          'data-cfasync': 'false',
+        }
       );
 
       appendScript(

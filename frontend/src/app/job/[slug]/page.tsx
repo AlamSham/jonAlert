@@ -389,7 +389,7 @@ export default async function JobDetailPage({ params }: Props) {
           )}
 
           {/* Clean Ad Banner Slot 1 */}
-          <AdSlot zoneId="11552173" />
+          <AdSlot zoneId="273631" />
 
           {/* Eligibility */}
           {hasRealEligibility && (
@@ -419,7 +419,7 @@ export default async function JobDetailPage({ params }: Props) {
           )}
 
           {/* Clean Ad Banner Slot 2 */}
-          <AdSlot zoneId="11552173" />
+          <AdSlot zoneId="273631" />
 
           {/* Preparation Guides Section */}
           <section className="mb-8 card !p-5 mobile-content-section" id="section-prep">
