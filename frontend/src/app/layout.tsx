@@ -117,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PwaInstallPrompt />
         <WebVitals />
         <Analytics />
-        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-KEQLLZWFJJ'} />
         <ThirdPartyScripts />
         <Script
           async
