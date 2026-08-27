@@ -418,8 +418,8 @@ export default async function JobDetailPage({ params }: Props) {
             </section>
           )}
 
-          {/* Clean Ad Banner Slot */}
-          <AdSlot />
+          {/* Clean Ad Banner Slot 2 */}
+          <AdSlot variant="secondary" />
 
           {/* Preparation Guides Section */}
           <section className="mb-8 card !p-5 mobile-content-section" id="section-prep">
