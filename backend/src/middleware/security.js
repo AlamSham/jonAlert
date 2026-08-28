@@ -14,7 +14,14 @@ export const corsMiddleware = cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.includes('sarkaripulse') ||
+      origin.includes('run.app') ||
+      origin.includes('web.app') ||
+      origin.includes('firebaseapp.com') ||
+      origin.includes('localhost')
+    ) {
       return callback(null, true);
     }
 
