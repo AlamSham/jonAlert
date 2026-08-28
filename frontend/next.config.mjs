@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Frontend service deployment check - auto build trigger test
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',

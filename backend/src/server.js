@@ -5,6 +5,7 @@ import { startCron } from './cron/job.cron.js';
 import { startTokenRefreshCron } from './cron/tokenRefresh.cron.js';
 import { logger } from './utils/logger.js';
 
+// Backend service deployment check - auto build trigger test
 const bootstrap = async () => {
   validateEnv();
   await connectDb();
