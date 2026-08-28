@@ -3,20 +3,24 @@ import { JobDetail, JobListItem, PaginatedResponse, StatsData, SchemeDetail, Sch
 const DEFAULT_BACKEND_URL = 'https://sarkaripulse-61255565662.asia-south2.run.app';
 
 export function getBackendUrl(): string {
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+      return DEFAULT_BACKEND_URL;
+    }
+  }
+
   const envUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
   if (envUrl && !envUrl.includes('localhost')) {
     return envUrl;
   }
-  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+
+  if (process.env.NODE_ENV === 'production') {
     return DEFAULT_BACKEND_URL;
   }
-  if (process.env.NODE_ENV === 'production' && (!envUrl || envUrl.includes('localhost'))) {
-    return DEFAULT_BACKEND_URL;
-  }
+
   return envUrl || DEFAULT_BACKEND_URL;
 }
-
-const API_BASE = getBackendUrl();
 
 async function fetchWithRetry(
   url: string,
@@ -77,7 +81,8 @@ async function fetchWithRetry(
 
 async function safeFetch<T>(path: string, revalidate = 86400, fallback: any = { data: [] }): Promise<T> {
   try {
-    const response = await fetchWithRetry(`${API_BASE}${path}`, {
+    const baseUrl = getBackendUrl();
+    const response = await fetchWithRetry(`${baseUrl}${path}`, {
       next: { revalidate },
     });
 
@@ -124,7 +129,8 @@ export async function getJobsByState(state: string, page = 1, limit = 20, catego
 
 export async function getJobBySlug(slug: string): Promise<JobDetail | null> {
   try {
-    const response = await fetchWithRetry(`${API_BASE}/api/jobs/${slug}`, {
+    const baseUrl = getBackendUrl();
+    const response = await fetchWithRetry(`${baseUrl}/api/jobs/${slug}`, {
       next: { revalidate: 86400 },
     });
 
@@ -188,7 +194,8 @@ export async function getLatestSchemes(limit = 6): Promise<SchemeListItem[]> {
 }
 
 export async function getSchemeBySlug(slug: string): Promise<SchemeDetail | null> {
-  const response = await fetchWithRetry(`${API_BASE}/api/schemes/${slug}`, {
+  const baseUrl = getBackendUrl();
+  const response = await fetchWithRetry(`${baseUrl}/api/schemes/${slug}`, {
     next: { revalidate: 86400 },
   });
 
