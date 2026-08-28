@@ -13,7 +13,7 @@ const nextConfig = {
   compress: true, // Enable gzip compression
   poweredByHeader: false, // Remove X-Powered-By header
   reactStrictMode: true, // Enable React strict mode
-  
+
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -87,7 +87,7 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://sarkaripulse-61255565662.asia-south2.run.app';
     return [
       {
         source: '/api/sitemap.xml',

@@ -1,3 +1,5 @@
+import { JobDetail, JobListItem, PaginatedResponse, StatsData, SchemeDetail, SchemeListItem, SchemeFilters } from './types';
+
 const DEFAULT_BACKEND_URL = 'https://sarkaripulse-61255565662.asia-south2.run.app';
 
 export function getBackendUrl(): string {
@@ -38,6 +40,9 @@ async function fetchWithRetry(
       const response = await fetch(url, mergedOptions);
 
       if (response.status === 429) {
+        if (typeof window === 'undefined') {
+          return response;
+        }
         attempt++;
         if (attempt >= retries) {
           console.error(`[API Rate Limit 429] Max retries reached for ${url}`);

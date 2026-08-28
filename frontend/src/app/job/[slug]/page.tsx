@@ -27,7 +27,7 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateStaticParams() {
   try {
     const { getLatestJobs } = await import('@/lib/api');
-    const latestJobs = await getLatestJobs(500); // Pre-build top 500 pages for faster crawling
+    const latestJobs = await getLatestJobs(20); // Pre-build top 20 pages for zero build-time rate limits
     return latestJobs.map((job) => ({
       slug: job.slug,
     }));
