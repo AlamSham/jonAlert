@@ -209,22 +209,23 @@ export function SarkariMatrixGrid({
         {/* Answer Key / Exam Forms */}
         <div className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden flex flex-col justify-between">
           <div>
-            <div className="bg-stone-800 text-white px-4 py-2.5 font-bold text-sm flex items-center justify-between">
+            <div className="bg-stone-800 text-white px-4 py-3 font-bold text-sm flex items-center justify-between">
               <span>📝 Answer Key & Exam Forms</span>
               <Link href="/exam-form" className="text-xs text-amber-300 hover:underline">
                 View All
               </Link>
             </div>
-            <ul className="divide-y divide-stone-100 text-xs p-1">
+            <ul className="divide-y divide-stone-100 text-xs">
               {admissions.slice(0, 5).map((job, idx) => (
-                <li key={job.slug || idx} className="hover:bg-stone-50 transition p-2.5">
-                  <Link href={`/job/${job.slug}`} className="hover:text-accent font-medium line-clamp-1">
-                    • {job.title}
+                <li key={job.slug || idx} className="hover:bg-stone-50 transition">
+                  <Link href={`/job/${job.slug}`} className="p-3 flex items-start gap-2 text-ink hover:text-accent font-medium leading-snug">
+                    <span className="text-accent font-bold">•</span>
+                    <span className="flex-1 line-clamp-2">{job.title}</span>
                   </Link>
                 </li>
               ))}
               {admissions.length === 0 && (
-                <li className="p-3 text-stone-400 text-[11px]">Regular updates available</li>
+                <li className="p-3.5 text-stone-400 text-xs">Regular updates available</li>
               )}
             </ul>
           </div>
@@ -233,22 +234,23 @@ export function SarkariMatrixGrid({
         {/* College Admissions */}
         <div className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden flex flex-col justify-between">
           <div>
-            <div className="bg-stone-800 text-white px-4 py-2.5 font-bold text-sm flex items-center justify-between">
+            <div className="bg-stone-800 text-white px-4 py-3 font-bold text-sm flex items-center justify-between">
               <span>🎓 College Admissions 2026</span>
               <Link href="/admission" className="text-xs text-amber-300 hover:underline">
                 View All
               </Link>
             </div>
-            <ul className="divide-y divide-stone-100 text-xs p-1">
+            <ul className="divide-y divide-stone-100 text-xs">
               {admissions.slice(5, 10).map((job, idx) => (
-                <li key={job.slug || idx} className="hover:bg-stone-50 transition p-2.5">
-                  <Link href={`/job/${job.slug}`} className="hover:text-accent font-medium line-clamp-1">
-                    • {job.title}
+                <li key={job.slug || idx} className="hover:bg-stone-50 transition">
+                  <Link href={`/job/${job.slug}`} className="p-3 flex items-start gap-2 text-ink hover:text-accent font-medium leading-snug">
+                    <span className="text-accent font-bold">•</span>
+                    <span className="flex-1 line-clamp-2">{job.title}</span>
                   </Link>
                 </li>
               ))}
               {admissions.length < 6 && (
-                <li className="p-3 text-stone-400 text-[11px]">Latest Admission forms update daily</li>
+                <li className="p-3.5 text-stone-400 text-xs">Latest Admission forms update daily</li>
               )}
             </ul>
           </div>
@@ -257,22 +259,23 @@ export function SarkariMatrixGrid({
         {/* Sarkari Yojana */}
         <div className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden flex flex-col justify-between">
           <div>
-            <div className="bg-stone-800 text-white px-4 py-2.5 font-bold text-sm flex items-center justify-between">
+            <div className="bg-stone-800 text-white px-4 py-3 font-bold text-sm flex items-center justify-between">
               <span>🏛️ Sarkari Yojana (सरकारी योजना)</span>
               <Link href="/schemes" className="text-xs text-amber-300 hover:underline">
                 View All
               </Link>
             </div>
-            <ul className="divide-y divide-stone-100 text-xs p-1">
+            <ul className="divide-y divide-stone-100 text-xs">
               {schemes.slice(0, 5).map((scheme, idx) => (
-                <li key={scheme.slug || idx} className="hover:bg-stone-50 transition p-2.5">
-                  <Link href={`/schemes/${scheme.slug}`} className="hover:text-accent font-medium line-clamp-1">
-                    • {scheme.title}
+                <li key={scheme.slug || idx} className="hover:bg-stone-50 transition">
+                  <Link href={`/schemes/${scheme.slug}`} className="p-3 flex items-start gap-2 text-ink hover:text-accent font-medium leading-snug">
+                    <span className="text-accent font-bold">•</span>
+                    <span className="flex-1 line-clamp-2">{scheme.title}</span>
                   </Link>
                 </li>
               ))}
               {schemes.length === 0 && (
-                <li className="p-3 text-stone-400 text-[11px]">PM Kisan, Ayushman Bharat updates</li>
+                <li className="p-3.5 text-stone-400 text-xs">PM Kisan, Ayushman Bharat updates</li>
               )}
             </ul>
           </div>
