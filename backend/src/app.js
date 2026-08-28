@@ -44,6 +44,14 @@ app.get('/health', (_req, res) => {
 // SEO routes (sitemap.xml, robots.txt, static pages)
 app.use('/', seoRouter);
 
+// HTTP Caching for GET API responses (Reduces database & Cloud Run load to near-zero)
+app.use('/api', (req, res, next) => {
+  if (req.method === 'GET') {
+    res.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+  }
+  next();
+});
+
 // API routes
 app.use('/api', jobRouter);
 app.use('/api', schemeRouter);
