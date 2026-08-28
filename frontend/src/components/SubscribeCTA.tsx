@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { getBackendUrl } from '@/lib/api';
 
 export function SubscribeCTA() {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ export function SubscribeCTA() {
     setMessage('');
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+      const apiUrl = getBackendUrl();
       const res = await fetch(`${apiUrl}/api/subscribe`, {
         method: 'POST',
         headers: {

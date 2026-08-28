@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { getBackendUrl } from '@/lib/api';
 
 const EXAM_PREFERENCES = [
   { id: 'ssc', label: 'SSC (CGL, CHSL, MTS, GD)', icon: '🦅', color: 'border-blue-300 bg-blue-50 text-blue-800' },
@@ -35,7 +36,7 @@ export function AspirantAlertSubscription() {
     setMessage('');
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+      const apiUrl = getBackendUrl();
       const res = await fetch(`${apiUrl}/api/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

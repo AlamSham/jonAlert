@@ -116,7 +116,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileStickySocial />
         <PwaInstallPrompt />
         <WebVitals />
-        <Analytics />
+        {process.env.VERCEL && <Analytics />}
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-KEQLLZWFJJ'} />
         <ThirdPartyScripts />
         <Script

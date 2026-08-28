@@ -1,6 +1,20 @@
-import { JobDetail, JobListItem, PaginatedResponse, StatsData, SchemeDetail, SchemeListItem, SchemeFilters } from './types';
+const DEFAULT_BACKEND_URL = 'https://sarkaripulse-61255565662.asia-south2.run.app';
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+export function getBackendUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (envUrl && !envUrl.includes('localhost')) {
+    return envUrl;
+  }
+  if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+    return DEFAULT_BACKEND_URL;
+  }
+  if (process.env.NODE_ENV === 'production' && (!envUrl || envUrl.includes('localhost'))) {
+    return DEFAULT_BACKEND_URL;
+  }
+  return envUrl || DEFAULT_BACKEND_URL;
+}
+
+const API_BASE = getBackendUrl();
 
 async function fetchWithRetry(
   url: string,
