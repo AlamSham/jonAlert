@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FAQItem } from '@/lib/internal-links';
+import { SafeHtml } from '@/components/SafeHtml';
 
 interface FAQProps {
   items: FAQItem[];
@@ -36,7 +37,7 @@ export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'ac
       name: item.question,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: item.answer
+        text: item.answer.replace(/<[^>]*>/g, ' ').trim()
       }
     }))
   } : null;
@@ -56,7 +57,9 @@ export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'ac
           {items.map((item, index) => (
             <div key={index} className="card !p-4">
               <h3 className="font-bold text-ink text-sm mb-2">{item.question}</h3>
-              <p className="text-xs text-muted leading-relaxed">{item.answer}</p>
+              <div className="text-xs text-muted leading-relaxed">
+                <SafeHtml content={item.answer} />
+              </div>
             </div>
           ))}
         </div>
@@ -100,11 +103,11 @@ export function FAQ({ items, title = 'Frequently Asked Questions', variant = 'ac
               <div
                 id={`faq-answer-${index}`}
                 className={`overflow-hidden transition-all duration-200 ${
-                  isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  isOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="px-4 pb-4 pt-0">
-                  <p className="text-xs text-muted leading-relaxed">{item.answer}</p>
+                <div className="px-4 pb-4 pt-0 text-xs text-muted leading-relaxed">
+                  <SafeHtml content={item.answer} />
                 </div>
               </div>
             </div>

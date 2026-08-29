@@ -156,33 +156,49 @@ export default async function JobDetailPage({ params }: Props) {
     { label: job.title ? job.title.slice(0, 50) + (job.title.length > 50 ? '...' : '') : 'Job Details' },
   ];
 
+  // Clean up portal link (remove Google News RSS links)
+  const cleanPortalLink = (link?: string, officialLink?: string) => {
+    if (officialLink && !officialLink.includes('news.google.com') && !officialLink.includes('google.com/rss')) {
+      return officialLink;
+    }
+    if (link && !link.includes('news.google.com') && !link.includes('google.com/rss')) {
+      return link;
+    }
+    return '';
+  };
+  const activePortalUrl = cleanPortalLink(job.applyLink, job.officialLink);
+
   // Generate FAQ items for the job
   const faqItems = [
     hasRealEligibility && {
       question: `${job.title} ke liye eligibility criteria kya hai?`,
-      answer: job.eligibility
+      answer: job.qualificationLevel 
+        ? `Minimum Qualification: ${job.qualificationLevel.toUpperCase()} Pass. Complete age limit aur category-wise eligibility details ke liye uper diye gaye Eligibility section ko dekhein.`
+        : `Complete eligibility criteria, age limit aur educational qualification details ke liye uper Eligibility table check karein.`
     },
     (job.lastDate || hasRealDates) && {
       question: `${job.title} ki last date kya hai?`,
       answer: job.lastDate 
-        ? `Last date to apply: ${formatDate(job.lastDate)}`
-        : job.importantDates
+        ? `Last date to apply online: ${formatDate(job.lastDate)}.`
+        : `Important dates ke liye uper Important Dates table check karein.`
     },
-    job.applyLink && {
+    {
       question: `${job.title} ke liye kaise apply karein?`,
-      answer: `Official website par jaayiye: ${job.applyLink}. Online application form bhariye, zaroori documents upload kariye, aur fee payment (agar applicable hai) kariye. Application submit karne ke baad receipt save kar liye.`
+      answer: activePortalUrl 
+        ? `Official portal (${activePortalUrl}) par jaayiye. Registration karke online application form bhariye, required documents upload karein aur form submit karke printout save kar lein.`
+        : `Official government portal par jaakar online application form bhariye, required documents upload karein aur final submit karein.`
     },
     job.qualificationLevel && {
       question: `${job.title} ke liye minimum qualification kya hai?`,
-      answer: `Minimum qualification: ${job.qualificationLevel}. Complete eligibility criteria ke liye official notification check kariye.`
+      answer: `Minimum qualification: ${job.qualificationLevel.toUpperCase()} Pass.`
     },
     job.salary && {
       question: `${job.title} ki salary kitni hai?`,
-      answer: `Salary: ${job.salary}. Complete pay scale aur allowances ke liye official notification dekhiye.`
+      answer: `Pay Scale / Salary: ${job.salary}.`
     },
     job.vacancyCount && job.vacancyCount > 0 && {
       question: `${job.title} mein kitni vacancies hain?`,
-      answer: `Total vacancies: ${job.vacancyCount}. Category-wise breakdown ke liye official notification check kariye.`
+      answer: `Total vacancies: ${job.vacancyCount.toLocaleString('en-IN')} posts.`
     }
   ].filter(Boolean) as Array<{ question: string; answer: string }>;
 
@@ -350,10 +366,10 @@ export default async function JobDetailPage({ params }: Props) {
           </header>
 
           {/* Prominent CTA - Official Government Portal Link */}
-          {job.applyLink && (
+          {activePortalUrl && (
             <div className="mb-6 flex flex-col items-center gap-2">
               <a
-                href={job.applyLink}
+                href={activePortalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 px-10 py-4 text-base font-bold text-white shadow-lg transition hover:shadow-xl hover:scale-105 active:scale-95 animate-pulse"
@@ -415,9 +431,9 @@ export default async function JobDetailPage({ params }: Props) {
           )}
 
           {/* How to Apply Section */}
-          {job.applyLink && (
+          {activePortalUrl && (
             <section className="mb-8" id="section-how-to-apply">
-              <HowToApply applyLink={job.applyLink} title={job.title} />
+              <HowToApply applyLink={activePortalUrl} title={job.title} />
             </section>
           )}
 
@@ -480,14 +496,14 @@ export default async function JobDetailPage({ params }: Props) {
           )}
 
           {/* Apply Link */}
-          {job.applyLink && (
+          {activePortalUrl && (
             <section className="mb-8 card !p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-emerald-50/70 border-emerald-200" id="section-apply">
               <div>
                 <h3 className="text-base font-bold text-ink">Ready to Apply for {job.title}?</h3>
                 <p className="text-xs text-muted mt-1">Direct official government recruitment portal link for online application.</p>
               </div>
               <a
-                href={job.applyLink}
+                href={activePortalUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:shadow-xl active:scale-95 whitespace-nowrap"
