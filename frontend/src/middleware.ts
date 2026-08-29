@@ -21,12 +21,6 @@ export function middleware(request: NextRequest) {
   //   return NextResponse.redirect(url, 301);
   // }
   
-  // Fix 3: Lowercase URLs for consistency
-  if (url.pathname !== url.pathname.toLowerCase()) {
-    url.pathname = url.pathname.toLowerCase();
-    return NextResponse.redirect(url, 301);
-  }
-  
   return NextResponse.next();
 }
 
