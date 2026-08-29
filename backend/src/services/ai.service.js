@@ -592,34 +592,55 @@ const rewriteWithGemini = async (prompt, rawJob) => {
     throw new Error('GEMINI_API_KEY missing');
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${env.geminiModel}:generateContent?key=${env.geminiApiKey}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 3800,
-        responseMimeType: 'application/json'
-      },
-      contents: [{ role: 'user', parts: [{ text: prompt }] }]
-    })
-  });
+  const geminiModels = [
+    env.geminiModel,
+    'gemini-1.5-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-pro',
+    'gemini-flash-latest'
+  ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
-  if (!response.ok) {
-    const body = await response.text();
-    const err = new Error(`Gemini error: ${response.status} ${body}`);
-    err.status = response.status;
-    throw err;
+  let lastErr = null;
+  for (const modelName of geminiModels) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${env.geminiApiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 3800,
+            responseMimeType: 'application/json'
+          },
+          contents: [{ role: 'user', parts: [{ text: prompt }] }]
+        })
+      });
+
+      if (!response.ok) {
+        const body = await response.text();
+        const err = new Error(`Gemini error (${modelName}): ${response.status} ${body}`);
+        err.status = response.status;
+        throw err;
+      }
+
+      const data = await response.json();
+      const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!content) {
+        throw new Error(`No Gemini content returned from ${modelName}`);
+      }
+
+      return normalizeAiJson(content, rawJob);
+    } catch (err) {
+      lastErr = err;
+      if (isProviderConfigError(err) || err.status === 404 || err.status === 400 || String(err.message).includes('404') || String(err.message).includes('400')) {
+        logger.warn(`Gemini model ${modelName} failed (${err.message}), trying next model candidate...`);
+        continue;
+      }
+      throw err;
+    }
   }
-
-  const data = await response.json();
-  const content = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!content) {
-    throw new Error('No Gemini content returned');
-  }
-
-  return normalizeAiJson(content, rawJob);
+  throw lastErr;
 };
 
 const rewriteWithGrok = async (prompt, rawJob) => {
@@ -627,19 +648,39 @@ const rewriteWithGrok = async (prompt, rawJob) => {
     throw new Error('GROK_API_KEY missing');
   }
 
-  const response = await grokClient.chat.completions.create({
-    model: env.grokModel,
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 3800,
-    temperature: 0.7
-  });
+  const grokModels = [
+    env.grokModel,
+    'grok-2-1212',
+    'grok-beta',
+    'grok-2-latest'
+  ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
-  const content = response.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error('No Grok content returned');
+  let lastErr = null;
+  for (const modelName of grokModels) {
+    try {
+      const response = await grokClient.chat.completions.create({
+        model: modelName,
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 3800,
+        temperature: 0.7
+      });
+
+      const content = response.choices?.[0]?.message?.content;
+      if (!content) {
+        throw new Error(`No Grok content returned from ${modelName}`);
+      }
+
+      return normalizeAiJson(content, rawJob);
+    } catch (err) {
+      lastErr = err;
+      if (isProviderConfigError(err) || err.status === 404 || err.status === 400 || String(err.message).includes('400')) {
+        logger.warn(`Grok model ${modelName} failed (${err.message}), trying next model candidate...`);
+        continue;
+      }
+      throw err;
+    }
   }
-
-  return normalizeAiJson(content, rawJob);
+  throw lastErr;
 };
 
 const rewriteWithDeepseek = async (prompt, rawJob) => {
@@ -667,20 +708,41 @@ const rewriteWithGroqCloud = async (prompt, rawJob) => {
     throw new Error('GROQ_CLOUD_API_KEY missing');
   }
 
-  const response = await groqCloudClient.chat.completions.create({
-    model: env.groqCloudModel || 'llama3-70b-8192',
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 3800,
-    temperature: 0.7,
-    response_format: { type: 'json_object' }
-  });
+  const groqModels = [
+    env.groqCloudModel,
+    'llama-3.3-70b-versatile',
+    'llama3-70b-8192',
+    'llama-3.1-8b-instant',
+    'mixtral-8x7b-32768'
+  ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
-  const content = response.choices?.[0]?.message?.content;
-  if (!content) {
-    throw new Error('No Groq Cloud content returned');
+  let lastErr = null;
+  for (const modelName of groqModels) {
+    try {
+      const response = await groqCloudClient.chat.completions.create({
+        model: modelName,
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 3800,
+        temperature: 0.7,
+        response_format: { type: 'json_object' }
+      });
+
+      const content = response.choices?.[0]?.message?.content;
+      if (!content) {
+        throw new Error(`No Groq Cloud content returned from ${modelName}`);
+      }
+
+      return normalizeAiJson(content, rawJob);
+    } catch (err) {
+      lastErr = err;
+      if (isProviderConfigError(err) || err.status === 404 || err.status === 400 || String(err.message).includes('404')) {
+        logger.warn(`Groq Cloud model ${modelName} failed (${err.message}), trying next model candidate...`);
+        continue;
+      }
+      throw err;
+    }
   }
-
-  return normalizeAiJson(content, rawJob);
+  throw lastErr;
 };
 
 const formatCooldownRemaining = (disabledUntil) => {
