@@ -28,6 +28,7 @@ export type JobDetail = JobListItem & {
   status: string;
   sourceUrl: string;
   sourceName: string;
+  officialLink?: string; // AI-generated official portal link
 };
 
 export type Pagination = {
