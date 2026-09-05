@@ -2,6 +2,25 @@ import OpenAI from 'openai';
 import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 
+// Parse multiple Groq API keys (comma-separated)
+const groqCloudApiKeys = env.groqCloudApiKey 
+  ? env.groqCloudApiKey.split(',').map(k => k.trim()).filter(Boolean)
+  : [];
+let groqKeyIndex = 0; // Round-robin index
+
+// Create Groq client with rotation support
+const getGroqClient = () => {
+  if (groqCloudApiKeys.length === 0) return null;
+  
+  const apiKey = groqCloudApiKeys[groqKeyIndex];
+  groqKeyIndex = (groqKeyIndex + 1) % groqCloudApiKeys.length; // Rotate
+  
+  return new OpenAI({
+    apiKey,
+    baseURL: 'https://api.groq.com/openai/v1'
+  });
+};
+
 const client = env.openAiApiKey ? new OpenAI({ apiKey: env.openAiApiKey }) : null;
 const grokClient = env.grokApiKey
   ? new OpenAI({
@@ -13,12 +32,6 @@ const deepseekClient = env.deepseekApiKey
   ? new OpenAI({
     apiKey: env.deepseekApiKey,
     baseURL: env.deepseekBaseUrl || 'https://api.deepseek.com'
-  })
-  : null;
-const groqCloudClient = env.groqCloudApiKey
-  ? new OpenAI({
-    apiKey: env.groqCloudApiKey,
-    baseURL: 'https://api.groq.com/openai/v1'
   })
   : null;
 
@@ -714,6 +727,7 @@ const rewriteWithDeepseek = async (prompt, rawJob) => {
 };
 
 const rewriteWithGroqCloud = async (prompt, rawJob) => {
+  const groqCloudClient = getGroqClient();
   if (!groqCloudClient) {
     throw new Error('GROQ_CLOUD_API_KEY missing');
   }
