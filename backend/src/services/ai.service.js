@@ -593,17 +593,16 @@ const rewriteWithGemini = async (prompt, rawJob) => {
   }
 
   const geminiModels = [
-    env.geminiModel,
-    'gemini-1.5-flash',
-    'gemini-2.0-flash',
-    'gemini-1.5-pro',
-    'gemini-flash-latest'
+    'gemini-3.6-flash',
+    'gemini-3.7-flash',
+    'gemini-3.8-flash',
+    'gemini-3.5-flash'
   ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
   let lastErr = null;
   for (const modelName of geminiModels) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${env.geminiApiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${env.geminiApiKey}`;
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -633,7 +632,18 @@ const rewriteWithGemini = async (prompt, rawJob) => {
       return normalizeAiJson(content, rawJob);
     } catch (err) {
       lastErr = err;
-      if (isProviderConfigError(err) || err.status === 404 || err.status === 400 || String(err.message).includes('404') || String(err.message).includes('400')) {
+      // Skip to next model on config errors, 404s, 503s, or JSON parse errors
+      if (
+        isProviderConfigError(err) || 
+        err.status === 404 || 
+        err.status === 400 || 
+        err.status === 503 ||
+        String(err.message).includes('404') || 
+        String(err.message).includes('400') ||
+        String(err.message).includes('503') ||
+        String(err.message).includes('JSON') ||
+        String(err.message).includes('Unterminated')
+      ) {
         logger.warn(`Gemini model ${modelName} failed (${err.message}), trying next model candidate...`);
         continue;
       }
@@ -709,11 +719,10 @@ const rewriteWithGroqCloud = async (prompt, rawJob) => {
   }
 
   const groqModels = [
-    env.groqCloudModel,
-    'llama-3.3-70b-versatile',
-    'llama3-70b-8192',
-    'llama-3.1-8b-instant',
-    'mixtral-8x7b-32768'
+    'openai/gpt-oss-120b',     // Best available model (2026)
+    'openai/gpt-oss-20b',      // Smaller fallback
+    'groq/compound',           // Groq's compound model
+    'qwen/qwen3.6-27b'         // Alternative model
   ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
   let lastErr = null;
