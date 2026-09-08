@@ -21,6 +21,19 @@ const getGroqClient = () => {
   });
 };
 
+// Parse multiple Gemini API keys (comma-separated)
+const geminiApiKeys = env.geminiApiKey
+  ? env.geminiApiKey.split(',').map(k => k.trim()).filter(Boolean)
+  : [];
+let geminiKeyIndex = 0;
+
+const getGeminiApiKey = () => {
+  if (geminiApiKeys.length === 0) return null;
+  const apiKey = geminiApiKeys[geminiKeyIndex];
+  geminiKeyIndex = (geminiKeyIndex + 1) % geminiApiKeys.length;
+  return apiKey;
+};
+
 const client = env.openAiApiKey ? new OpenAI({ apiKey: env.openAiApiKey }) : null;
 const grokClient = env.grokApiKey
   ? new OpenAI({
@@ -601,7 +614,8 @@ const rewriteWithOpenAi = async (prompt, rawJob) => {
 };
 
 const rewriteWithGemini = async (prompt, rawJob) => {
-  if (!env.geminiApiKey) {
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
     throw new Error('GEMINI_API_KEY missing');
   }
 
@@ -615,7 +629,7 @@ const rewriteWithGemini = async (prompt, rawJob) => {
   let lastErr = null;
   for (const modelName of geminiModels) {
     try {
-      const url = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${env.geminiApiKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`;
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -799,7 +813,7 @@ export const rewriteJobWithAi = async (job) => {
     }
 
     // 2. Try Gemini (Free Tier 1,500 Requests/Day)
-    if (Date.now() >= geminiDisabledUntil && env.geminiApiKey) {
+    if (Date.now() >= geminiDisabledUntil && geminiApiKeys.length > 0) {
       try {
         const result = await rewriteWithGemini(prompt, job);
         logger.info('AI rewrite successful via Gemini', { title: job.title.slice(0, 50) });
