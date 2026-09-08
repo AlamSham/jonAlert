@@ -748,9 +748,10 @@ const rewriteWithGroqCloud = async (prompt, rawJob) => {
 
   const groqModels = [
     env.groqCloudModel,
-    'llama-3.3-70b-versatile',
-    'llama-3.1-8b-instant',
-    'mixtral-8x7b-32768'
+    'openai/gpt-oss-120b',
+    'groq/compound',
+    'qwen/qwen3.6-27b',
+    'openai/gpt-oss-20b'
   ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
   let lastErr = null;
@@ -760,8 +761,7 @@ const rewriteWithGroqCloud = async (prompt, rawJob) => {
         model: modelName,
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 3800,
-        temperature: 0.7,
-        response_format: { type: 'json_object' }
+        temperature: 0.7
       });
 
       const content = response.choices?.[0]?.message?.content;
