@@ -733,10 +733,10 @@ const rewriteWithGroqCloud = async (prompt, rawJob) => {
   }
 
   const groqModels = [
-    'openai/gpt-oss-120b',     // Best available model (2026)
-    'openai/gpt-oss-20b',      // Smaller fallback
-    'groq/compound',           // Groq's compound model
-    'qwen/qwen3.6-27b'         // Alternative model
+    env.groqCloudModel,
+    'llama-3.3-70b-versatile',
+    'llama-3.1-8b-instant',
+    'mixtral-8x7b-32768'
   ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
   let lastErr = null;
@@ -776,95 +776,100 @@ const formatCooldownRemaining = (disabledUntil) => {
 };
 
 export const rewriteJobWithAi = async (job) => {
-  if (!env.aiEnabled) {
-    logger.warn('AI disabled via AI_ENABLED=false, using upgraded 1200+ word local fallback generator');
+  try {
+    if (!env.aiEnabled) {
+      logger.warn('AI disabled via AI_ENABLED=false, using upgraded 1200+ word local fallback generator');
+      return fallbackTransform(job);
+    }
+
+    const prompt = buildPrompt(job);
+
+    // 1. Try Groq Cloud (Fastest & 100% Free Llama 3.3 70B AI)
+    if (Date.now() >= groqCloudDisabledUntil && groqCloudApiKeys.length > 0) {
+      try {
+        const result = await rewriteWithGroqCloud(prompt, job);
+        logger.info('AI rewrite successful via Groq Cloud (Free Llama 3.3 70B)', { title: job.title.slice(0, 50) });
+        return result;
+      } catch (error) {
+        if (isQuotaError(error) || isAuthError(error)) {
+          groqCloudDisabledUntil = Date.now() + 15 * 60 * 1000;
+        }
+        logger.error('Groq Cloud generation failed, trying Gemini fallback', { error: error.message });
+      }
+    }
+
+    // 2. Try Gemini (Free Tier 1,500 Requests/Day)
+    if (Date.now() >= geminiDisabledUntil && env.geminiApiKey) {
+      try {
+        const result = await rewriteWithGemini(prompt, job);
+        logger.info('AI rewrite successful via Gemini', { title: job.title.slice(0, 50) });
+        return result;
+      } catch (error) {
+        if (isQuotaError(error)) {
+          const cooldownMs = Math.max(1, env.geminiQuotaCooldownMinutes) * 60 * 1000;
+          geminiDisabledUntil = Date.now() + cooldownMs;
+          logger.warn('Gemini quota/rate limit reached, switching fallback');
+        } else if (isAuthError(error)) {
+          geminiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
+          logger.error('Gemini auth failed, disabling for 12h');
+        } else {
+          logger.error('Gemini generation failed, trying OpenAI/DeepSeek fallbacks', { error: error.message });
+        }
+      }
+    }
+
+    // 3. Try OpenAI (if key and credits available)
+    if (Date.now() >= openAiDisabledUntil && client) {
+      try {
+        const result = await rewriteWithOpenAi(prompt, job);
+        logger.info('AI rewrite successful via OpenAI', { title: job.title.slice(0, 50) });
+        return result;
+      } catch (error) {
+        if (isQuotaError(error)) {
+          const cooldownMs = Math.max(1, env.aiQuotaCooldownMinutes) * 60 * 1000;
+          openAiDisabledUntil = Date.now() + cooldownMs;
+          logger.warn('OpenAI quota/rate limit reached, switching fallback');
+        } else if (isAuthError(error)) {
+          openAiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
+          logger.error('OpenAI auth failed, disabling for 12h');
+        } else {
+          logger.error('OpenAI generation failed, trying fallbacks', { error: error.message });
+        }
+      }
+    }
+
+    // 4. Try DeepSeek
+    if (Date.now() >= deepseekDisabledUntil && deepseekClient) {
+      try {
+        const result = await rewriteWithDeepseek(prompt, job);
+        logger.info('AI rewrite successful via DeepSeek', { title: job.title.slice(0, 50) });
+        return result;
+      } catch (error) {
+        logger.error('DeepSeek generation failed, falling back to local engine', { error: error.message });
+      }
+    }
+
+    // 5. Try Grok
+    if (Date.now() >= grokDisabledUntil && grokClient) {
+      try {
+        const result = await rewriteWithGrok(prompt, job);
+        logger.info('AI rewrite successful via Grok', { title: job.title.slice(0, 50) });
+        return result;
+      } catch (error) {
+        if (isQuotaError(error)) {
+          const cooldownMs = Math.max(1, env.grokQuotaCooldownMinutes) * 60 * 1000;
+          grokDisabledUntil = Date.now() + cooldownMs;
+        } else {
+          logger.error('Grok generation failed, trying fallbacks', { error: error.message });
+        }
+      }
+    }
+
+    // All AI providers exhausted — use upgraded 1200+ word local fallback
+    logger.warn('AI providers exhausted/cooldown, using upgraded 1200+ word local fallback generator');
+    return fallbackTransform(job);
+  } catch (outerErr) {
+    logger.error('Unexpected error in rewriteJobWithAi, safely falling back to local engine', { error: outerErr.message });
     return fallbackTransform(job);
   }
-
-  const prompt = buildPrompt(job);
-
-  // 1. Try Groq Cloud (Fastest & 100% Free Llama 3.3 70B AI)
-  if (Date.now() >= groqCloudDisabledUntil && groqCloudClient) {
-    try {
-      const result = await rewriteWithGroqCloud(prompt, job);
-      logger.info('AI rewrite successful via Groq Cloud (Free Llama 3.3 70B)', { title: job.title.slice(0, 50) });
-      return result;
-    } catch (error) {
-      if (isQuotaError(error)) {
-        groqCloudDisabledUntil = Date.now() + 15 * 60 * 1000;
-      }
-      logger.error('Groq Cloud generation failed, trying Gemini fallback', { error: error.message });
-    }
-  }
-
-  // 2. Try Gemini (Free Tier 1,500 Requests/Day)
-  if (Date.now() >= geminiDisabledUntil && env.geminiApiKey) {
-    try {
-      const result = await rewriteWithGemini(prompt, job);
-      logger.info('AI rewrite successful via Gemini', { title: job.title.slice(0, 50) });
-      return result;
-    } catch (error) {
-      if (isQuotaError(error)) {
-        const cooldownMs = Math.max(1, env.geminiQuotaCooldownMinutes) * 60 * 1000;
-        geminiDisabledUntil = Date.now() + cooldownMs;
-        logger.warn('Gemini quota/rate limit reached, switching fallback');
-      } else if (isAuthError(error)) {
-        geminiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
-        logger.error('Gemini auth failed, disabling for 12h');
-      } else {
-        logger.error('Gemini generation failed, trying OpenAI/DeepSeek fallbacks', { error: error.message });
-      }
-    }
-  }
-
-  // 3. Try OpenAI (if key and credits available)
-  if (Date.now() >= openAiDisabledUntil && client) {
-    try {
-      const result = await rewriteWithOpenAi(prompt, job);
-      logger.info('AI rewrite successful via OpenAI', { title: job.title.slice(0, 50) });
-      return result;
-    } catch (error) {
-      if (isQuotaError(error)) {
-        const cooldownMs = Math.max(1, env.aiQuotaCooldownMinutes) * 60 * 1000;
-        openAiDisabledUntil = Date.now() + cooldownMs;
-        logger.warn('OpenAI quota/rate limit reached, switching fallback');
-      } else if (isAuthError(error)) {
-        openAiDisabledUntil = Date.now() + CONFIG_ERROR_COOLDOWN_MS;
-        logger.error('OpenAI auth failed, disabling for 12h');
-      } else {
-        logger.error('OpenAI generation failed, trying fallbacks', { error: error.message });
-      }
-    }
-  }
-
-  // 4. Try DeepSeek
-  if (Date.now() >= deepseekDisabledUntil && deepseekClient) {
-    try {
-      const result = await rewriteWithDeepseek(prompt, job);
-      logger.info('AI rewrite successful via DeepSeek', { title: job.title.slice(0, 50) });
-      return result;
-    } catch (error) {
-      logger.error('DeepSeek generation failed, falling back to local engine', { error: error.message });
-    }
-  }
-
-  // 5. Try Grok
-  if (Date.now() >= grokDisabledUntil && grokClient) {
-    try {
-      const result = await rewriteWithGrok(prompt, job);
-      logger.info('AI rewrite successful via Grok', { title: job.title.slice(0, 50) });
-      return result;
-    } catch (error) {
-      if (isQuotaError(error)) {
-        const cooldownMs = Math.max(1, env.grokQuotaCooldownMinutes) * 60 * 1000;
-        grokDisabledUntil = Date.now() + cooldownMs;
-      } else {
-        logger.error('Grok generation failed, trying fallbacks', { error: error.message });
-      }
-    }
-  }
-
-  // All AI providers exhausted — use upgraded 1200+ word local fallback
-  logger.warn('AI providers exhausted/cooldown, using upgraded 1200+ word local fallback generator');
-  return fallbackTransform(job);
 };
