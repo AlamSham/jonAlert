@@ -12,7 +12,7 @@ import {
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = 14400;
+export const revalidate = 300; // Background ISR revalidation every 5 minutes
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams;

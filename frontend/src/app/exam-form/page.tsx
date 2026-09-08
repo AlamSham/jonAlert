@@ -12,7 +12,7 @@ import {
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = 14400;
+export const revalidate = 600; // Background ISR revalidation every 10 minutes
 
 export const metadata: Metadata = {
   title: 'Exam Form — Latest Application Forms & Registration 2026',

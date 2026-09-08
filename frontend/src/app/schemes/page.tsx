@@ -12,7 +12,7 @@ import {
 import { FAQItem } from '@/lib/internal-links';
 import { SchemeListItem } from '@/lib/types';
 
-export const revalidate = 14400;
+export const revalidate = 1800; // Background ISR revalidation every 30 minutes
 
 type Props = { searchParams: Promise<{ page?: string }> };
 

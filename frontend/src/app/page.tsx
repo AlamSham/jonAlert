@@ -15,7 +15,7 @@ import { AdSlot } from '@/components/AdSlot';
 import { getTopStateLinks } from '@/lib/internal-links';
 import { CATEGORY_EMOJI } from '@/lib/types';
 
-export const revalidate = false; // Pure On-Demand revalidation ONLY via /api/revalidate (No timer-based revalidation)
+export const revalidate = 300; // Background ISR revalidation every 5 minutes + On-Demand webhook support
 
 export default async function HomePage() {
   const [

@@ -6,7 +6,7 @@ import { Breadcrumb } from '@/components/Breadcrumb';
 import { SearchForm } from '@/components/SearchForm';
 import { breadcrumbJsonLd } from '@/lib/seo';
 
-export const revalidate = false; // Pure On-Demand revalidation ONLY (No timer-based revalidation)
+export const revalidate = 300; // Background ISR revalidation every 5 minutes
 
 type Props = { searchParams: Promise<{ q?: string }> };
 

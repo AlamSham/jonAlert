@@ -8,7 +8,7 @@ import { FAQ } from '@/components/FAQ';
 import { breadcrumbJsonLd, generateCollectionPageSchema } from '@/lib/seo';
 import { ORG_SEO_DATA } from '@/lib/org-seo-data';
 
-export const revalidate = false; // Pure On-Demand revalidation ONLY
+export const revalidate = 600; // Background ISR revalidation every 10 minutes
 
 type Props = {
   params: Promise<{ orgSlug: string }>;

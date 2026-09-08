@@ -13,7 +13,7 @@ import {
 } from '@/lib/seo';
 import { FAQItem } from '@/lib/internal-links';
 
-export const revalidate = false; // Pure On-Demand revalidation ONLY (No timer-based revalidation)
+export const revalidate = 300; // Background ISR revalidation every 5 minutes
 
 type Props = { searchParams: Promise<{ page?: string }> };
 
