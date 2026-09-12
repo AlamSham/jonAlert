@@ -39,8 +39,13 @@ export const helmetMiddleware = helmet({
 
 export const rateLimitMiddleware = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 5000, // Drastically increased limit
   skip: (req) => {
+    // Completely skip rate limiting for all GET, HEAD, and OPTIONS requests (browsing, crawlers, frontend SSR/ISR)
+    if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
+      return true;
+    }
+
     // Skip rate limiting for local loopback connections or if a secret bypass key matches
     const ip = req.ip || '';
     const bypassKey = req.headers['x-api-bypass-key'];

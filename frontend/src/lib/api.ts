@@ -44,18 +44,16 @@ async function fetchWithRetry(
       const response = await fetch(url, mergedOptions);
 
       if (response.status === 429) {
-        if (typeof window === 'undefined') {
-          return response;
-        }
         attempt++;
         if (attempt >= retries) {
           console.error(`[API Rate Limit 429] Max retries reached for ${url}`);
           return response;
         }
+        const waitTime = typeof window === 'undefined' ? 500 * attempt : delayMs;
         console.warn(
-          `[API Rate Limit 429] Retrying ${url} (attempt ${attempt}/${retries}) in ${delayMs}ms...`
+          `[API Rate Limit 429] Retrying ${url} (attempt ${attempt}/${retries}) in ${waitTime}ms...`
         );
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        await new Promise((resolve) => setTimeout(resolve, waitTime));
         delayMs *= 2; // Exponential backoff
         continue;
       }
@@ -128,20 +126,18 @@ export async function getJobsByState(state: string, page = 1, limit = 20, catego
 }
 
 export async function getJobBySlug(slug: string): Promise<JobDetail | null> {
-  try {
-    const baseUrl = getBackendUrl();
-    const response = await fetchWithRetry(`${baseUrl}/api/jobs/${slug}`, {
-      next: { revalidate: 86400 },
-    });
+  const baseUrl = getBackendUrl();
+  const response = await fetchWithRetry(`${baseUrl}/api/jobs/${slug}`, {
+    next: { revalidate: 86400 },
+  });
 
-    if (response.status === 404) return null;
-    if (!response.ok) return null;
-
-    const data = (await response.json()) as { data: JobDetail };
-    return data.data;
-  } catch {
-    return null;
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    throw new Error(`[API Error] Failed to fetch job ${slug}: HTTP ${response.status}`);
   }
+
+  const data = (await response.json()) as { data: JobDetail };
+  return data.data;
 }
 
 export async function getTrendingJobs(limit = 6): Promise<JobListItem[]> {

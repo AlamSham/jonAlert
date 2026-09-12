@@ -31,3 +31,4 @@ frontend/out/
 !package-lock.json
 !tsconfig.json
 !**/data/*.json
+*.xlsx
