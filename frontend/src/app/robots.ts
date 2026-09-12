@@ -22,8 +22,20 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/', '/private/'],
       },
       {
-        userAgent: ['GPTBot', 'ClaudeBot', 'ChatGPT-User', 'OAI-SearchBot', 'PerplexityBot'],
-        allow: '/',
+        userAgent: [
+          'GPTBot',
+          'ChatGPT-User',
+          'OAI-SearchBot',
+          'ClaudeBot',
+          'PerplexityBot',
+          'Google-Extended',
+          'GoogleOther',
+          'Applebot-Extended',
+          'Amazonbot',
+          'meta-externalagent',
+          'cohere-ai',
+        ],
+        allow: ['/', '/llms.txt', '/llms-full.txt'],
         disallow: ['/api/', '/admin/', '/private/'],
       },
       {
@@ -31,7 +43,16 @@ export default function robots(): MetadataRoute.Robots {
         disallow: '/',
       },
     ],
-    sitemap: [`${siteUrl}/sitemap.xml`, `${siteUrl}/sitemap-index.xml`],
+    sitemap: [
+      `${siteUrl}/sitemap.xml`,
+      `${siteUrl}/sitemap-index.xml`,
+      `${siteUrl}/sitemap-jobs.xml`,
+      `${siteUrl}/sitemap-results.xml`,
+      `${siteUrl}/sitemap-schemes.xml`,
+      `${siteUrl}/sitemap-states.xml`,
+      `${siteUrl}/sitemap-categories.xml`,
+      `${siteUrl}/sitemap-static.xml`,
+    ],
   };
 }
 
