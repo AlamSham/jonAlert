@@ -117,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PwaInstallPrompt />
         <WebVitals />
         {process.env.VERCEL && <Analytics />}
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-KEQLLZWFJJ'} />
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-F5ZVMQY48M'} />
         <ThirdPartyScripts />
         <Script
           async
