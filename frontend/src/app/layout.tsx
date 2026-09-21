@@ -6,7 +6,6 @@ import { NewsTicker } from '@/components/NewsTicker';
 import { Footer } from '@/components/Footer';
 import { websiteJsonLd, organizationJsonLd, siteNavigationJsonLd } from '@/lib/seo';
 import { BackToTop } from '@/components/BackToTop';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from '@vercel/analytics/react';
 import { WebVitals } from '@/components/WebVitals';
 import { ThirdPartyScripts } from '@/components/ThirdPartyScripts';
@@ -94,6 +93,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="google-adsense-account" content="ca-pub-4518508932731576" />
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-F5ZVMQY48M"
+        />
+        <script
+          id="google-tag-analytics"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-F5ZVMQY48M');
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
@@ -117,7 +132,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PwaInstallPrompt />
         <WebVitals />
         {process.env.VERCEL && <Analytics />}
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || 'G-F5ZVMQY48M'} />
         <ThirdPartyScripts />
         <Script
           async
