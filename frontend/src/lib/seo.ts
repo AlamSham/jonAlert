@@ -186,7 +186,7 @@ function buildJobBaseSalary(job: JobDetail) {
   };
 }
 
-function truncateTitle(title: string, maxLength = 68) {
+function truncateTitle(title: string, maxLength = 54) {
   if (title.length <= maxLength) return title;
   return `${title.slice(0, maxLength - 3).trim()}...`;
 }
@@ -404,62 +404,70 @@ export function categoryMeta(category: string) {
   };
 }
 
+/**
+ * Clean up conversational Hinglish, clickbait fillers, and redundant text from job titles
+ * to maintain high credibility and search engine CTR.
+ */
+function sanitizeJobTitle(rawTitle: string): string {
+  let t = cleanText(rawTitle);
+  // Clean conversational fillers
+  t = t.replace(/\s*(?:ka\s+age\s+limit\s+bada|age\s+limit\s+bada)\s*/gi, ' (Age Limit Relaxed) ');
+  t = t.replace(/\s*(?:ke\s+liye\s+bharti\s+ka\s+mauka|bharti\s+ka\s+mauka)\s*/gi, ' Bharti ');
+  t = t.replace(/\s*(?:sab\s+details|puri\s+jaankari|full\s+details)\s*/gi, ' Notification ');
+  t = t.replace(/\s*pw\s+sarkari\s+nau\w*\s*/gi, ' ');
+  t = t.replace(/\s*-\s*apply\s+now\s*/gi, ' ');
+  t = t.replace(/\s*apply\s+now\s*/gi, ' ');
+  t = t.replace(/\s*-\s*sarkaripulse\s*/gi, ' ');
+  t = t.replace(/\s{2,}/g, ' ').trim();
+  return t;
+}
+
 export function generateJobPageTitle(job: JobDetail): string {
   try {
     const providedTitle = cleanText(job.metaTitle);
-    if (providedTitle && providedTitle.length <= 68) return providedTitle;
+    if (providedTitle && providedTitle.length <= 54) return providedTitle;
 
-    const title = cleanText(job.title || 'Job Notification');
+    const baseTitle = sanitizeJobTitle(job.title || 'Job Notification');
     const currentYear = new Date().getFullYear();
 
-    // Build data-rich suffix parts (vacancy + salary + urgency = highest CTR)
-    const dataParts: string[] = [];
-
-    if (job.vacancyCount && job.vacancyCount > 0) {
-      dataParts.push(`${job.vacancyCount.toLocaleString()} Posts`);
+    // High-CTR action suffix based on category
+    let actionSuffix = `Apply Online ${currentYear}`;
+    if (job.category === 'result') {
+      actionSuffix = `Result OUT ${currentYear}`;
+    } else if (job.category === 'admit-card') {
+      actionSuffix = `Admit Card Download ${currentYear}`;
+    } else if (job.category === 'admission') {
+      actionSuffix = `Admission Open ${currentYear}`;
+    } else if (job.category === 'scholarship') {
+      actionSuffix = `Scholarship Apply ${currentYear}`;
+    } else if (job.category === 'exam-form') {
+      actionSuffix = `Online Form ${currentYear}`;
     }
 
-    // Salary in title = major CTR driver (users search "SSC CGL salary")
-    if (job.salary && job.salary.length < 25) {
-      const salaryShort = job.salary.replace(/per\s*month/i, 'PM').replace(/as per government rules.*/i, '').trim();
-      if (salaryShort && salaryShort.length < 20 && !/as per/i.test(salaryShort)) {
-        dataParts.push(salaryShort);
-      }
-    }
-
-    if (job.lastDate) {
+    // Check last date urgency (high CTR driver)
+    if (job.lastDate && (job.category === 'job' || !job.category)) {
       const ld = new Date(job.lastDate);
       if (!isNaN(ld.getTime())) {
         const now = new Date();
         const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         if (daysLeft > 0 && daysLeft <= 3) {
-          dataParts.push(`Aaj Hi Apply Karo!`);
+          actionSuffix = `Last 3 Days to Apply`;
         } else if (daysLeft > 3 && daysLeft <= 7) {
-          dataParts.push(`Jaldi Karo! ${daysLeft} Din Baaki`);
-        } else if (daysLeft > 7 && daysLeft <= 30) {
-          dataParts.push(`Last Date ${ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`);
+          actionSuffix = `Apply Online (Last Date Soon)`;
         }
       }
     }
 
-    // Category-specific suffix (NO emojis — Google SERPs don't render them)
-    const dataStr = dataParts.length > 0 ? dataParts.join(' | ') : '';
-    const suffixByCategory: Record<string, string> = {
-      job: [dataStr, `Apply Online ${currentYear}`].filter(Boolean).join(' | '),
-      result: `Result OUT ${currentYear} - Merit List, Cut Off`,
-      'admit-card': `Admit Card Download ${currentYear} - Hall Ticket`,
-      admission: [dataStr, `Admission ${currentYear} - Registration Open`].filter(Boolean).join(' | '),
-      scholarship: [dataStr, `Scholarship ${currentYear} - Apply Now`].filter(Boolean).join(' | '),
-      'exam-form': [`Application Form ${currentYear}`, dataStr].filter(Boolean).join(' | '),
-    };
+    // If the base title already includes actionSuffix, don't duplicate
+    if (new RegExp(actionSuffix, 'i').test(baseTitle)) {
+      return truncateTitle(baseTitle, 54);
+    }
 
-    const suffix = suffixByCategory[job.category] || `Notification ${currentYear}`;
-    const optimizedTitle = `${title} — ${suffix}`;
-
-    return truncateTitle(optimizedTitle);
+    const optimizedTitle = `${baseTitle} — ${actionSuffix}`;
+    return truncateTitle(optimizedTitle, 54);
   } catch (error) {
     console.error('Title generation failed:', error);
-    return job.title || 'Job Notification';
+    return truncateTitle(job.title || 'Job Notification', 54);
   }
 }
 
@@ -467,29 +475,36 @@ export function generateJobPageTitle(job: JobDetail): string {
 export function generateJobMetaDescription(job: JobDetail): string {
   try {
     if (!job || !job.title) {
-      return 'Latest government job notification and sarkari naukri updates.';
+      return 'Latest Sarkari Job 2026 notification: eligibility, vacancy count, last date aur apply online direct link.';
     }
 
     const organization = job.organization || '';
-    
-    // Build data-rich components
     const parts: string[] = [];
-    
-    // Organization + Title (NO emojis — Google strips them, wasting chars)
-    const orgText = organization ? `${organization}: ` : '';
-    parts.push(`${orgText}${job.title}.`);
-    
-    // Vacancy count (if available) — users search for this
-    if (job.vacancyCount && job.vacancyCount > 0) {
-      parts.push(`${job.vacancyCount.toLocaleString()} vacancies available.`);
+
+    // Title & Organization
+    const titleText = sanitizeJobTitle(job.title);
+    if (organization && !titleText.toLowerCase().includes(organization.toLowerCase())) {
+      parts.push(`${organization}: ${titleText}.`);
+    } else {
+      parts.push(`${titleText}.`);
     }
-    
-    // Salary (if available) — high CTR driver
+
+    // Vacancy count
+    if (job.vacancyCount && job.vacancyCount > 0) {
+      parts.push(`Total ${job.vacancyCount.toLocaleString()} Vacancies.`);
+    }
+
+    // Qualification
+    if (job.qualificationLevel && job.qualificationLevel !== 'any') {
+      parts.push(`Eligibility: ${job.qualificationLevel.toUpperCase()} Pass.`);
+    }
+
+    // Salary
     if (job.salary && !/as per/i.test(job.salary)) {
       parts.push(`Salary: ${job.salary}.`);
     }
-    
-    // Last date with urgency (text-only, no emoji)
+
+    // Last date with urgency
     if (job.lastDate) {
       const ld = new Date(job.lastDate);
       if (!isNaN(ld.getTime())) {
@@ -497,37 +512,32 @@ export function generateJobMetaDescription(job: JobDetail): string {
         const daysLeft = Math.ceil((ld.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         const formattedDate = ld.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
         if (daysLeft > 0 && daysLeft <= 5) {
-          parts.push(`Jaldi karo — sirf ${daysLeft} din baaki!`);
-        } else if (daysLeft > 5 && daysLeft <= 15) {
+          parts.push(`Last Date: ${formattedDate} (Sirf ${daysLeft} din baaki!).`);
+        } else if (daysLeft > 5 && daysLeft <= 30) {
           parts.push(`Last Date: ${formattedDate}.`);
         }
       }
     }
-    
-    // Qualification (if available)
-    if (job.qualificationLevel && job.qualificationLevel !== 'any') {
-      parts.push(`${job.qualificationLevel.toUpperCase()} pass eligible.`);
-    }
-    
-    // CTA — actionable, no emojis
-    parts.push('Complete details, eligibility aur apply link yahan.');
-    
+
+    // High-CTR Call to Action
+    parts.push('Notification PDF, eligibility details aur direct apply link yahan check karein.');
+
     let description = parts.join(' ');
 
-    // Ensure length is between 140-160 characters
+    // Ensure ideal snippet length (140-160 characters)
     if (description.length > 160) {
       description = description.slice(0, 157) + '...';
     } else if (description.length < 130) {
-      description += ' SarkariPulse par sabse pehle update paayein.';
+      description += ' SarkariPulse par latest updates paayein.';
       if (description.length > 160) {
         description = description.slice(0, 160);
       }
     }
-    
+
     return description;
   } catch (error) {
     console.error('Meta description generation failed:', error);
-    return job.metaDescription || (job.summary && job.summary.slice(0, 160)) || 'Latest sarkari job notification';
+    return job.metaDescription || (job.summary && job.summary.slice(0, 160)) || 'Latest sarkari job 2026 notification & apply online link.';
   }
 }
 

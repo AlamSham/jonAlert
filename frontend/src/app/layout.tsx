@@ -22,19 +22,21 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Latest Sarkari Naukri 2026 - UPSC, SSC, Railway Jobs | SarkariPulse',
+    default: 'Sarkari Job 2026: Latest Sarkari Naukri, Govt Jobs, Results & Admit Card | SarkariPulse',
     template: '%s | SarkariPulse',
   },
   description:
-    'Latest Sarkari Naukri 2026 alerts for UPSC, SSC, Railway, Police & Banking jobs. Get admit cards, results, scholarship updates. Regularly updated!',
+    'Sarkari Job 2026 alerts for UPSC, SSC, Railway, Police & Banking jobs. Get latest sarkari naukri notifications, admit cards, exam results & apply online links.',
   keywords: [
+    'sarkari job',
+    'sarkari job 2026',
     'sarkari naukri',
-    'government jobs',
+    'sarkari naukri 2026',
+    'latest sarkari job',
+    'government jobs 2026',
+    'govt job vacancy 2026',
     'sarkari result',
     'admit card',
-    'sarkari naukri 2026',
-    'govt jobs 2026',
-    'latest sarkari naukri',
     'sarkari yojana',
   ],
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://sarkaripulse.net'),
@@ -52,21 +54,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'hi_IN',
     siteName: 'SarkariPulse',
-    title: 'SarkariPulse — Latest Sarkari Naukri, Result, Admit Card',
-    description: 'Latest sarkari job alerts verified by our editorial team. UPSC, SSC, Railway, State jobs sab ek jagah.',
+    title: 'Sarkari Job 2026 — Latest Sarkari Naukri, Results, Admit Card',
+    description: 'Sarkari Job 2026: Latest sarkari naukri alerts, UPSC, SSC, Railway, State govt jobs, results & online application links verified by our team.',
     images: [
       {
         url: '/logo.jpg',
         width: 1024,
         height: 1024,
-        alt: 'SarkariPulse - Latest Sarkari Naukri Updates',
+        alt: 'SarkariPulse - Latest Sarkari Job & Naukri Updates',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'SarkariPulse — Sarkari Naukri Updates',
-    description: 'Latest govt jobs, results, admit cards — regularly updated by our team.',
+    title: 'Sarkari Job 2026 — Latest Sarkari Naukri Updates',
+    description: 'Latest sarkari job alerts, results & admit cards — regularly updated by our team.',
     images: ['/logo.jpg'],
   },
   icons: {

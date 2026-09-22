@@ -76,7 +76,7 @@ export default async function HomePage() {
       <section className="hero-gradient py-10 sm:py-14" id="hero">
         <div className="container-wrap text-center">
           <h1 className="text-3xl font-black tracking-tight text-ink sm:text-4xl lg:text-5xl">
-            Latest Sarkari Naukri 2026 & <span className="gradient-text">Sarkari Result</span>
+            Sarkari Job 2026: <span className="gradient-text">Latest Sarkari Naukri</span> & Result
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted sm:text-base leading-relaxed">
             UPSC, SSC, Railway, Police, Banking, State Govt Jobs — latest sarkari naukri, admission, scholarship, results aur admit cards ek jagah.

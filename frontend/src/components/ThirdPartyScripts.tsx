@@ -38,7 +38,7 @@ export function ThirdPartyScripts() {
         'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js'
       );
 
-      const appId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID;
+      const appId = process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID || 'd7bcc5a4-76ef-49de-ac25-c8d9a489e051';
       if (!appId) {
         return;
       }
@@ -48,6 +48,25 @@ export function ThirdPartyScripts() {
         await OneSignal.init({
           appId,
           notifyButton: { enable: true },
+          promptOptions: {
+            slidedown: {
+              prompts: [
+                {
+                  type: 'push',
+                  autoPrompt: true,
+                  text: {
+                    actionMessage: 'Govt Jobs, Admit Card & Result ka sabse pehle alert paane ke liye Allow karein! 🔔',
+                    acceptButton: 'Allow Alerts',
+                    cancelButton: 'Baad Me',
+                  },
+                  delay: {
+                    pageViews: 1,
+                    timeDelay: 3,
+                  },
+                },
+              ],
+            },
+          },
         });
       });
     };
