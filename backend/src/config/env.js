@@ -49,7 +49,11 @@ export const env = {
   sitemapCacheTtl: Number(process.env.SITEMAP_CACHE_TTL || 3600),
   structuredDataCacheTtl: Number(process.env.STRUCTURED_DATA_CACHE_TTL || 3600),
   metaTagCacheTtl: Number(process.env.META_TAG_CACHE_TTL || 1800),
-  enableSeoValidation: (process.env.ENABLE_SEO_VALIDATION || 'true').toLowerCase() === 'true'
+  enableSeoValidation: (process.env.ENABLE_SEO_VALIDATION || 'true').toLowerCase() === 'true',
+  // OneSignal Push Notification Configuration
+  oneSignalAppId: process.env.ONESIGNAL_APP_ID || '',
+  oneSignalApiKey: process.env.ONESIGNAL_REST_API_KEY || '',
+  oneSignalEnabled: (process.env.ONESIGNAL_ENABLED || 'true').toLowerCase() === 'true'
 };
 
 export const validateEnv = () => {

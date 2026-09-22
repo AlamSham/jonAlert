@@ -5,6 +5,7 @@ import { sendTelegramMessage, buildJobNotificationMessage } from './telegram.ser
 import { enqueueFacebookJobPost } from './facebook.service.js';
 import { notifyNewJob } from './googleIndexing.service.js';
 import { triggerFrontendRevalidate } from '../utils/revalidateFrontend.js';
+import { sendOneSignalJobNotification } from './onesignal.service.js';
 import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 import crypto from 'node:crypto';
@@ -190,6 +191,14 @@ export const processAndSaveJob = async (rawJob) => {
   // Trigger Frontend On-Demand ISR Revalidation
   triggerFrontendRevalidate({ slug: saved.slug, category: saved.category }).catch(error => {
     logger.error('Frontend revalidation trigger failed (non-blocking)', {
+      slug: saved.slug,
+      error: error.message
+    });
+  });
+
+  // Automated Web Push Notification via OneSignal
+  sendOneSignalJobNotification(saved).catch(error => {
+    logger.error('OneSignal push notification failed (non-blocking)', {
       slug: saved.slug,
       error: error.message
     });
