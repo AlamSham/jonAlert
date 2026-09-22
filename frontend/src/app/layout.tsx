@@ -12,6 +12,7 @@ import { ThirdPartyScripts } from '@/components/ThirdPartyScripts';
 import { MobileStickySocial } from '@/components/MobileStickySocial';
 import { PwaInstallPrompt } from '@/components/PwaInstallPrompt';
 
+import { GoogleAnalytics } from '@next/third-parties/google';
 import Script from 'next/script';
 
 const inter = Inter({
@@ -92,25 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="hi" className={inter.variable}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <meta name="google-adsense-account" content="ca-pub-4518508932731576" />
-        {/* Google tag (gtag.js) */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-F5ZVMQY48M"
-        />
-        <script
-          id="google-tag-analytics"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-F5ZVMQY48M');
-            `,
-          }}
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
@@ -134,12 +117,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <PwaInstallPrompt />
         <WebVitals />
         {process.env.VERCEL && <Analytics />}
+        <GoogleAnalytics gaId="G-F5ZVMQY48M" />
         <ThirdPartyScripts />
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4518508932731576"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>

@@ -37,11 +37,10 @@ body {
     line-height: 1.5 !important;
   }
 
-  /* Mobile text: maintain heading hierarchy for SEO (Google uses heading sizes) */
-  /* Base text at 14px, but headings get progressively larger */
-  p, span, div, input, button, a {
-    font-size: 14px !important;
-    line-height: 1.6 !important;
+  /* Base text at 14px via inheritance without forced recalculation */
+  body {
+    font-size: 14px;
+    line-height: 1.6;
   }
 
   h1 {

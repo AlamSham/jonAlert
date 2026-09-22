@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
@@ -40,12 +41,13 @@ export function Header() {
     <header className="sticky top-0 z-50 glass border-b border-stone-200/60">
       <div className="container-wrap flex items-center justify-between py-3">
         <Link href="/" className="flex items-center gap-2 group shrink-0" id="header-logo">
-          <img
+          <Image
             src="/logo.jpg"
             alt="SarkariPulse logo"
             width={36}
             height={36}
             className="h-9 w-9 rounded-xl object-cover shadow-sm"
+            priority
           />
           <span className="text-xl font-black tracking-tight whitespace-nowrap">
             Sarkari<span className="text-accent">Pulse</span>
