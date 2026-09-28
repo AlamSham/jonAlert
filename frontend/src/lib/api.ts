@@ -131,7 +131,8 @@ export async function getJobBySlug(slug: string): Promise<JobDetail | null> {
     next: { revalidate: 86400 },
   });
 
-  if (response.status === 404) return null;
+  // Return null for 404 (Not Found) or 400 (Invalid slug/scanners probing e.g. .env)
+  if (response.status === 404 || response.status === 400) return null;
   if (!response.ok) {
     throw new Error(`[API Error] Failed to fetch job ${slug}: HTTP ${response.status}`);
   }
