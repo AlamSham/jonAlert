@@ -14,6 +14,7 @@ const nextConfig = {
   compress: true, // Enable gzip compression
   poweredByHeader: false, // Remove X-Powered-By header
   reactStrictMode: true, // Enable React strict mode
+  cacheMaxMemorySize: 0, // Disable Next.js in-memory LRU cache to prevent memory bloat on Cloud Run
 
   // Image optimization
   images: {
