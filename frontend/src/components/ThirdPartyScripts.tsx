@@ -26,13 +26,7 @@ export function ThirdPartyScripts() {
     // Defer script loading until after page is interactive
     // This improves FCP and LCP scores significantly
     const loadScripts = () => {
-      // Monetag In-Page Push (Zone: 11552173)
-      appendScript(
-        'monetag-inpage-push',
-        'https://nap5k.com/tag.min.js',
-        { 'data-zone': '11552173' }
-      );
-
+      // OneSignal Web Push SDK
       appendScript(
         ONESIGNAL_SCRIPT_ID,
         'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js'

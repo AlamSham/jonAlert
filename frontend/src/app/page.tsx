@@ -102,7 +102,7 @@ export default async function HomePage() {
           schemes={latestSchemes}
         />
 
-        {/* High-Converting Monetag Native Sponsored Banner */}
+        {/* Google AdSense In-Feed / Display Banner */}
         <AdSlot />
 
         {/* Stats */}
