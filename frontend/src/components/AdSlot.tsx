@@ -53,6 +53,11 @@ export function AdSlot({
           ? 'rounded-2xl border border-indigo-100 bg-indigo-50/20 p-2 sm:p-3'
           : 'rounded-2xl border border-stone-200/70 bg-stone-50/40 p-2 sm:p-3'
       } ${className}`}
+      style={{
+        // Reserve space to prevent CLS (Cumulative Layout Shift)
+        minHeight: format === 'rectangle' ? '280px' : format === 'horizontal' ? '100px' : '120px',
+        contain: 'layout',
+      }}
     >
       <div className="mb-1 text-[9px] uppercase tracking-widest text-stone-400 font-semibold select-none">
         Advertisement
@@ -67,4 +72,5 @@ export function AdSlot({
       />
     </div>
   );
+
 }

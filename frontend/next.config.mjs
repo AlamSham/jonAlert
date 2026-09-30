@@ -58,6 +58,21 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
+      {
+        // HTML pages: short cache + stale-while-revalidate for instant serving
+        // CDN serves stale content instantly while refreshing in background
+        source: '/((?!api|_next|.*\\.).*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=600' },
+        ],
+      },
+      {
+        // Preconnect to critical third-party origins for faster LCP
+        source: '/(.*)',
+        headers: [
+          { key: 'Link', value: '<https://sarkaripulse-61255565662.asia-south2.run.app>; rel=preconnect, <https://fonts.googleapis.com>; rel=preconnect, <https://fonts.gstatic.com>; rel=preconnect; crossorigin, <https://pagead2.googlesyndication.com>; rel=dns-prefetch' },
+        ],
+      },
     ];
   },
   async redirects() {

@@ -186,7 +186,7 @@ function buildJobBaseSalary(job: JobDetail) {
   };
 }
 
-function truncateTitle(title: string, maxLength = 54) {
+function truncateTitle(title: string, maxLength = 60) {
   if (title.length <= maxLength) return title;
   return `${title.slice(0, maxLength - 3).trim()}...`;
 }
@@ -425,7 +425,7 @@ function sanitizeJobTitle(rawTitle: string): string {
 export function generateJobPageTitle(job: JobDetail): string {
   try {
     const providedTitle = cleanText(job.metaTitle);
-    if (providedTitle && providedTitle.length <= 54) return providedTitle;
+    if (providedTitle && providedTitle.length <= 60) return providedTitle;
 
     const baseTitle = sanitizeJobTitle(job.title || 'Job Notification');
     const currentYear = new Date().getFullYear();
@@ -458,16 +458,23 @@ export function generateJobPageTitle(job: JobDetail): string {
       }
     }
 
-    // If the base title already includes actionSuffix, don't duplicate
-    if (new RegExp(actionSuffix, 'i').test(baseTitle)) {
-      return truncateTitle(baseTitle, 54);
+    // Add vacancy count for high-CTR signal (e.g., "17727 Posts")
+    let vacancyInsert = '';
+    if (job.vacancyCount && job.vacancyCount > 0) {
+      vacancyInsert = `${job.vacancyCount.toLocaleString('en-IN')} Posts, `;
     }
 
-    const optimizedTitle = `${baseTitle} — ${actionSuffix}`;
-    return truncateTitle(optimizedTitle, 54);
+    // If the base title already includes actionSuffix, don't duplicate
+    if (new RegExp(actionSuffix, 'i').test(baseTitle)) {
+      const withVacancy = vacancyInsert ? `${baseTitle} (${vacancyInsert.replace(', ', '')})` : baseTitle;
+      return truncateTitle(withVacancy, 60);
+    }
+
+    const optimizedTitle = `${baseTitle} — ${vacancyInsert}${actionSuffix}`;
+    return truncateTitle(optimizedTitle, 60);
   } catch (error) {
     console.error('Title generation failed:', error);
-    return truncateTitle(job.title || 'Job Notification', 54);
+    return truncateTitle(job.title || 'Job Notification', 60);
   }
 }
 

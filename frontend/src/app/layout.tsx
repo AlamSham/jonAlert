@@ -94,6 +94,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="hi" className={inter.variable}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-4518508932731576" />
+        {/* Preconnect to critical origins for faster LCP */}
+        <link rel="preconnect" href="https://sarkaripulse-61255565662.asia-south2.run.app" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://cdn.onesignal.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}

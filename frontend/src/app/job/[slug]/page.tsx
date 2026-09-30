@@ -20,7 +20,7 @@ import { generateJobContextualLinks, generateBreadcrumbLinks } from '@/lib/inter
 import { CATEGORY_EMOJI, CATEGORY_COLORS, CATEGORY_LABELS } from '@/lib/types';
 import { guides } from '@/lib/guides';
 
-export const revalidate = 600; // Background ISR revalidation every 10 minutes + On-Demand webhook support
+export const revalidate = 600; // Background ISR revalidation every 10 minutes (Cloud Run friendly)
 
 type Props = { params: Promise<{ slug: string }> };
 

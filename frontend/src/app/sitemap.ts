@@ -22,6 +22,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error('Failed to fetch data for sitemap:', error);
   }
 
+  // Derive meaningful lastModified dates from actual data
+  const latestJobDate = (latestJobs && latestJobs.length > 0) 
+    ? new Date(latestJobs[0].updatedAt || latestJobs[0].createdAt || new Date())
+    : new Date();
+  const latestSchemeDate = (latestSchemes && latestSchemes.length > 0)
+    ? new Date((latestSchemes[0] as any).updatedAt || (latestSchemes[0] as any).createdAt || new Date())
+    : new Date();
+
   // Job URLs with proper priority and changeFrequency
   const jobUrls = (latestJobs || []).filter((job: any) => job && job.slug).map((job) => ({
     url: `${siteUrl}/job/${job.slug}`,
@@ -32,10 +40,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categories: JobCategory[] = ['job', 'admission', 'scholarship', 'result', 'admit-card', 'exam-form'];
   
-  // Category URLs with enhanced priority (0.8-0.9 for categories)
+  // Category URLs: use latest job date as lastmod (not new Date())
   const categoryUrls = categories.map((cat) => ({
     url: `${siteUrl}/${cat === 'job' ? 'jobs' : cat}`,
-    lastModified: new Date(),
+    lastModified: latestJobDate,
     changeFrequency: 'daily' as const,
     priority: 0.9, // Enhanced to upper range (0.8-0.9 for categories)
   }));
@@ -50,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     categoriesWithStates.forEach((category) => {
       stateUrls.push({
         url: `${siteUrl}/${category}/state/${stateSlug}`,
-        lastModified: new Date(),
+        lastModified: latestJobDate, // Use actual latest data date
         changeFrequency: 'daily' as const,
         priority: 0.7,
       });
@@ -61,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const schemeUrls: MetadataRoute.Sitemap = [
     {
       url: `${siteUrl}/schemes`,
-      lastModified: new Date(),
+      lastModified: latestSchemeDate,
       changeFrequency: 'daily' as const,
       priority: 0.9, // High priority for main schemes page
     },
@@ -96,7 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Main search page
     {
       url: `${siteUrl}/search`,
-      lastModified: new Date(),
+      lastModified: latestJobDate,
       changeFrequency: 'daily' as const,
       priority: 0.7,
     },
@@ -106,7 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticUrls = [
     {
       url: `${siteUrl}/`,
-      lastModified: new Date(),
+      lastModified: latestJobDate, // Use actual latest content date
       changeFrequency: 'hourly' as const, // As per requirements
       priority: 1.0, // Homepage priority
     },
@@ -116,7 +124,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const qualifications = ['10th', '12th', 'graduate', 'post-graduate', 'diploma', 'iti'];
   const qualificationUrls = qualifications.map(q => ({
     url: `${siteUrl}/jobs/qualification/${q}`,
-    lastModified: new Date(),
+    lastModified: latestJobDate,
     changeFrequency: 'daily' as const,
     priority: 0.8,
   }));
@@ -125,7 +133,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const orgs = ['ssc', 'upsc', 'railway', 'banking', 'defense', 'police'];
   const orgUrls = orgs.map(org => ({
     url: `${siteUrl}/jobs/org/${org}`,
-    lastModified: new Date(),
+    lastModified: latestJobDate,
     changeFrequency: 'daily' as const,
     priority: 0.9,
   }));
@@ -135,13 +143,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const specialTrafficUrls = [
     {
       url: `${siteUrl}/today`,
-      lastModified: new Date(),
+      lastModified: latestJobDate,
       changeFrequency: 'hourly' as const,
       priority: 0.9,
     },
     {
       url: `${siteUrl}/closing-soon`,
-      lastModified: new Date(),
+      lastModified: latestJobDate,
       changeFrequency: 'daily' as const,
       priority: 0.9,
     },

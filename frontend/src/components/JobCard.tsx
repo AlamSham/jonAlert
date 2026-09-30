@@ -17,6 +17,17 @@ function getLastDateStatus(lastDate?: string) {
   return null;
 }
 
+function getFreshnessBadge(createdAt?: string, updatedAt?: string) {
+  const refDate = updatedAt || createdAt;
+  if (!refDate) return null;
+  const now = Date.now();
+  const posted = new Date(refDate).getTime();
+  const hoursAgo = (now - posted) / (1000 * 60 * 60);
+  if (hoursAgo <= 24) return { label: '🆕 NEW', class: 'bg-green-100 text-green-700 font-bold animate-pulse' };
+  if (hoursAgo <= 72) return { label: '🔄 Updated', class: 'bg-sky-100 text-sky-700' };
+  return null;
+}
+
 export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }) {
   if (!job) return null;
 
@@ -47,12 +58,18 @@ export function JobCard({ job, index = 0 }: { job: JobListItem; index?: number }
       style={{ animationDelay: `${index * 60}ms` }}
       id={`job-card-${job.slug}`}
     >
-      {/* Category + Time */}
+      {/* Category + Freshness + Time */}
       <div className="flex items-center justify-between mb-3">
-        <span className={`badge ${colorClass}`}>
-          <span>{emoji}</span>
-          {CATEGORY_LABELS[job.category] || job.category}
-        </span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className={`badge ${colorClass}`}>
+            <span>{emoji}</span>
+            {CATEGORY_LABELS[job.category] || job.category}
+          </span>
+          {(() => {
+            const freshness = getFreshnessBadge(job.createdAt, (job as any).updatedAt);
+            return freshness ? <span className={`badge text-[10px] ${freshness.class}`} suppressHydrationWarning>{freshness.label}</span> : null;
+          })()}
+        </div>
         <time
           className="text-[11px] text-stone-400 font-medium"
           dateTime={job.createdAt}
