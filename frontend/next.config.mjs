@@ -59,11 +59,11 @@ const nextConfig = {
         ],
       },
       {
-        // HTML pages: short cache + stale-while-revalidate for instant serving
-        // CDN serves stale content instantly while refreshing in background
+        // HTML pages: short cache + stale-while-revalidate + stale-if-error for high availability
+        // If Cloud Run ever goes down, CDN / Cloudflare serves stale cached pages for up to 24h
         source: '/((?!api|_next|.*\\.).*)',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=600' },
+          { key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=86400, stale-if-error=86400' },
         ],
       },
       {
