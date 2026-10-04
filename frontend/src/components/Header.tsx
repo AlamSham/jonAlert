@@ -110,9 +110,23 @@ export function Header() {
             </div>
           </div>
 
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && (window as any).triggerOneSignalPrompt) {
+                (window as any).triggerOneSignalPrompt();
+              }
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 transition hover:bg-amber-100 active:scale-95 text-base"
+            id="job-alert-bell"
+            aria-label="Get Job Alerts"
+            title="Sarkari Job Alerts 🔔"
+          >
+            🔔
+          </button>
+
           <Link
             href="/search"
-            className="ml-2 flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-muted transition hover:bg-accent/10 hover:text-accent"
+            className="ml-1 flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-muted transition hover:bg-accent/10 hover:text-accent"
             id="search-icon"
             aria-label="Search"
           >
@@ -120,15 +134,29 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex md:hidden h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-lg"
-          aria-label="Toggle menu"
-          id="mobile-menu-btn"
-        >
-          {menuOpen ? '✕' : '☰'}
-        </button>
+        {/* Mobile Header Buttons */}
+        <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && (window as any).triggerOneSignalPrompt) {
+                (window as any).triggerOneSignalPrompt();
+              }
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 text-base active:scale-95"
+            aria-label="Get Job Alerts"
+            title="Sarkari Job Alerts"
+          >
+            🔔
+          </button>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-100 text-lg"
+            aria-label="Toggle menu"
+            id="mobile-menu-btn"
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Nav */}
