@@ -59,11 +59,10 @@ const nextConfig = {
         ],
       },
       {
-        // HTML pages: short cache + stale-while-revalidate + stale-if-error for high availability
-        // If Cloud Run ever goes down, CDN / Cloudflare serves stale cached pages for up to 24h
+        // HTML pages: 5-min fresh cache for latest sarkari job updates + stale-if-error for downtime protection
         source: '/((?!api|_next|.*\\.).*)',
         headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=86400, stale-if-error=86400' },
+          { key: 'Cache-Control', value: 'public, s-maxage=300, stale-while-revalidate=300, stale-if-error=86400' },
         ],
       },
       {
